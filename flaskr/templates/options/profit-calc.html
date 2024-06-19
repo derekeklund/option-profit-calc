@@ -1,0 +1,162 @@
+{# https://www.optionsprofitcalculator.com/calculator/long-call.html #}
+
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1 id="top-scroll">{% block title %}Options Profit Calculator{% endblock %}</h1>
+    <a class="action" href="{{ url_for('blog.index') }}">Home</a>
+    <a class="action" href="{{ url_for('options.scanner') }}">Scanner</a>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+    <script src="https://unpkg.com/htmx.org@1.6.1/dist/htmx.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    {# Option Profit Calculator form #}
+    <form id="mainForm" method="POST">
+
+        <h3>Underlying Stock</h3>
+        <div class="flex-container">
+
+            {# Search for ticker #}
+            <div class="flex-item vertical-center">
+                <label for="symbol">Symbol</label>
+
+                <span>
+                    <input name="symbol" id="symbol" value="{{ request.form['symbol'] }}" style="text-transform:uppercase" required>
+                    <button type="submit" value="Search">Get Price</button>
+                </span>
+            </div>
+
+            {# Current Price #}
+            <div class="flex-item vertical-center">
+                <label for="price">Current Price*</label>
+                <input name="price" id="price" value="{{ last_price }}">
+            </div>
+
+            {# Only show these fields if the symbol is entered and valid #}
+            {% if show_div == True %}
+
+                {# Search for expiration date #}
+                <div class="flex-item vertical-center">
+                    <label for="expiry">Expiration Dates</label>
+                    <select name="expiry" id="expiry" onchange="this.form.submit()">
+                        {% for expiry in expiries %}
+                            <option value="{{expiry}}" {% if expiry == selected_exp_date %} selected {% endif %}>{{expiry}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <br>
+
+            {% endif %}
+
+        </div>
+
+        <br>
+
+        <h3></h3>
+        <div class="flex-container">
+
+            {# Price Range Selection #}
+            <div class="flex-item">
+                <h4>Price Range at Expiration</h4>
+                    <span>$</span>
+                    <input placeholder="auto" name="lower-range" id="lower-range" value="{{ lower_bound }}" style="width: 75px">
+                    <span> - </span>
+                    <input placeholder="auto" name="upper-range" id="upper-range" value="{{ upper_bound }}" style="width: 75px">
+            </div>
+
+            {# Buy/Write Selection #}
+            <div class="flex-item">
+                <h4>Buy/Write</h4>
+                <div class="call-put">
+                    <input type="radio" id="buy" name="buy_write" value="buy" {% if buy_write == 'buy' %} checked {% endif %} onchange="this.form.submit()">
+                    <span>Buy</span>
+                    <input type="radio" id="write" name="buy_write" value="write" {% if buy_write == 'write' %} checked {% endif %} onchange="this.form.submit()">
+                    <span>Write</span>
+                </div>
+            </div>
+
+            {# Moneyness Selection #}
+            <div class="flex-item vertical-center">
+                <fieldset>
+                <legend>Moneyness</legend>
+                <input type="radio" id="near" name="moneyness" value="near" {% if moneyness == 'near' %} checked {% endif %} onchange="this.form.submit()">
+                <label for="near" class="normal-font">Near the Money</label><br>
+                <input type="radio" id="all-contracts" name="moneyness" value="all-contracts" {% if moneyness == 'all-contracts' %} checked {% endif %} onchange="this.form.submit()">
+                <label for="all-contracts" class="normal-font">All Contracts</label>
+                </fieldset>
+            </div>
+
+        </div>
+
+        <br>
+        {% if show_div == True %}
+            {# <input type="submit" value="Search"> #}
+
+            {# Get strike price range & buy/write #}
+            <button type="submit" value="Search" style="width: 100px">Re-Calculate</button>
+        {% endif %}
+
+        <script type="text/javascript">
+            // Get clicked strike price
+            function getUserInput(a){
+                var symbol = document.getElementById("symbol").value;
+                var strike = a.getAttribute("value");
+                var expiry = document.getElementById("expiry").value;
+                var price = document.getElementById("price").value;
+                var lower_bound = document.getElementById("lower-range").value;
+                var upper_bound = document.getElementById("upper-range").value;
+                var buy_write = document.querySelector('input[name="buy_write"]:checked').value;
+
+                
+                console.log("AJAX REQUEST");
+                console.log("Symbol:", symbol);
+                console.log("Strike:", strike);
+                console.log("Expiry:", expiry);
+                console.log("Price:", price);
+                console.log("Lower Range:", lower_bound);
+                console.log("Upper Range:", upper_bound);
+                console.log("Buy/Write:", buy_write);
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url_for('options.profit_calc') }}",
+                    contentType: 'application/json', 
+                    data: JSON.stringify({'symbol': symbol, 'strike': strike, 'expiry': expiry, 'price': price , 'lower_bound': lower_bound, 'upper_bound': upper_bound, 'buy_write': buy_write}), 
+                    success: function(data){
+                        console.log("");
+                    }
+                });
+            }
+        </script>
+
+        {# Remove profit loss table if new date selected #}
+
+
+    </form>
+
+    {# Show tables #}
+    <div class="tables-container">
+        <div class="table-item">
+            {% for table in tables %}
+
+                <div id="details">Options chain yo</div>
+                {{ table|safe }}
+                
+                {% if not loop.last %}
+                    <hr>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {# Profit/loss table updates here when a strike price is clicked #}
+        <div class="table-item">
+
+            <div id="profit-loss-table"></div>
+                
+        </div>
+    </div>
+
+
+{% endblock %}

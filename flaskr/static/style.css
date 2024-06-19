@@ -1,0 +1,223 @@
+/* Delete all this below. Only for template purposes. */
+
+html { font-family: sans-serif; background: #eee; padding: 1rem; }
+body { max-width: 1160px; margin: 0 auto; background: white; }
+h1 { font-family: serif; color: #377ba8; margin: 1rem 0; }
+a { color: #377ba8; }
+hr { border: none; border-top: 1px solid lightgray; }
+nav { background: lightgray; display: flex; align-items: center; padding: 0 0.5rem; }
+nav h1 { flex: auto; margin: 0; }
+nav h1 a { text-decoration: none; padding: 0.25rem 0.5rem; }
+nav ul  { display: flex; list-style: none; margin: 0; padding: 0; }
+nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; }
+.content { padding: 0 1rem 1rem; }
+.content > header { border-bottom: 1px solid lightgray; display: flex; align-items: flex-end; }
+.content > header h1 { flex: auto; margin: 1rem 0 0.25rem 0; }
+.flash { margin: 1em 0; padding: 1em; background: #cae6f6; border: 1px solid #377ba8; }
+.post > header { display: flex; align-items: flex-end; font-size: 0.85em; }
+.post > header > div:first-of-type { flex: auto; }
+.post > header h1 { font-size: 1.5em; margin-bottom: 0; }
+.post .about { color: slategray; font-style: italic; }
+.post .body { white-space: pre-line; }
+.content:last-child { margin-bottom: 0; }
+.content form { margin: 1em 0; display: flex; flex-direction: column; }
+.content label { font-weight: normal; margin-bottom: 0em; }
+.content input, .content textarea { margin-bottom: 0em; max-width: 10em; }
+.content select { width: 10em; }
+.content textarea { min-height: 12em; resize: vertical; }
+input.danger { color: #cc2f2e; }
+input[type=submit] { align-self: start; min-width: 10em; }
+
+/* Pandas table styles */
+
+.pd-table {
+    width: min-content;
+    font-size: 11pt; 
+    font-family: Arial;
+    border-collapse: collapse; 
+    border: 1px solid silver;
+}
+
+.pd-table td, th {
+    padding: 5px;
+    text-align: center;
+}
+
+.pd-table td {
+    white-space: nowrap;
+}
+
+.pd-table thead tr:first-child {
+    background: gray;
+    cursor: pointer;
+    color: white;
+}
+
+.pd-table tr:nth-child(even) {
+    background: #E0E0E0;
+}
+
+.pd-table tbody tr:hover {
+    /* background: rgb(45, 137, 153); */
+    cursor: pointer;
+}
+
+/* .pd-table td:nth-child(1){
+    min-width: 80px;
+} */
+
+
+/* Scanner styles */
+.alignleft {
+	float: left;
+    margin-left: 25%;
+}
+
+.alignright {
+	float: right;
+    margin-right: 25%;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-item {
+    flex-grow: 1;
+}
+
+.vertical-center {
+    display: flex;
+    align-items: center;
+}
+
+.flex-item label {
+    font-weight: bold;
+    padding-right: 1em;
+}
+
+.radio-buttons {
+    display: flex;
+}
+
+.radio-buttons label {
+    margin-right: 10px;
+}
+
+legend {
+    font-weight: bold;
+}
+
+.normal-font {
+    font-weight: normal !important;
+}
+
+/* Profit Calc styles */
+
+.fake-link {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.tables-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-item {
+    flex: 1; /* Makes all items take equal space */
+    margin: 10px; /* Adds some space around each item */
+    padding: 20px; /* Adds some padding inside each item */
+    background-color: #f0f0f0; /* Background color for visibility */
+    text-align: center; /* Center the text inside the div */
+    border: 1px solid #ccc; /* Adds a border to the div */
+}
+
+.pl-td {
+    position: relative;
+}
+
+.pl-td .highlight-cell {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.pl-td .highlight-cell::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.pl-td:hover .highlight-cell {
+    visibility: visible;
+    opacity: 1;
+}
+
+.p100 {
+    background-color: #13973bce;
+}
+
+.p75 {
+    background-color: #4a971d;
+}
+
+.p50 {
+    background-color: #6af55e;
+}
+
+.p25 {
+    background-color: #96f589;
+}
+
+.p5 {
+    background-color: #bbfcb2;
+}
+
+.p0 {
+    background-color: #fff;
+
+}
+
+.p-5 {
+    background-color: #ffdbdb;
+}
+
+.p-25 {
+    background-color: #ff8c8c;
+}
+
+.p-50 {
+    background-color: #fa6464;
+}
+
+.p-75 {
+    background-color: #f83b3b;
+}
+
+.p-100 {
+    background-color: #ff0000;
+}
