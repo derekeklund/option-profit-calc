@@ -53,15 +53,6 @@
         </div>
 
         <br>
-        <br>
-        
-        {# Current Strike Selected #}
-        <h4>Select a Call/Put From the Options Chain Below</h4>
-        <div class="flex-item vertical-center">
-            <input name="selected_strike" id="selected_strike" value="{{ selected_strike }}" placeholder="No strike selected" style="width: 200px">
-        </div>        
-
-        <h3></h3>
         <div class="flex-container">
 
             {# Price Range Selection #}
@@ -97,12 +88,8 @@
 
         </div>
 
-        <br>
         {% if show_div == True %}
-            {# <input type="submit" value="Search"> #}
-
-            {# Get strike price range & buy/write #}
-            <button type="submit" value="Search" style="width: 100px" onclick="this.form.submit()">Re-Calculate</button>
+            <p style="font-style: italic;">Select an option below to show profit/loss table:</p>
         {% endif %}
 
         <script type="text/javascript">
@@ -145,20 +132,18 @@
 
     {# Show tables #}
     <div class="tables-container">
-        <div class="table-item">
+        
+        <div class="table-item-small">
+
             {% for table in tables %}
 
-                <div id="details">Options chain yo</div>
                 {{ table|safe }}
                 
-                {% if not loop.last %}
-                    <hr>
-                {% endif %}
             {% endfor %}
         </div>
 
         {# Profit/loss table updates here when a strike price is clicked #}
-        <div class="table-item">
+        <div class="table-item-big">
 
             <div id="profit-loss-table"></div>
                 

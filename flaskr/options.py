@@ -109,7 +109,7 @@ def scanner():
 @bp.route('/profit-calc', methods=('GET', 'POST'))
 def profit_calc():
     
-    show_div = True
+    show_div = False
     
     if request.method == 'GET':
         session.clear()
@@ -129,6 +129,7 @@ def profit_calc():
         profit_loss_table = session.get('profit_loss_table')
 
         strike = None
+        show_div = True
 
         moneyness = get_moneyness()
         print("Moneyness:", moneyness)
@@ -315,7 +316,8 @@ def profit_calc():
                     if j == 0:
                         html_pl += f'<td><b>{value}</b></td>'
                     else:
-                        html_pl += f'<td class="pl-td {style}">{profit} ({value})<span class="highlight-cell">{percent}%</span></td>'
+                        # html_pl += f'<td class="pl-td {style}">{profit} ({value})<span class="highlight-cell">{percent}%</span></td>'
+                        html_pl += f'<td class="pl-td {style}">{percent}%<span class="highlight-cell">{value}</span></td>'
 
                     j += 1
 
@@ -412,25 +414,6 @@ def profit_calc():
 
         lower_bound = int(round(price)) - 10
         upper_bound = int(round(price)) + 10
-
-        # try:
-        #     print("try lower bound")
-        #     lower_bound = request.form['lower_bound']
-        #     print("lower bound try:", lower_bound)
-        # except:
-        #     print("except lower bound")
-        #     lower_bound = int(round(price)) - 10
-        #     print("lower bound except:", lower_bound)
-        #     pass
-
-        # try:
-        #     upper_bound = request.form['upper_bound']
-        # except:
-        #     upper_bound = int(round(price)) + 10
-        #     pass
-        
-        # lower_bound = int(round(price)) - 10
-        # upper_bound = int(round(price)) + 10
 
         # Find the strike price closest to the current price
         closest_strike = all_options['Strike'].sub(price).abs().idxmin()
