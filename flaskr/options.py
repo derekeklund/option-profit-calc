@@ -150,6 +150,8 @@ def profit_calc():
             symbol = json_values['symbol']
             strike = json_values['strike']
             expiry = json_values['expiry']
+            upper_bound = int(json_values['upper_bound'])
+            lower_bound = int(json_values['lower_bound'])
             price = float(json_values['price'])
 
             print("initial Json strike:", strike)
@@ -167,6 +169,8 @@ def profit_calc():
             print("Option type (option_type):", option_type)
             print("Expiry (expiry):", expiry)
             print("Price (price):", price)
+            print("Lower bound (lower_bound):", lower_bound)
+            print("Upper bound (upper_bound):", upper_bound)
             print("---------------------")
 
             # Get current date
@@ -186,9 +190,6 @@ def profit_calc():
             days_to_expiry_list.append(0)
 
             # Make dataframe with possible profit/loss scenarios
-            lower_bound = int(round(price)) - 10
-            upper_bound = int(round(price)) + 10
-            
             expiration_price_range = range(lower_bound, upper_bound, 1)
             expiration_price_list = list(expiration_price_range)
             possible_price_list = list(reversed(expiration_price_list))
@@ -411,6 +412,25 @@ def profit_calc():
 
         lower_bound = int(round(price)) - 10
         upper_bound = int(round(price)) + 10
+
+        # try:
+        #     print("try lower bound")
+        #     lower_bound = request.form['lower_bound']
+        #     print("lower bound try:", lower_bound)
+        # except:
+        #     print("except lower bound")
+        #     lower_bound = int(round(price)) - 10
+        #     print("lower bound except:", lower_bound)
+        #     pass
+
+        # try:
+        #     upper_bound = request.form['upper_bound']
+        # except:
+        #     upper_bound = int(round(price)) + 10
+        #     pass
+        
+        # lower_bound = int(round(price)) - 10
+        # upper_bound = int(round(price)) + 10
 
         # Find the strike price closest to the current price
         closest_strike = all_options['Strike'].sub(price).abs().idxmin()

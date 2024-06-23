@@ -53,6 +53,13 @@
         </div>
 
         <br>
+        <br>
+        
+        {# Current Strike Selected #}
+        <h4>Select a Call/Put From the Options Chain Below</h4>
+        <div class="flex-item vertical-center">
+            <input name="selected_strike" id="selected_strike" value="{{ selected_strike }}" placeholder="No strike selected" style="width: 200px">
+        </div>        
 
         <h3></h3>
         <div class="flex-container">
@@ -61,9 +68,9 @@
             <div class="flex-item">
                 <h4>Price Range at Expiration</h4>
                     <span>$</span>
-                    <input placeholder="auto" name="lower-range" id="lower-range" value="{{ lower_bound }}" style="width: 75px">
+                    <input placeholder="auto" name="lower_bound" id="lower_bound" value="{{ lower_bound }}" style="width: 75px">
                     <span> - </span>
-                    <input placeholder="auto" name="upper-range" id="upper-range" value="{{ upper_bound }}" style="width: 75px">
+                    <input placeholder="auto" name="upper_bound" id="upper_bound" value="{{ upper_bound }}" style="width: 75px">
             </div>
 
             {# Buy/Write Selection #}
@@ -95,7 +102,7 @@
             {# <input type="submit" value="Search"> #}
 
             {# Get strike price range & buy/write #}
-            <button type="submit" value="Search" style="width: 100px">Re-Calculate</button>
+            <button type="submit" value="Search" style="width: 100px" onclick="this.form.submit()">Re-Calculate</button>
         {% endif %}
 
         <script type="text/javascript">
@@ -105,8 +112,8 @@
                 var strike = a.getAttribute("value");
                 var expiry = document.getElementById("expiry").value;
                 var price = document.getElementById("price").value;
-                var lower_bound = document.getElementById("lower-range").value;
-                var upper_bound = document.getElementById("upper-range").value;
+                var lower_bound = document.getElementById("lower_bound").value;
+                var upper_bound = document.getElementById("upper_bound").value;
                 var buy_write = document.querySelector('input[name="buy_write"]:checked').value;
 
                 
@@ -115,8 +122,8 @@
                 console.log("Strike:", strike);
                 console.log("Expiry:", expiry);
                 console.log("Price:", price);
-                console.log("Lower Range:", lower_bound);
-                console.log("Upper Range:", upper_bound);
+                console.log("Lower bound:", lower_bound);
+                console.log("Upper bound:", upper_bound);
                 console.log("Buy/Write:", buy_write);
 
                 $.ajax({
