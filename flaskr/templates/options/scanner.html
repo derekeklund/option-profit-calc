@@ -3,12 +3,12 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title %}Option Scanner{% endblock %}</h1>
-    <a class="action" href="{{ url_for('blog.index') }}">Home</a>
-    <a class="action" href="{{ url_for('options.profit_calc') }}">Profit Calculator</a>
+    {# <h1>{% block title %}Option Scanner{% endblock %}</h1> #}
 {% endblock %}
 
 {% block content %}
+
+    <div class="gradient2">Scanner</div>
 
     {# Option scanner form #}
     <form method="POST">
@@ -18,7 +18,7 @@
             {# Search for ticker #}
             <div class="flex-item vertical-center">
                 <label for="symbol">Symbol</label>
-                <input name="symbol" id="symbol" value="{{ request.form['symbol'] }}" style="text-transform:uppercase" required>
+                <input class="text-input" name="symbol" placeholder="ABC" id="symbol" value="{{ request.form['symbol'] }}" style="text-transform:uppercase" required>
             </div>
 
             {# Only show these fields if the symbol is entered and valid #}
@@ -27,7 +27,7 @@
                 {# Search for expiration date #}
                 <div class="flex-item vertical-center">
                     <label for="expiry">Expiration Dates</label>
-                    <select name="expiry" id="expiry" onchange="this.form.submit()">
+                    <select class="text-input" name="expiry" id="expiry" onchange="this.form.submit()">
                         {% for expiry in expiries %}
                             <option value="{{expiry}}" {% if expiry == selected_exp_date %} selected {% endif %}>{{expiry}}</option>
                         {% endfor %}
@@ -52,7 +52,7 @@
 
         <br>
         {% if show_div == False %}
-            <input type="submit" value="Search">
+            <input class="button" type="submit" value="Search">
         {% endif %}
     </form>
     

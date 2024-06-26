@@ -3,14 +3,14 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1 id="top-scroll">{% block title %}Options Profit Calculator{% endblock %}</h1>
-    <a class="action" href="{{ url_for('blog.index') }}">Home</a>
-    <a class="action" href="{{ url_for('options.scanner') }}">Scanner</a>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
     <script src="https://unpkg.com/htmx.org@1.6.1/dist/htmx.min.js"></script>
 {% endblock %}
 
 {% block content %}
+
+    <div class="gradient1">Options Profit Calculator</div>
 
     {# Option Profit Calculator form #}
     <form id="mainForm" method="POST">
@@ -23,15 +23,15 @@
                 <label for="symbol">Symbol</label>
 
                 <span>
-                    <input name="symbol" id="symbol" value="{{ request.form['symbol'] }}" style="text-transform:uppercase" required>
-                    <button type="submit" value="Search">Get Price</button>
+                    <input class="text-input" name="symbol" placeholder="ABC" id="symbol" value="{{ request.form['symbol'] }}" style="text-transform:uppercase" required>
+                    <button class="button" type="submit" value="Search">Get Price</button>
                 </span>
             </div>
 
             {# Current Price #}
             <div class="flex-item vertical-center">
                 <label for="price">Current Price*</label>
-                <input name="price" id="price" value="{{ last_price }}">
+                <input class="text-input" name="price" id="price" value="{{ last_price }}">
             </div>
 
             {# Only show these fields if the symbol is entered and valid #}
@@ -40,7 +40,7 @@
                 {# Search for expiration date #}
                 <div class="flex-item vertical-center">
                     <label for="expiry">Expiration Dates</label>
-                    <select name="expiry" id="expiry" onchange="this.form.submit()">
+                    <select class="text-input" name="expiry" id="expiry" onchange="this.form.submit()">
                         {% for expiry in expiries %}
                             <option value="{{expiry}}" {% if expiry == selected_exp_date %} selected {% endif %}>{{expiry}}</option>
                         {% endfor %}
@@ -59,9 +59,9 @@
             <div class="flex-item">
                 <h4>Price Range at Expiration</h4>
                     <span>$</span>
-                    <input placeholder="auto" name="lower_bound" id="lower_bound" value="{{ lower_bound }}" style="width: 75px">
+                    <input class="text-input" placeholder="auto" name="lower_bound" id="lower_bound" value="{{ lower_bound }}" style="width: 75px">
                     <span> - </span>
-                    <input placeholder="auto" name="upper_bound" id="upper_bound" value="{{ upper_bound }}" style="width: 75px">
+                    <input class="text-input" placeholder="auto" name="upper_bound" id="upper_bound" value="{{ upper_bound }}" style="width: 75px">
             </div>
 
             {# Buy/Write Selection #}
@@ -89,7 +89,7 @@
         </div>
 
         {% if show_div == True %}
-            <p style="font-style: italic;">Select an option below to show profit/loss table:</p>
+            <p style="font-style: italic;">Select an option below:</p>
         {% endif %}
 
         <script type="text/javascript">

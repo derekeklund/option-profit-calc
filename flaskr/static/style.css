@@ -1,15 +1,126 @@
 /* Delete all this below. Only for template purposes. */
 
-html { font-family: sans-serif; background: #eee; padding: 1rem; }
-body { max-width: 1160px; margin: 0 auto; background: white; }
+:root {
+    --gray: #c2c8c5;
+    --white: #ffffff;
+    --green: #009879;
+}
+
+.example {
+    background-color: var(--gray);
+    color: var(--white);
+    border: 1px solid var(--white);
+}
+
+.gradient1 {
+    background: linear-gradient(90deg, #48a2a8 0%, #47df68 100%);
+    color: var(--white);
+    max-width: 80%;
+    margin: auto;
+    margin-top: 50px;
+    min-height: 100px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+    padding-top: 50px;
+}
+
+.gradient2 {
+    background: linear-gradient(90deg, #48a2a8 0%, #e1d048 100%);
+    color: var(--white);
+    max-width: 80%;
+    margin: auto;
+    margin-top: 50px;
+    min-height: 100px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+    padding-top: 50px;
+}
+
+html, body {
+    font-family: Verdana, sans-serif;
+    background: #eee;
+    margin: 0px;
+}
+
+.content {
+    display: block;
+    margin: 0 auto;
+    max-width: 70%;
+    padding: 0px 20px;
+}
+
+/* Navbar */
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+nav ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.active {
+    background-color: var(--green);
+}
+
+.active:hover {
+    background-color: var(--green);
+}
+
+li:hover {
+    background-color: #111;
+}
+
+.text-input {
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 75px;
+}
+
+.button {
+    background-color: #009879;
+    color: white;
+    padding: 5px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.strike-select {
+    color: #377ba8;
+    font-style: italic;
+}
+
+/* html { font-family: sans-serif; background: #eee;}
+body { max-width: 1160px; margin: 0 auto; background: white; } */
 h1 { font-family: serif; color: #377ba8; margin: 1rem 0; }
 a { color: #377ba8; }
 hr { border: none; border-top: 1px solid lightgray; }
-nav { background: lightgray; display: flex; align-items: center; padding: 0 0.5rem; }
-nav h1 { flex: auto; margin: 0; }
+/* nav { background: lightgray; display: flex; align-items: center; padding: 0 0.5rem; } */
+/* nav h1 { flex: auto; margin: 0; }
 nav h1 a { text-decoration: none; padding: 0.25rem 0.5rem; }
 nav ul  { display: flex; list-style: none; margin: 0; padding: 0; }
-nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; }
+nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; } */
 .content { padding: 0 1rem 1rem; }
 .content > header { border-bottom: 1px solid lightgray; display: flex; align-items: flex-end; }
 .content > header h1 { flex: auto; margin: 1rem 0 0.25rem 0; }
@@ -25,8 +136,8 @@ nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; }
 .content input, .content textarea { margin-bottom: 0em; max-width: 10em; }
 .content select { width: 10em; }
 .content textarea { min-height: 12em; resize: vertical; }
-input.danger { color: #cc2f2e; }
-input[type=submit] { align-self: start; min-width: 10em; }
+/* input.danger { color: #cc2f2e; }
+input[type=submit] { align-self: start; min-width: 10em; } */
 
 /* Pandas table styles */
 
@@ -39,6 +150,10 @@ input[type=submit] { align-self: start; min-width: 10em; }
     margin: 0 auto;
 }
 
+.pd-table tbody {
+    border-collapse: collapse;
+}
+
 .pd-table td, th {
     padding: 5px;
     text-align: center;
@@ -49,7 +164,7 @@ input[type=submit] { align-self: start; min-width: 10em; }
 }
 
 .pd-table thead tr:first-child {
-    background: gray;
+    background: var(--green);
     cursor: pointer;
     color: white;
 }
@@ -58,8 +173,8 @@ input[type=submit] { align-self: start; min-width: 10em; }
     background: #E0E0E0;
 }
 
-.pd-table tbody tr:hover {
-    /* background: rgb(45, 137, 153); */
+.scanner tbody tr:hover {
+    background: rgb(159, 217, 228);
     cursor: pointer;
 }
 
@@ -133,7 +248,8 @@ legend {
 }
 
 .table-item-small {
-    margin-top: -20px;
+    margin-top: -10px;
+    margin-right: 10px;
     /* padding: 20px; */
     /* background-color: #f0f0f0; */
     text-align: center; 

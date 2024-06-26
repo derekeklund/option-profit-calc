@@ -93,7 +93,7 @@ def scanner():
             all_options = all_options.iloc[ind_previous_close - 10:ind_previous_close + 11]
 
         # Pandas to html 
-        all_options_table = all_options.to_html(header=True, na_rep="--", classes='pd-table', index=False, formatters={'Strike': lambda x: f'<b>{x}</b>'},escape=False)
+        all_options_table = all_options.to_html(header=True, na_rep="--", classes='pd-table scanner', index=False, formatters={'Strike': lambda x: f'<b>{x}</b>'},escape=False)
 
         print("selected_exp_date:", selected_exp_date)
         print("expiries:", exp_dates)
@@ -189,6 +189,8 @@ def profit_calc():
             days_to_expiry_list = list(expiry_range)
             days_to_expiry_list = list(reversed(days_to_expiry_list))
             days_to_expiry_list.append(0)
+
+            print("Days to expiry list:", days_to_expiry_list)
 
             # Make dataframe with possible profit/loss scenarios
             expiration_price_range = range(lower_bound, upper_bound, 1)
@@ -469,10 +471,10 @@ def profit_calc():
 
                     # This works best, needs the click delay to produce the table
                     # Note the show:top attribute which scrolls to the top (currently targets the div in the h1 tag at the top of the page)
-                    html += f'<td><a href=".top" onclick="getUserInput(this)" hx-target="#profit-loss-table" hx-trigger="click delay:1s" hx-swap="innerHTML show:#top-scroll:top" hx-get="/refresh-calc" value="{identifier}_{next_strike}_{value}">{value}</a></td>'
+                    html += f'<td><a class="strike-select" href=".top" onclick="getUserInput(this)" hx-target="#profit-loss-table" hx-trigger="click delay:1s" hx-swap="innerHTML show:#top-scroll:top" hx-get="/refresh-calc" value="{identifier}_{next_strike}_{value}">{value}</a></td>'
 
                 else:
-                    html += f'<td>{value}</td>'
+                    html += f'<td><b>{value}</b></td>'
 
             html += "</tr>"
 
