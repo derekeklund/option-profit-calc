@@ -4,6 +4,7 @@
     --gray: #c2c8c5;
     --white: #ffffff;
     --green: #009879;
+    --background: #eee;
 }
 
 .example {
@@ -36,6 +37,41 @@
     font-size: 30px;
     font-weight: 600;
     padding-top: 50px;
+}
+
+.img-container {
+    height: 100%;
+    margin: 0;
+}
+
+.fade-in {
+    background: url('/static/images/bull_and_bear_expressionism.png') no-repeat center fixed;
+    width: 100%;
+    height: 100vh;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    animation: fade-in-scale-down 5s ease-out 1;
+    -webkit-animation: fade-in-scale-down 5s ease-in-out 1;
+    -moz-animation:    fade-in-scale-down 5s ease-in-out 1;
+    -o-animation:      fade-in-scale-down 5s ease-in-out 1;
+}
+
+@keyframes fade-in-scale-down{
+    0%{
+      opacity:0;
+      -webkit-transform:scale(1.1);
+      -ms-transform:scale(1.1);
+      transform:scale(1.1)
+    }
+    
+    100%{
+      opacity:1;
+      -webkit-transform:scale(1);
+      -ms-transform:scale(1);
+      transform:scale(1);
+    }
 }
 
 html, body {
@@ -163,9 +199,39 @@ input[type=submit] { align-self: start; min-width: 10em; } */
     white-space: nowrap;
 }
 
+/* .pd-table thead tr:first-child th:nth-child(2) {
+    background: var(--green);
+    cursor: pointer;
+    color: white;
+} */
+
 .pd-table thead tr:first-child {
     background: var(--green);
     cursor: pointer;
+    color: white;
+}
+
+.profit-table thead tr:first-child {
+    background: none;
+    cursor: pointer;
+    color: white;
+}
+
+.profit-table thead tr:nth-child(2) {
+    background: var(--green);
+    cursor: pointer;
+    color: white;
+}
+
+/* .scanner-table thead tr:first-child {
+    background: var(--green);
+    cursor: pointer;
+    color: white;
+} */
+
+
+.colored-header {
+    background: var(--green);
     color: white;
 }
 
@@ -176,6 +242,18 @@ input[type=submit] { align-self: start; min-width: 10em; } */
 .scanner tbody tr:hover {
     background: rgb(159, 217, 228);
     cursor: pointer;
+}
+
+.top-left-cell {
+    background: #eee;
+    border-top: hidden;
+    border-left:hidden;
+}
+
+.top-right-cell {
+    background: var(--green);
+    cursor: pointer;
+    color: white;
 }
 
 /* .pd-table td:nth-child(1){

@@ -8,6 +8,8 @@
 
 {% block content %}
 
+    <div class="content">
+
     <div class="gradient2">Scanner</div>
 
     {# Option scanner form #}
@@ -19,7 +21,9 @@
             <div class="flex-item vertical-center">
                 <label for="symbol">Symbol</label>
                 <input class="text-input" name="symbol" placeholder="ABC" id="symbol" value="{{ request.form['symbol'] }}" style="text-transform:uppercase" required>
+                <input class="button" type="submit" value="Scan">
             </div>
+            
 
             {# Only show these fields if the symbol is entered and valid #}
             {% if show_div == True %}
@@ -45,15 +49,14 @@
                     <label for="all" class="normal-font">All Contracts</label>
                     </fieldset>
                 </div>
+                
 
             {% endif %}
 
         </div>
 
         <br>
-        {% if show_div == False %}
-            <input class="button" type="submit" value="Search">
-        {% endif %}
+        
     </form>
     
     {% if show_div == True %}
@@ -73,5 +76,7 @@
             <hr>
         {% endif %}
     {% endfor %}
+
+    </div>
 
 {% endblock %}

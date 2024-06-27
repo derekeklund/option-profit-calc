@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title %}Posts{% endblock %}</h1>
-    {% if g.user %}
-        <a class="action" href="{{ url_for('blog.create') }}">Create New Post</a>
-    {% endif %}
-    <a class="action" href="{{ url_for('options.scanner') }}">Scanner</a>
-    <a class="action" href="{{ url_for('options.profit_calc') }}">Profit Calculator</a>
+
 {% endblock %}
 
 {% block content %}
+
+    <div class="img-container">
+        <div class="fade-in">
+        </div>
+    </div>
+
+
     {% for post in posts %}
         <article class="post">
             <header>

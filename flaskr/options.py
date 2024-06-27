@@ -192,6 +192,13 @@ def profit_calc():
 
             print("Days to expiry list:", days_to_expiry_list)
 
+            # If the number of days to expiry is over 15, remove every other day
+            '''https://pandas.pydata.org/docs/user_guide/indexing.html'''
+            if days_to_expiry > 15:
+                days_to_expiry_list = days_to_expiry_list[::2]
+            if days_to_expiry > 30:
+                days_to_expiry_list = days_to_expiry_list[::3]
+
             # Make dataframe with possible profit/loss scenarios
             expiration_price_range = range(lower_bound, upper_bound, 1)
             expiration_price_list = list(expiration_price_range)
@@ -209,48 +216,17 @@ def profit_calc():
                 # Calculate option price for each day to expiry at each strike price
                 df_profit_loss[f'{d}'] = df_profit_loss[f'{column_header}'].apply(lambda x: round(blackScholes(0.05, x, strike, d/365, 0.2, type='c')[1], 2)) # x = S (underlying stock price)
 
-            # print("profit loss table columns:", df_profit_loss.columns)
-
             # print("Profit loss table:", df_profit_loss)
 
-            # Isolate the first column
-            first_column = df_profit_loss.iloc[:, 0]
+            upper_header = "Days to Expiry"
+            lower_header = df_profit_loss.columns
+            num_columns = len(df_profit_loss.columns)
 
-            # print("First column:", first_column)
+            df_profit_loss.columns = pd.MultiIndex.from_product([[upper_header], df_profit_loss.columns])
 
-            # Divide the rest of the dataframe by the initial strike value
-            rest_of_pl_df = df_profit_loss.iloc[:, 1:] / initial_strike_value
+            print("profit loss table columns:", df_profit_loss.columns)
 
-            # Concatenate the first column with the rest of the dataframe
-            df_profit_loss_percent = pd.concat([first_column, rest_of_pl_df], axis=1)
-
-            # print("Profit loss table after division:", df_profit_loss_percent)
-
-            def assign_color_code(val):
-
-                color = '#fff'
-
-                if val >= 1.0:
-                    color = '#3fff00'
-                elif val >= 0.6 and val < 1.0:
-                    color = '#baff92'
-                elif val >= 0.4 and val < 0.6:
-                    color = '#fff'
-                elif val >= 0.25 and val < 0.4:
-                    color = '#ffb6b6'
-                elif val >= 0.00 and val < 0.25:
-                    color = '#ff2424'
-
-                val = round(val * 100, 2)
-
-                background_color = f'<div style="background-color: {color};">{val}%</div>'
-
-                return background_color
-            
-            def bold(val):
-                return f'<b>{val}</b>'
-            
-            #####
+            print("Profit loss table:", df_profit_loss)
 
             def calculate_profit(option_value, initial_strike_value):
                 profit = round(option_value - initial_strike_value, 2)
@@ -267,7 +243,7 @@ def profit_calc():
 
                 background = "p0"
 
-                # print("Percent:", percent)
+                # FYI for below: p100 would be positive 100% profit and p-100 would a 100% loss
 
                 if percent >= 100:
                     background = 'p100'
@@ -298,8 +274,11 @@ def profit_calc():
             html_pl = f"<p>Selected Strike: <b>{strike}</b></p>"
 
             # Create actual table
-            html_pl += '<table border="1" class="dataframe pd-table"><thead><tr style="text-align: right;">'
-            html_pl += '<th>' + '</th><th>'.join(df_profit_loss.columns) + '</th></tr></thead><tbody>'
+            # html_pl += '<table border="1" class="dataframe pd-table"><thead><tr style="text-align: right;">'
+            # html_pl += '<th>' + '</th><th>'.join(df_profit_loss.columns) + '</th></tr></thead><tbody>'
+
+            html_pl += f'<table border="1" class="dataframe pd-table profit-table"><thead><tr><th class="top-left-cell"></th><th class="top-right-cell" colspan={num_columns} haligh="left">{upper_header}</th></tr><tr style="text-align: right;">'
+            html_pl += '<th>' + '</th><th>'.join(lower_header) + '</th></tr></thead><tbody>'
 
             for i, row in df_profit_loss.iterrows():
                 html_pl += "<tr>"
@@ -327,16 +306,6 @@ def profit_calc():
             html_pl += "</table>"
 
             # print("HTML PL:", html_pl)
-
-            #####
-
-            # Create a dictionary of formatters
-            formatters = {
-                df_profit_loss_percent.columns[0]: bold,  # Apply bold to the first column
-                **{col: assign_color_code for col in df_profit_loss_percent.columns[1:]}  # Apply color code to all other columns
-            }
-
-            styled_table = df_profit_loss_percent.to_html(header=True, na_rep="--", classes='pd-table', index=False, formatters=formatters, escape=False)
 
             # Pandas to html
             profit_loss_table = df_profit_loss.to_html(header=True, na_rep="--", classes='pd-table', index=False, formatters={f'{column_header}': lambda x: f'<b>{x}</b>'}, escape=False)
@@ -465,13 +434,8 @@ def profit_calc():
                 next_strike = all_options["Strike"][i]
 
                 if identifier != "strike":
-                    # html += f'<td><button class="fake-link" onclick="getUserInput(this)" hx-target="#profit-loss-table" hx-post="/refresh-calc" value="{identifier}_{next_strike}">{value}</button></td>'
-
-                    # html += f'<td><a href="#top" onclick="getUserInput(this)" hx-target="#profit-loss-table" hx-swap="innerHTML" hx-confirm="Are you sure?" hx-get="/refresh-calc" value="{identifier}_{next_strike}">{value}</a></td>'
-
-                    # This works best, needs the click delay to produce the table
-                    # Note the show:top attribute which scrolls to the top (currently targets the div in the h1 tag at the top of the page)
-                    html += f'<td><a class="strike-select" href=".top" onclick="getUserInput(this)" hx-target="#profit-loss-table" hx-trigger="click delay:1s" hx-swap="innerHTML show:#top-scroll:top" hx-get="/refresh-calc" value="{identifier}_{next_strike}_{value}">{value}</a></td>'
+                    # HTMX link to refresh the table
+                    html += f'<td><a class="strike-select" href=".top" onclick="getUserInput(this)" hx-target="#profit-loss-table" hx-trigger="click delay:1.2s" hx-swap="innerHTML show:#top-scroll:top" hx-get="/refresh-calc" value="{identifier}_{next_strike}_{value}">{value}</a></td>'
 
                 else:
                     html += f'<td><b>{value}</b></td>'
