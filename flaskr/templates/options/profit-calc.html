@@ -63,6 +63,9 @@
                     <input class="text-input" placeholder="auto" name="lower_bound" id="lower_bound" value="{{ lower_bound }}" style="width: 75px">
                     <span> - </span>
                     <input class="text-input" placeholder="auto" name="upper_bound" id="upper_bound" value="{{ upper_bound }}" style="width: 75px">
+                    {% if show_div == True %}
+                        <p>*Adjust price range and re-select an option to refresh</p>
+                    {% endif %}
             </div>
 
             {# Buy/Write Selection #}
@@ -93,42 +96,6 @@
             <p style="font-style: italic;">Select an option below:</p>
         {% endif %}
 
-        <script type="text/javascript">
-            // Get clicked strike price
-            function getUserInput(a){
-                var symbol = document.getElementById("symbol").value;
-                var strike = a.getAttribute("value");
-                var expiry = document.getElementById("expiry").value;
-                var price = document.getElementById("price").value;
-                var lower_bound = document.getElementById("lower_bound").value;
-                var upper_bound = document.getElementById("upper_bound").value;
-                var buy_write = document.querySelector('input[name="buy_write"]:checked').value;
-
-                
-                console.log("AJAX REQUEST");
-                console.log("Symbol:", symbol);
-                console.log("Strike:", strike);
-                console.log("Expiry:", expiry);
-                console.log("Price:", price);
-                console.log("Lower bound:", lower_bound);
-                console.log("Upper bound:", upper_bound);
-                console.log("Buy/Write:", buy_write);
-
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url_for('options.profit_calc') }}",
-                    contentType: 'application/json', 
-                    data: JSON.stringify({'symbol': symbol, 'strike': strike, 'expiry': expiry, 'price': price , 'lower_bound': lower_bound, 'upper_bound': upper_bound, 'buy_write': buy_write}), 
-                    success: function(data){
-                        console.log("");
-                    }
-                });
-            }
-        </script>
-
-        {# Remove profit loss table if new date selected #}
-
-
     </form>
 
     {# Show tables #}
@@ -153,6 +120,38 @@
 
     </div>
 
+    <script type="text/javascript">
+        // Get clicked strike price and form data
+        function getUserInput(a){
+            var symbol = document.getElementById("symbol").value;
+            var strike = a.getAttribute("value");
+            var expiry = document.getElementById("expiry").value;
+            var price = document.getElementById("price").value;
+            var lower_bound = document.getElementById("lower_bound").value;
+            var upper_bound = document.getElementById("upper_bound").value;
+            var buy_write = document.querySelector('input[name="buy_write"]:checked').value;
 
+            
+            console.log("AJAX REQUEST");
+            console.log("Symbol:", symbol);
+            console.log("Strike:", strike);
+            console.log("Expiry:", expiry);
+            console.log("Price:", price);
+            console.log("Lower bound:", lower_bound);
+            console.log("Upper bound:", upper_bound);
+            console.log("Buy/Write:", buy_write);
+
+            // Send data to options.py file for profit calculation
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('options.profit_calc') }}",
+                contentType: 'application/json', 
+                data: JSON.stringify({'symbol': symbol, 'strike': strike, 'expiry': expiry, 'price': price , 'lower_bound': lower_bound, 'upper_bound': upper_bound, 'buy_write': buy_write}), 
+                success: function(data){
+                    console.log("");
+                }
+            });
+        }
+    </script>
 
 {% endblock %}

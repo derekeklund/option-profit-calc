@@ -124,6 +124,14 @@ li:hover {
     background-color: #111;
 }
 
+.sticky{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+}
+
 .text-input {
     padding: 5px;
     margin: 5px;
@@ -346,6 +354,7 @@ legend {
 
 .pl-td {
     position: relative;
+    cursor: pointer;
 }
 
 .pl-td .highlight-cell {

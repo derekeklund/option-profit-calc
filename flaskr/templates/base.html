@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <nav>
+    <nav class="nav" id="navbar">
         <ul>
             <li class="float-left"><a class="active" href="{{ url_for('blog.index') }}">Home</a></li>
             <li class="float-left"><a class="action" href="{{ url_for('options.scanner') }}">Scanner</a></li>
@@ -33,5 +33,21 @@
         {% endfor %}
         {% block content %}{% endblock %}
     </section>
+
+    <script>
+        // Sticky navbar on page Y-axis scroll
+        window.onscroll = function() {myFunction()};
+
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {
+                navbar.classList.add("sticky")
+            } else {
+                navbar.classList.remove("sticky");
+            }
+        }
+    </script>
 </body>
 </html>
