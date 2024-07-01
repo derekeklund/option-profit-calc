@@ -190,14 +190,36 @@ def profit_calc():
             days_to_expiry_list = list(reversed(days_to_expiry_list))
             days_to_expiry_list.append(0)
 
-            print("Days to expiry list:", days_to_expiry_list)
+            # print("********\n days_to_expiry :", days_to_expiry)
 
-            # If the number of days to expiry is over 15, remove every other day
-            '''https://pandas.pydata.org/docs/user_guide/indexing.html'''
-            if days_to_expiry > 15:
-                days_to_expiry_list = days_to_expiry_list[::2]
-            if days_to_expiry > 30:
-                days_to_expiry_list = days_to_expiry_list[::3]
+            price_range = upper_bound - lower_bound
+
+            # print("Price range:", price_range)
+
+            # If dataframe gets too big, calculate a slice factor to limit the number of table cells to ~400
+            if days_to_expiry * price_range > 400:
+                slice_factor = round(days_to_expiry / 20)
+
+                # print("Slice factor:", slice_factor)
+
+                # If user selects a wide price range, increase the slice factor
+                '''Next step: do the slicing on the rows instead of the columns to keep the number of columns constant'''
+                if price_range > 20:
+                    range_factor = round(price_range / 10)
+
+                    # print("Range factor:", range_factor)
+
+                    slice_factor = slice_factor * range_factor
+
+                    # print("New slice factor:", slice_factor)
+
+                days_to_expiry_list = days_to_expiry_list[::slice_factor]
+
+                
+
+            # if days_to_expiry_list doesn't have 0, add it
+            if 0 not in days_to_expiry_list:
+                days_to_expiry_list.append(0)
 
             # Make dataframe with possible profit/loss scenarios
             expiration_price_range = range(lower_bound, upper_bound, 1)
@@ -224,9 +246,9 @@ def profit_calc():
 
             df_profit_loss.columns = pd.MultiIndex.from_product([[upper_header], df_profit_loss.columns])
 
-            print("profit loss table columns:", df_profit_loss.columns)
+            # print("profit loss table columns:", df_profit_loss.columns)
 
-            print("Profit loss table:", df_profit_loss)
+            # print("Profit loss table:", df_profit_loss)
 
             def calculate_profit(option_value, initial_strike_value):
                 profit = round(option_value - initial_strike_value, 2)
