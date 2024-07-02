@@ -45,5 +45,8 @@ def create_app(test_config=None):
 
     from . import options
     app.register_blueprint(options.bp)
+
+    from . import stocks
+    app.register_blueprint(stocks.bp)
     
     return app

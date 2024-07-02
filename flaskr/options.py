@@ -137,8 +137,6 @@ def profit_calc():
         buy_write = get_buy_write()
         print("Buy write:", buy_write)
 
-
-
         try:
             json_values = request.get_json()
 
@@ -341,8 +339,6 @@ def profit_calc():
 
             # Styled one
             session['profit_loss_table'] = html_pl
-
-            
 
         
         else:

@@ -438,3 +438,10 @@ legend {
 .p-101 {
     background-color: #ff0000;
 }
+
+/* Watchlist */
+
+.working-block {
+    width: 70%;
+    margin: 0 auto;
+}

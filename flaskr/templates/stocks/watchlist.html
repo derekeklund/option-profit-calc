@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+
+    <br>
+    <br>
+    <br>
+
+    <div class="working-block">
+
+        <h1 class="working-block">Watchlist ({{ time }})</h1>
+
+        <br>
+        <br>
+
+        {% for ticker in prices_dict %}
+        
+            <div>
+                <button class="button"> + {{ ticker }}</button>
+                <span>${{ prices_dict[ticker] }}</span>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
