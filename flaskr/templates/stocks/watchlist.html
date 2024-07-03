@@ -17,14 +17,38 @@
         <br>
         <br>
 
-        {% for ticker in prices_dict %}
-        
-            <div>
-                <button class="button"> + {{ ticker }}</button>
-                <span>${{ prices_dict[ticker] }}</span>
-            </div>
+        <form method="POST">
 
-        {% endfor %}
+            {% for ticker in prices_dict %}
+            
+                <div>
+
+                    {# <button class="button"> + {{ ticker }}</button> #}
+                    <input class="button" name="ticker" type="submit" value=" + {{ ticker }}">
+                    
+                    <span>${{ prices_dict[ticker]['price'] }}</span>
+                    {% if prices_dict[ticker]['change'] > 0 %}
+                        <span style="color: green; font-weight: bold;">{{ prices_dict[ticker]['change'] }}%</span>
+                    {% else %}
+                        <span style="color: red; font-weight: bold;">({{ prices_dict[ticker]['change'] }}%)</span>
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </form>
+
+        <div class="working-block">
+        <br>
+        <br>
+
+        <p>Added ticker: {{ added_ticker }}</p>
+        
+        
+        </div>
+
+        
 
     </div>
 
