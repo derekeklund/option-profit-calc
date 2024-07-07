@@ -12,13 +12,19 @@ from datetime import datetime
 import time
 from flaskr.db import get_db
 from flaskr.auth import login_required
+from flaskr.helpers import get_watchlist
 
 
 # https://ibkrcampus.com/ibkr-quant-news/yfinance-library-a-complete-guide/
 # https://www.highcharts.com/docs/index
 @bp.route('/watchlist', methods=('GET', 'POST'))
+@login_required
 def watchlist():
-    print("watchlist")
+    print("Watchlist route")
+
+    # Get the user's watchlist
+    user_id = g.user['id']
+    watchlist = get_watchlist(user_id)
 
     tickers = ['SPY', 'QQQ', 'NVDA']
 
@@ -49,21 +55,60 @@ def watchlist():
         print("GET method")
 
 
-        return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time)
+        return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, watchlist=watchlist)
     
     if request.method == 'POST':
         print("POST method")
 
-        # Get the ticker that was clicked on from the form
-        added_ticker = request.form['ticker']
+        try:
+            # Get the ticker that was clicked on from the form
+            added_ticker = request.form['ticker']
 
-        # Remove the + sign and whitespace
-        added_ticker = added_ticker.replace("+", "").strip()
+            # Remove the + sign and whitespace
+            added_ticker = added_ticker.replace("+", "").strip()
 
-        print("added_ticker: ", added_ticker)
+            print("added_ticker: ", added_ticker)
 
-        # Add the ticker to user tables favorites column in database
+            # Add the ticker to favorites table in database
+            error = None
 
+            db = get_db()
 
-        return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, added_ticker=added_ticker)
+            # Check if the ticker is already in the favorites table
+            # Why come this won't work?
+            if db.execute(
+                'SELECT id FROM favorites WHERE ticker = ? AND user_id = ?', (added_ticker, g.user['id'])
+            ).fetchone() is not None:
+                print("Yup")
+                error = 'Ticker is already in your watchlist.'
+
+            if error is not None:
+                flash(error)
+            else:
+                db.execute(
+                    'INSERT INTO favorites (ticker, user_id)'
+                    ' VALUES (?, ?)',
+                    (added_ticker, g.user['id'])
+                )
+                db.commit()
+
+            watchlist = get_watchlist(user_id)
+
+            return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, added_ticker=added_ticker, watchlist=watchlist)
+
+        except:
+            removed_ticker = request.form['remove-ticker']
+            print("removed_ticker: ", removed_ticker)
+
+            db = get_db()
+            db.execute(
+                'DELETE FROM favorites WHERE ticker = ? AND user_id = ?', (removed_ticker, g.user['id'])
+            )
+            db.commit()
+
+            watchlist = get_watchlist(user_id)
+
+            return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, watchlist=watchlist)
+
+        
 

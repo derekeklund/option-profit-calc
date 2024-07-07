@@ -150,6 +150,16 @@ li:hover {
     cursor: pointer;
 }
 
+.gray-button {
+    background-color: #9d9194;
+    color: white;
+    padding: 5px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .strike-select {
     color: #377ba8;
     font-style: italic;
@@ -444,4 +454,49 @@ legend {
 .working-block {
     width: 70%;
     margin: 0 auto;
+}
+
+.watchlist-sidebar {
+    display: flex;
+    flex-direction: column;
+    min-width: 350px;
+}
+
+.sidebar-item {
+    display: flex;
+    margin: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    text-align: center;
+    border: 1px solid #ccc;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.watchlist-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.watchlist-item {
+    flex: 1 1 auto;
+    margin: 10px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+.green-triangle {
+    display: inline-block;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 15px solid rgb(0, 200, 5);
+}
+
+.red-triangle {
+    display: inline-block;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 15px solid rgb(243, 48, 48);
 }

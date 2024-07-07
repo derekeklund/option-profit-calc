@@ -6,24 +6,25 @@
 
 {% block content %}
 
+<form method="POST">
+
     <br>
     <br>
     <br>
 
-    <div class="working-block">
+    <div class="watchlist-container">
+
+    <div class="watchlist-item">
 
         <h1 class="working-block">Watchlist ({{ time }})</h1>
 
         <br>
         <br>
 
-        <form method="POST">
-
             {% for ticker in prices_dict %}
-            
+
                 <div>
 
-                    {# <button class="button"> + {{ ticker }}</button> #}
                     <input class="button" name="ticker" type="submit" value=" + {{ ticker }}">
                     
                     <span>${{ prices_dict[ticker]['price'] }}</span>
@@ -37,19 +38,44 @@
 
             {% endfor %}
 
-        </form>
+    </div>
 
-        <div class="working-block">
-        <br>
-        <br>
+    <div class="watchlist-sidebar">
 
-        <p>Added ticker: {{ added_ticker }}</p>
-        
-        
+        <div class="sidebar-item">
+            {# Search for ticker. Needs adjustment #}
+            <div class="flex-item vertical-center">
+                <label for="symbol">Add Company</label>
+                <input class="text-input" name="symbol" placeholder="ABC" id="symbol" value="{{ request.form['symbol'] }}" style="text-transform:uppercase">
+                <button class="button" type="submit" value="Add">Add</button>
+            </div>
         </div>
+                    
+        {% for ticker in watchlist %}
 
-        
+            <div class="sidebar-item">
+                <div>{{ ticker }}</div>
+                
+                <div>${{ prices_dict[ticker]['price'] }}</div>
+                {% if prices_dict[ticker]['change'] > 0 %}
+                    <div class="green-triangle"></div>
+                    <div style="color: green; font-weight: bold;">{{ prices_dict[ticker]['change'] }}%</div>
+                {% else %}
+                    <div class="red-triangle"></div>
+                    <div style="color: red; font-weight: bold;">{{ prices_dict[ticker]['change'] }}%</div>
+                {% endif %}
+                
+                
+
+                <button class="gray-button" name="remove-ticker" value="{{ ticker }}"> x </button>
+            </div>
+
+        {% endfor %}
 
     </div>
+
+    </div>
+
+</form>
 
 {% endblock %}

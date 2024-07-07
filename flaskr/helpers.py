@@ -36,3 +36,15 @@ def get_buy_write():
 
     return buy_write
 
+
+def get_watchlist(user_id):
+    db = get_db()
+    results = db.execute(
+        'SELECT ticker FROM favorites WHERE user_id = ?', (user_id,)
+    ).fetchall()
+    db.commit()
+
+    watchlist = [row['ticker'] for row in results]
+
+    return watchlist
+
