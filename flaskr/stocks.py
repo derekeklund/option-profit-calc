@@ -26,33 +26,46 @@ def watchlist():
     user_id = g.user['id']
     watchlist = get_watchlist(user_id)
 
-    tickers = ['SPY', 'QQQ', 'NVDA']
+    # Get tickers for the stocks we want to track
+    print("Watchlist: ", watchlist)
 
-    prices_dict = {}
+    # tickers = ['SPY', 'QQQ', 'NVDA', 'BABA']
 
-    for t in tickers:
+    # Input list of tickers to get prices dict
+    def get_prices_dict(watchlist):
 
-        # Get SPY stock price
-        prices = yf.Ticker(t)
+        prices_dict = {}
 
-        # Get previous couple day's prices
-        historical_prices = prices.history(period="5d", interval="1d")
+        for t in watchlist:
 
-        # Get latest price, % change, and time (AM/PM format)
-        latest_price = historical_prices['Close'].iloc[-1].round(2)
-        day_before = historical_prices['Close'].iloc[-2].round(2)
+            # Get SPY stock price
+            prices = yf.Ticker(t)
 
-        change = ((latest_price - day_before) * 100 / day_before).round(2)
+            # Get previous couple day's prices
+            historical_prices = prices.history(period="5d", interval="1d")
 
-        time = historical_prices.index[-1].strftime('%I:%M %p')
+            # Get latest price, % change, and time (AM/PM format)
+            latest_price = historical_prices['Close'].iloc[-1].round(2)
+            day_before = historical_prices['Close'].iloc[-2].round(2)
 
-        # Add price and percent change to nested dictionary
-        prices_dict[t] = {}
-        prices_dict[t]['price'] = latest_price
-        prices_dict[t]['change'] = change
+            change = ((latest_price - day_before) * 100 / day_before).round(2)
 
+            # time = historical_prices.index[-1].strftime('%I:%M %p')
+
+            # Add price and percent change to nested dictionary
+            prices_dict[t] = {}
+            prices_dict[t]['price'] = latest_price
+            prices_dict[t]['change'] = change
+
+        return prices_dict
+
+
+    prices_dict = get_prices_dict(watchlist)
+    
     if request.method == 'GET':
         print("GET method")
+
+        print("prices_dict: ", prices_dict)
 
 
         return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, watchlist=watchlist)
@@ -60,12 +73,15 @@ def watchlist():
     if request.method == 'POST':
         print("POST method")
 
-        try:
+        if request.form['ticker'] != '':
             # Get the ticker that was clicked on from the form
             added_ticker = request.form['ticker']
 
             # Remove the + sign and whitespace
-            added_ticker = added_ticker.replace("+", "").strip()
+            # added_ticker = added_ticker.replace("+", "").strip()
+
+            # Make uppercase
+            added_ticker = added_ticker.upper()
 
             print("added_ticker: ", added_ticker)
 
@@ -93,10 +109,11 @@ def watchlist():
                 db.commit()
 
             watchlist = get_watchlist(user_id)
+            prices_dict = get_prices_dict(watchlist)
 
-            return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, added_ticker=added_ticker, watchlist=watchlist)
+            return render_template('stocks/watchlist.html', prices_dict=prices_dict, added_ticker=added_ticker, watchlist=watchlist)
 
-        except:
+        else:
             removed_ticker = request.form['remove-ticker']
             print("removed_ticker: ", removed_ticker)
 
@@ -107,8 +124,9 @@ def watchlist():
             db.commit()
 
             watchlist = get_watchlist(user_id)
+            prices_dict = get_prices_dict(watchlist)
 
-            return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, watchlist=watchlist)
+            return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist)
 
         
 

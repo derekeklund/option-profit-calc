@@ -5,7 +5,10 @@
 -- DROP TABLE IF EXISTS user;
 -- DROP TABLE IF EXISTS post;
 -- DROP TABLE IF EXISTS company_info;
-DROP TABLE IF EXISTS favorites;
+-- DROP TABLE IF EXISTS favorites;
+
+-- DELETE FROM favorites WHERE ticker = 'aapl';
+DELETE FROM favorites WHERE id = 31;
 
 
 CREATE TABLE IF NOT EXISTS user (
