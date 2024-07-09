@@ -29,8 +29,6 @@ def watchlist():
     # Get tickers for the stocks we want to track
     print("Watchlist: ", watchlist)
 
-    # tickers = ['SPY', 'QQQ', 'NVDA', 'BABA']
-
     # Input list of tickers to get prices dict
     def get_prices_dict(watchlist):
 
@@ -61,6 +59,16 @@ def watchlist():
 
 
     prices_dict = get_prices_dict(watchlist)
+
+    # Just for MSFT atm, get the business summary, etc. 
+    current_company = yf.Ticker('MSFT')
+    company_info = current_company.info
+
+    print("company_info: ", company_info['shortName'])
+
+    company_summary = company_info['longBusinessSummary']
+
+
     
     if request.method == 'GET':
         print("GET method")
@@ -68,7 +76,7 @@ def watchlist():
         print("prices_dict: ", prices_dict)
 
 
-        return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, watchlist=watchlist)
+        return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, watchlist=watchlist, company_info=company_info)
     
     if request.method == 'POST':
         print("POST method")

@@ -8,7 +8,7 @@
 -- DROP TABLE IF EXISTS favorites;
 
 -- DELETE FROM favorites WHERE ticker = 'aapl';
-DELETE FROM favorites WHERE id = 31;
+-- DELETE FROM favorites WHERE id = 31;
 
 
 CREATE TABLE IF NOT EXISTS user (

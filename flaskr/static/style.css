@@ -451,9 +451,20 @@ legend {
 
 /* Watchlist */
 
-.working-block {
-    width: 70%;
-    margin: 0 auto;
+.page-container {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+}
+
+.financial-summary {
+    flex: 1;
+    /* min-height: 300px; */
+    margin: 10px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    text-align: center;
+    border: 1px solid #ccc;
 }
 
 .watchlist-sidebar {
@@ -474,6 +485,7 @@ legend {
 }
 
 .watchlist-container {
+    flex: 2;
     display: flex;
     justify-content: space-between;
 }
@@ -500,3 +512,6 @@ legend {
     border-right: 8px solid transparent;
     border-top: 15px solid rgb(243, 48, 48);
 }
+
+
+
