@@ -79,9 +79,99 @@
     {# Bottom section #}
     <div class="financial-summary">
 
-        {{ company_info['shortName'] }}
-
-
+        <table class="summary-table">
+            <tbody>
+                <tr>
+                    <td class="td-label">Name</td>
+                    <td>{{ company_info['shortName'] }}</td>
+                    <td class="td-label">Revenue</td>
+                    <td>{{ company_info['totalRevenue'] }}</td>
+                    <td class="td-label">Current Price</td>
+                    <td>{{ company_info['currentPrice'] }}</td>
+                    <td class="td-label">Trailing PE</td>
+                    <td>{{ company_info['trailingPE'] }}</td>
+                    <td class="td-label">Price to Book</td>
+                    <td>{{ company_info['priceToBook'] }}</td>
+                    <td class="td-label">Return on Assets</td>
+                    <td>{{ company_info['returnOnAssets'] }}</td>
+                </tr>
+                {# Second Row #}
+                <tr>
+                    <td class="td-label">Symbol</td>
+                    <td>{{ company_info['symbol'] }}</td>
+                    <td class="td-label">Net Income</td>
+                    <td>{{ company_info['netIncomeToCommon'] }}</td>
+                    <td class="td-label">Target Price (Mean)</td>
+                    <td>{{ company_info['targetMeanPrice'] }}</td>
+                    <td class="td-label">Forward PE</td>
+                    <td>{{ company_info['forwardPE'] }}</td>
+                    <td class="td-label">Debt to Equity</td>
+                    <td>{{ company_info['debtToEquity'] }}</td>
+                    <td class="td-label">Operating Cash Flow</td>
+                    <td>{{ company_info['operatingCashflow'] }}</td>
+                </tr>
+                {# Third Row #}
+                <tr>
+                    <td class="td-label">Location</td>
+                    <td>{{ company_info['city'] }}, {{ company_info['state'] }}</td>
+                    <td class="td-label">Free Cash Flow</td>
+                    <td>{{ company_info['freeCashflow'] }}</td>
+                    <td class="td-label">52 Week Low</td>
+                    <td>{{ company_info['fiftyTwoWeekLow'] }}</td>
+                    <td class="td-label">PEG Ratio</td>
+                    <td>{{ company_info['pegRatio'] }}</td>
+                    <td class="td-label">Revenue Per Share</td>
+                    <td>{{ company_info['revenuePerShare'] }}</td>
+                    <td class="td-label">EBITDA</td>
+                    <td>{{ company_info['ebitda'] }}</td>
+                </tr>
+                {# Fourth Row #}
+                <tr>
+                    <td class="td-label">Sector</td>
+                    <td>{{ company_info['sector'] }}</td>
+                    <td class="td-label">Total Debt</td>
+                    <td>{{ company_info['totalDebt'] }}</td>
+                    <td class="td-label">52 Week High</td>
+                    <td>{{ company_info['fiftyTwoWeekHigh'] }}</td>
+                    <td class="td-label">Trailing EPS</td>
+                    <td>{{ company_info['trailingEps'] }}</td>
+                    <td class="td-label">Price to Sales</td>
+                    <td>{{ company_info['priceToSalesTrailing12Months'] }}</td>
+                    <td class="td-label">Revenue Growth (YoY)</td>
+                    <td>{{ company_info['revenueGrowth'] }}</td>
+                </tr>
+                {# Fifth Row #}
+                <tr>
+                    <td class="td-label">Industry</td>
+                    <td>{{ company_info['industry'] }}</td>
+                    <td class="td-label">Shares Outstanding</td>
+                    <td>{{ company_info['sharesOutstanding'] }}</td>
+                    <td class="td-label">52 Week Change</td>
+                    <td>{{ company_info['52WeekChange'] }}</td>
+                    <td class="td-label">Forward EPS</td>
+                    <td>{{ company_info['forwardEps'] }}</td>
+                    <td class="td-label">Profit Margin</td>
+                    <td>{{ company_info['profitMargins'] }}</td>
+                    <td class="td-label">Earnings Growth (YoY)</td>
+                    <td>{{ company_info['earningsGrowth'] }}</td>
+                </tr>
+                {# Sixth Row #}
+                <tr>
+                    <td class="td-label">Market Cap</td>
+                    <td>{{ company_info['marketCap'] }}</td>
+                    <td class="td-label">Return on Equity</td>
+                    <td>{{ company_info['returnOnEquity'] }}</td>
+                    <td class="td-label">Quick Ratio</td>
+                    <td>{{ company_info['quickRatio'] }}</td>
+                    <td class="td-label">Beta</td>
+                    <td>{{ company_info['beta'] }}</td>
+                    <td class="td-label">Cash per Share</td>
+                    <td>{{ company_info['totalCashPerShare'] }}</td>
+                    <td class="td-label">Short Percent of Float</td>
+                    <td>{{ company_info['shortPercentOfFloat'] }}</td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
 

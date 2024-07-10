@@ -61,7 +61,7 @@ def watchlist():
     prices_dict = get_prices_dict(watchlist)
 
     # Just for MSFT atm, get the business summary, etc. 
-    current_company = yf.Ticker('MSFT')
+    current_company = yf.Ticker('AMZN')
     company_info = current_company.info
 
     print("company_info: ", company_info['shortName'])

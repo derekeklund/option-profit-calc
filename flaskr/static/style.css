@@ -513,5 +513,10 @@ legend {
     border-top: 15px solid rgb(243, 48, 48);
 }
 
+.summary-table tbody tr td {
+    border: 1px solid #ccc;
+}
 
-
+.td-label {
+    font-weight: bold;
+}
