@@ -20,14 +20,14 @@ from flaskr.helpers import get_watchlist
 @bp.route('/watchlist', methods=('GET', 'POST'))
 @login_required
 def watchlist():
-    print("Watchlist route")
+    # print("Watchlist route")
 
     # Get the user's watchlist
     user_id = g.user['id']
     watchlist = get_watchlist(user_id)
 
     # Get tickers for the stocks we want to track
-    print("Watchlist: ", watchlist)
+    # print("Watchlist: ", watchlist)
 
     # Input list of tickers to get prices dict
     def get_prices_dict(watchlist):
@@ -64,16 +64,11 @@ def watchlist():
     current_company = yf.Ticker('AMZN')
     company_info = current_company.info
 
-    print("company_info: ", company_info['shortName'])
-
-    company_summary = company_info['longBusinessSummary']
-
-
     
     if request.method == 'GET':
         print("GET method")
 
-        print("prices_dict: ", prices_dict)
+        # session.clear()
 
 
         return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, watchlist=watchlist, company_info=company_info)
@@ -81,14 +76,44 @@ def watchlist():
     if request.method == 'POST':
         print("POST method")
 
-        if request.form['ticker'] != '':
+        # Get the form keys
+        form_keys = request.form.keys()
+        form_keys = list(form_keys)
+
+        print("Form keys: ", form_keys)
+
+        if request.form['add-ticker'] != '':
+            user_action = 'add_ticker'
+        elif 'summary' in form_keys:
+            user_action = 'summary'
+        elif 'remove-ticker' in form_keys:
+            user_action = 'remove_ticker'
+        else:
+            user_action = 'unknown'
+        
+
+        # If the user clicked on a ticker to see the financials
+        if user_action == 'summary':
+            print("User action is summary")
+
             # Get the ticker that was clicked on from the form
-            added_ticker = request.form['ticker']
+            summary_ticker = request.form['summary']
 
-            # Remove the + sign and whitespace
-            # added_ticker = added_ticker.replace("+", "").strip()
+            session['summary_ticker'] = summary_ticker
 
-            # Make uppercase
+            # Get the company info
+            current_company = yf.Ticker(summary_ticker)
+            company_info = current_company.info
+
+            return render_template('stocks/watchlist.html', prices_dict=prices_dict, watchlist=watchlist, company_info=company_info)
+
+
+        # If the user added a ticker to the watchlist
+        if user_action == 'add_ticker':
+            print("User action is add_ticker")
+
+            # Get the ticker that was clicked on from the form
+            added_ticker = request.form['add-ticker']
             added_ticker = added_ticker.upper()
 
             print("added_ticker: ", added_ticker)
@@ -99,13 +124,12 @@ def watchlist():
             db = get_db()
 
             # Check if the ticker is already in the favorites table
-            # Why come this won't work?
             if db.execute(
                 'SELECT id FROM favorites WHERE ticker = ? AND user_id = ?', (added_ticker, g.user['id'])
             ).fetchone() is not None:
-                print("Yup")
                 error = 'Ticker is already in your watchlist.'
 
+            # If not, add to the favorites table
             if error is not None:
                 flash(error)
             else:
@@ -119,9 +143,24 @@ def watchlist():
             watchlist = get_watchlist(user_id)
             prices_dict = get_prices_dict(watchlist)
 
-            return render_template('stocks/watchlist.html', prices_dict=prices_dict, added_ticker=added_ticker, watchlist=watchlist)
+            # Try to get session ticker if there is one (else, SPY is default)
+            try:
+                summary_ticker = session['summary_ticker']
+                # Get the company info
+                current_company = yf.Ticker(summary_ticker)
+                company_info = current_company.info
+            except:
+                summary_ticker = None
+                # Get the company info
+                current_company = yf.Ticker('SPY')
+                company_info = current_company.info
 
-        else:
+            return render_template('stocks/watchlist.html', prices_dict=prices_dict, added_ticker=added_ticker, watchlist=watchlist, company_info=company_info)
+
+        # If the user removed a ticker from the watchlist
+        elif user_action == 'remove_ticker':
+            print("User action is remove_ticker")
+
             removed_ticker = request.form['remove-ticker']
             print("removed_ticker: ", removed_ticker)
 
@@ -134,7 +173,19 @@ def watchlist():
             watchlist = get_watchlist(user_id)
             prices_dict = get_prices_dict(watchlist)
 
-            return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist)
+            # Try to get session ticker if there is one (else, SPY is default)
+            try:
+                summary_ticker = session['summary_ticker']
+                # Get the company info
+                current_company = yf.Ticker(summary_ticker)
+                company_info = current_company.info
+            except:
+                summary_ticker = None
+                # Get the company info
+                current_company = yf.Ticker('SPY')
+                company_info = current_company.info
+
+            return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist, company_info=company_info)
 
         
 

@@ -19,26 +19,7 @@
 
         <div class="watchlist-item">
 
-            <!--
 
-                {% for ticker in prices_dict %}
-
-                    <div>
-
-                        <input class="button" name="ticker" type="submit" value=" + {{ ticker }}">
-                        
-                        <span>${{ prices_dict[ticker]['price'] }}</span>
-                        {% if prices_dict[ticker]['change'] > 0 %}
-                            <span style="color: green; font-weight: bold;">{{ prices_dict[ticker]['change'] }}%</span>
-                        {% else %}
-                            <span style="color: red; font-weight: bold;">({{ prices_dict[ticker]['change'] }}%)</span>
-                        {% endif %}
-
-                    </div>
-
-                {% endfor %}
-
-                -->
 
         </div>
 
@@ -48,7 +29,9 @@
             <div class="sidebar-item">
                 <div class="flex-item vertical-center">
                     <label for="symbol">Add Company</label>
-                    <input class="text-input" name="ticker" placeholder="ABC" id="symbol" value="{{ ticker }}" style="text-transform:uppercase">
+                    <input class="text-input" name="add-ticker" placeholder="ABC" id="symbol" value="{{ ticker }}" style="text-transform:uppercase">
+                    
+                    {# Add ticker to watchlist #}
                     <button class="button" type="submit">Add</button>
                 </div>
             </div>
@@ -56,7 +39,9 @@
             {% for ticker in watchlist %}
 
                 <div class="sidebar-item">
-                    <div>{{ ticker }}</div>
+
+                    {# Click to view summary #}
+                    <button class="fake-link" name="summary" type="submit" value="{{ ticker }}">{{ ticker }}</button>
                     
                     <div>${{ prices_dict[ticker]['price'] }}</div>
                     {% if prices_dict[ticker]['change'] > 0 %}
@@ -67,7 +52,9 @@
                         <div style="color: red; font-weight: bold;">{{ prices_dict[ticker]['change'] }}%</div>
                     {% endif %}
 
-                    <button class="gray-button" name="remove-ticker" value="{{ ticker }}"> x </button>
+                    {# Remove ticker from watchlist #}
+                    <button class="gray-button" name="remove-ticker" type="submit" value="{{ ticker }}"> x </button>
+
                 </div>
 
             {% endfor %}
