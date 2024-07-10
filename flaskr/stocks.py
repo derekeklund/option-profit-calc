@@ -68,8 +68,6 @@ def watchlist():
     if request.method == 'GET':
         print("GET method")
 
-        # session.clear()
-
 
         return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, watchlist=watchlist, company_info=company_info)
     
