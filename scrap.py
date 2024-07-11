@@ -1,14 +1,17 @@
 import yfinance as yf
+# from datetime import datetime
 
 # Get financial data from ticker
 ticker = yf.Ticker('MSFT')
 
-# print(ticker.info)
+# Get last 30 days of prices
+hist = ticker.history(period='1mo')
 
-for key, value in ticker.info.items():
-    print(key, ":", value)
+labels = hist.index
+values = hist['Close']
 
+labels = [str(label.date()) for label in labels]
+values = [value for value in values]
 
-# print business summary
-print(ticker.info['longBusinessSummary'])
-
+print(labels)
+print(values)

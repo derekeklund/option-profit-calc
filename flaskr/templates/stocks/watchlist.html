@@ -17,9 +17,44 @@
     {# Top section #}
     <div class="watchlist-container">
 
-        <div class="watchlist-item">
+        <div class="chart-container">
+            <div>
+                {{ company_info['shortName'] }} ({{ company_info['symbol'] }})
+            </div>
 
+            {# https://www.youtube.com/watch?v=E2hytuQvLlE #}
+            <div class="chart">
+                <canvas id="stockChart" width="200" height="100"></canvas>
+            </div>
 
+            {# {{ labels }}
+            {{ values }} #}
+
+            <script>
+
+                const ctx = document.getElementById('stockChart').getContext('2d');
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                    labels: {{ labels | safe }},
+                    datasets: [{
+                        label: 'Stock Price',
+                        data: {{ values | safe }},
+                        borderWidth: 1
+                    }]
+                    },
+                    options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                    }
+                });
+            </script>
+
+            
 
         </div>
 
@@ -30,7 +65,7 @@
                 <div class="flex-item vertical-center">
                     <label for="symbol">Add Company</label>
                     <input class="text-input" name="add-ticker" placeholder="ABC" id="symbol" value="{{ ticker }}" style="text-transform:uppercase">
-                    
+
                     {# Add ticker to watchlist #}
                     <button class="button" type="submit">Add</button>
                 </div>

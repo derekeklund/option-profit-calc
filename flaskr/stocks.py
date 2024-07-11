@@ -61,16 +61,69 @@ def watchlist():
     prices_dict = get_prices_dict(watchlist)
 
     # Just for MSFT atm, get the business summary, etc. 
-    current_company = yf.Ticker('AMZN')
+    current_company = yf.Ticker('SPY')
     company_info = current_company.info
 
+    # Chart stuff
+    # Get last 30 days of prices
+    hist = current_company.history(period='1mo')
+
+    labels = hist.index
+    values = hist['Close']
+
+    labels = [str(label.date()) for label in labels]
+    values = [value for value in values]
+
+    print(labels)
+    print(values)
+
+    # List of tuples (date, price)
+    # data = [
+    #     ("01-01-2024", 10),
+    #     ("01-02-2024", 20),
+    #     ("01-03-2024", 14),
+    #     ("01-04-2024", 15),
+    #     ("01-05-2024", 22),
+    #     ("01-06-2024", 23),
+    #     ("01-07-2024", 28),
+    #     ("01-08-2024", 24),
+    #     ("01-09-2024", 27),
+    #     ("01-10-2024", 30),
+    #     ("01-11-2024", 32),
+    #     ("01-12-2024", 33),
+    #     ("01-13-2024", 32),
+    #     ("01-14-2024", 35),
+    #     ("01-15-2024", 38),
+    #     ("01-16-2024", 40),
+    #     ("01-17-2024", 50),
+    #     ("01-18-2024", 47),
+    #     ("01-19-2024", 55),
+    #     ("01-20-2024", 59),
+    #     ("01-21-2024", 60),
+    #     ("01-22-2024", 53),
+    #     ("01-23-2024", 50),
+    #     ("01-24-2024", 58),
+    #     ("01-25-2024", 66),
+    #     ("01-26-2024", 69),
+    #     ("01-27-2024", 70),
+    #     ("01-28-2024", 80),
+    #     ("01-29-2024", 75),
+    #     ("01-30-2024", 90),
+    #     ("01-31-2024", 100),
+    # ]
+
+    # labels = [row[0] for row in data]
+    # values = [row[1] for row in data]
+
+    # print("labels: ", labels)
     
     if request.method == 'GET':
         print("GET method")
 
 
-        return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, watchlist=watchlist, company_info=company_info)
+        return render_template('stocks/watchlist.html', prices_dict=prices_dict, time=time, watchlist=watchlist, company_info=company_info, labels=labels, values=values)
     
+
     if request.method == 'POST':
         print("POST method")
 
@@ -153,7 +206,7 @@ def watchlist():
                 current_company = yf.Ticker('SPY')
                 company_info = current_company.info
 
-            return render_template('stocks/watchlist.html', prices_dict=prices_dict, added_ticker=added_ticker, watchlist=watchlist, company_info=company_info)
+            return render_template('stocks/watchlist.html', prices_dict=prices_dict, added_ticker=added_ticker, watchlist=watchlist, company_info=company_info, labels=labels, values=values)
 
         # If the user removed a ticker from the watchlist
         elif user_action == 'remove_ticker':
@@ -183,7 +236,7 @@ def watchlist():
                 current_company = yf.Ticker('SPY')
                 company_info = current_company.info
 
-            return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist, company_info=company_info)
+            return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist, company_info=company_info, labels=labels, values=values)
 
         
 
