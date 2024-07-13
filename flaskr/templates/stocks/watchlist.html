@@ -22,18 +22,37 @@
                 {{ company_info['shortName'] }} ({{ company_info['symbol'] }})
             </div>
 
-            {# https://www.youtube.com/watch?v=E2hytuQvLlE #}
+            {# Dropdown for time period selection #}
+            <div>
+                <label for="time-period">Time Period</label>
+                <select name="time-period" id="time-period" onchange="this.form.submit()">
+                    {% for period in time_periods %}
+                        <option value="{{ period }}" {% if period == selected_time_period %} selected {% endif %}>{{ period }}</option>
+                    {% endfor %}
+
+                    {# <option value="1d">1 Day</option>
+                    <option value="5d">5 Days</option>
+                    <option value="1mo">1 Month</option>
+                    <option value="3mo">3 Months</option>
+                    <option value="6mo">6 Months</option>
+                    <option value="1y">1 Year</option>
+                    <option value="2y">2 Years</option>
+                    <option value="5y">5 Years</option>
+                    <option value="max">Max</option> #}
+                </select>
+            </div>
+
+
+
+            {# Canvas for stock chart #}
             <div class="chart">
                 <canvas id="stockChart" width="200" height="100"></canvas>
             </div>
 
-            {# {{ labels }}
-            {{ values }} #}
+            
 
             <script>
-
                 const ctx = document.getElementById('stockChart').getContext('2d');
-
                 new Chart(ctx, {
                     type: 'line',
                     data: {
