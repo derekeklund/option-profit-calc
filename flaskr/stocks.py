@@ -9,7 +9,6 @@ bp = Blueprint('stocks', __name__)
 import yfinance as yf
 import pandas as pd
 from datetime import datetime
-import time
 from flaskr.db import get_db
 from flaskr.auth import login_required
 from flaskr.helpers import get_watchlist
@@ -20,14 +19,11 @@ from flaskr.helpers import get_watchlist
 @bp.route('/watchlist', methods=('GET', 'POST'))
 @login_required
 def watchlist():
-    # print("Watchlist route")
+    print("In watchlist route")
 
     # Get the user's watchlist
     user_id = g.user['id']
     watchlist = get_watchlist(user_id)
-
-    # Default ticker for chart
-    session['summary_ticker'] = 'SPY'
 
     # Input list of tickers to get prices dict
     def get_prices_dict(watchlist):
@@ -57,52 +53,68 @@ def watchlist():
 
         return prices_dict
 
-
-    prices_dict = get_prices_dict(watchlist)
-
-    # Just for MSFT atm, get the business summary, etc. 
-    current_company = yf.Ticker('SPY')
-    company_info = current_company.info
-
-    # Chart stuff
-    # Get last 30 days of prices for chart
-    hist = current_company.history(period='1mo')
-
-    labels = hist.index
-    values = hist['Close']
-
-    labels = [str(label.date()) for label in labels]
-    values = [value for value in values]
-
-    # Time periods to pass to dropdown
-    time_periods = ['1d', '5d', '1mo', '3mo', '6mo', 'ytd', '1y', '2y', '5y', '10y', 'max']
+    # Convert time period to yfinance format
+    def yfinance_time_period(selected_time_period):
+        if selected_time_period == '1 Day':
+            return '1d'
+        elif selected_time_period == '5 Days':
+            return '5d'
+        elif selected_time_period == '1 Month':
+            return '1mo'
+        elif selected_time_period == '3 Months':
+            return '3mo'
+        elif selected_time_period == '6 Months':
+            return '6mo'
+        elif selected_time_period == 'YTD':
+            return 'ytd'
+        elif selected_time_period == '1 Year':
+            return '1y'    
+        elif selected_time_period == '2 Year':
+            return '2y'
+        elif selected_time_period == '5 Year':
+            return '5y'
+        elif selected_time_period == '10 Year':
+            return '10y'
+        elif selected_time_period == 'Max':
+            return 'max'
 
     
+    prices_dict = get_prices_dict(watchlist)
+
+    # Time periods to pass to dropdown
+    time_periods = ['1 Day', '5 Days', '1 Month', '3 Months', '6 Months', 'YTD', '1 Year', '2 Year', '5 Year', '10 Year', 'Max']
+
+
     
     if request.method == 'GET':
         print("GET method")
 
-        # Default time period for GET request chart
-        selected_time_period = '1mo'
+        # Defaults for summary
+        current_company = yf.Ticker('SPY')
+        company_info = current_company.info
 
+        # Defaults for chart
+        session['summary_ticker'] = 'SPY'
+        session['yfinance_range'] = '1mo'
+        selected_time_period = '1 Month'
+        yfinance_range = '1mo'
+        hist = current_company.history(period=yfinance_range)
 
-        return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist, company_info=company_info, time_periods=time_periods, selected_time_period=selected_time_period, labels=labels, values=values)
+        labels = hist.index
+        values = hist['Close']
+
+        labels = [str(label.date()) for label in labels]
+        values = [value for value in values]
+
     
-
     if request.method == 'POST':
         print("POST method")
-
-        # Get selected time period from dropdown
-        selected_time_period = request.form['time-period']
-        print("Selected time period: ", selected_time_period)
 
         # Get the form keys
         form_keys = request.form.keys()
         form_keys = list(form_keys)
 
-        print("Form keys: ", form_keys)
-
-
+        # Check which action the user took
         if request.form['add-ticker'] != '':
             user_action = 'add_ticker'
         elif 'summary' in form_keys:
@@ -114,53 +126,29 @@ def watchlist():
 
         print("User action: ", user_action)
 
-        # If the user updated a chart input (time period, etc.)
+        # If the user updated a chart input (time period)
         if user_action == 'update_chart':
+            
+            # Get selected time period from dropdown
+            selected_time_period = request.form['time-period']
 
-            # Get ticker from session
-            summary_ticker = session['summary_ticker']
+            # Convert to yfinance format
+            yfinance_range = yfinance_time_period(selected_time_period)
 
-            # Get the company info
-            current_company = yf.Ticker(summary_ticker)
-            company_info = current_company.info
+            # Store yfinance time period in session
+            session['yfinance_range'] = yfinance_range
 
-            # Get prices for chart
-            hist = current_company.history(period=selected_time_period)
-
-            # Get labels and values for chart
-            labels = hist.index
-            values = hist['Close']
-            labels = [str(label.date()) for label in labels]
-            values = [value for value in values]
-
-
-            return render_template('stocks/watchlist.html', prices_dict=prices_dict, watchlist=watchlist, company_info=company_info, time_periods=time_periods, selected_time_period=selected_time_period, labels=labels, values=values,)
-
-        
-
+    
         # If the user clicked on a ticker to see the financials
         if user_action == 'summary':
 
             # Get the ticker that was clicked on from the form
             summary_ticker = request.form['summary']
 
+            # Store the ticker in session
             session['summary_ticker'] = summary_ticker
 
-            # Get the company info
-            current_company = yf.Ticker(summary_ticker)
-            company_info = current_company.info
-
-            # Get last 30 days of prices for chart
-            hist = current_company.history(period='1mo')
-
-            labels = hist.index
-            values = hist['Close']
-
-            labels = [str(label.date()) for label in labels]
-            values = [value for value in values]
-
-
-            return render_template('stocks/watchlist.html', prices_dict=prices_dict, watchlist=watchlist, company_info=company_info, time_periods=time_periods, selected_time_period=selected_time_period,labels=labels, values=values)
+            print("Updated summary ticker: ", summary_ticker)
 
 
         # If the user added a ticker to the watchlist
@@ -169,8 +157,6 @@ def watchlist():
             # Get the ticker that was clicked on from the form
             added_ticker = request.form['add-ticker']
             added_ticker = added_ticker.upper()
-
-            print("added_ticker: ", added_ticker)
 
             # Add the ticker to favorites table in database
             error = None
@@ -194,32 +180,10 @@ def watchlist():
                 )
                 db.commit()
 
+            # Get updated watchlist and prices dictionary
             watchlist = get_watchlist(user_id)
             prices_dict = get_prices_dict(watchlist)
 
-            # Try to get session ticker if there is one (else, SPY is default)
-            try:
-                summary_ticker = session['summary_ticker']
-                # Get the company info
-                current_company = yf.Ticker(summary_ticker)
-                company_info = current_company.info
-            except:
-                summary_ticker = None
-                # Get the company info
-                current_company = yf.Ticker('SPY')
-                company_info = current_company.info
-
-            # Get last 30 days of prices for chart
-            hist = current_company.history(period='1mo')
-
-            labels = hist.index
-            values = hist['Close']
-
-            labels = [str(label.date()) for label in labels]
-            values = [value for value in values]
-
-
-            return render_template('stocks/watchlist.html', prices_dict=prices_dict, added_ticker=added_ticker, watchlist=watchlist, company_info=company_info, time_periods=time_periods, selected_time_period=selected_time_period, labels=labels, values=values)
 
         # If the user removed a ticker from the watchlist
         elif user_action == 'remove_ticker':
@@ -233,32 +197,36 @@ def watchlist():
             )
             db.commit()
 
+            # Get updated watchlist and prices dictionary
             watchlist = get_watchlist(user_id)
             prices_dict = get_prices_dict(watchlist)
 
-            # Try to get session ticker if there is one (else, SPY is default)
-            try:
-                summary_ticker = session['summary_ticker']
-                # Get the company info
-                current_company = yf.Ticker(summary_ticker)
-                company_info = current_company.info
-            except:
-                summary_ticker = None
-                # Get the company info
-                current_company = yf.Ticker('SPY')
-                company_info = current_company.info
 
-            # Get last 30 days of prices for chart
-            hist = current_company.history(period='1mo')
+        # Try to get session yfinance_range if there is one (else, 1mo is default)
+        try:
+            selected_time_period = request.form['time-period']
+            yfinance_range = yfinance_time_period(selected_time_period)
+        except:
+            yfinance_range = '1mo'
+            selected_time_period = '1 Month'
 
-            labels = hist.index
-            values = hist['Close']
-
-            labels = [str(label.date()) for label in labels]
-            values = [value for value in values]
-
-
-            return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist, company_info=company_info, time_periods=time_periods, selected_time_period=selected_time_period, labels=labels, values=values)
-
+        # Try to get session ticker if there is one (else, SPY is default)
+        try:
+            summary_ticker = session['summary_ticker']
+            
+        except:
+            summary_ticker = 'SPY'
         
+        # Get the company info for summary
+        current_company = yf.Ticker(summary_ticker)
+        company_info = current_company.info
 
+        # Get prices & dates for chart
+        hist = current_company.history(period=yfinance_range)
+        labels = hist.index
+        values = hist['Close']
+        labels = [str(label.date()) for label in labels]
+        values = [value for value in values]
+
+
+    return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist, company_info=company_info, time_periods=time_periods, selected_time_period=selected_time_period, labels=labels, values=values)
