@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+
+    <h2>Bubbles</h2>
+
+        {# Canvas for stock chart #}
+        <div class="chart">
+            <canvas id="stockChart" width="200" height="100"></canvas>
+        </div>
+
+        {# Chart.js script #}
+        <script>
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                labels: {{ labels | safe }},
+                datasets: [{
+                    label: 'Market Cap',
+                    data: {{ values | safe }},
+                    backgroundColor: 'rgb(255, 99, 132)'
+                }]
+                },
+                options: {
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+                }
+            });
+        </script>
+
+
+{% endblock %}

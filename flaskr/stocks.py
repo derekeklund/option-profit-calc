@@ -14,8 +14,6 @@ from flaskr.auth import login_required
 from flaskr.helpers import get_watchlist
 
 
-# https://ibkrcampus.com/ibkr-quant-news/yfinance-library-a-complete-guide/
-# https://www.highcharts.com/docs/index
 @bp.route('/watchlist', methods=('GET', 'POST'))
 @login_required
 def watchlist():
@@ -85,6 +83,7 @@ def watchlist():
     time_periods = ['1 Day', '5 Days', '1 Month', '3 Months', '6 Months', 'YTD', '1 Year', '2 Year', '5 Year', '10 Year', 'Max']
 
 
+
     
     if request.method == 'GET':
         print("GET method")
@@ -105,6 +104,8 @@ def watchlist():
 
         labels = [str(label.date()) for label in labels]
         values = [value for value in values]
+
+        print("values: ", values)
 
     
     if request.method == 'POST':
@@ -135,6 +136,8 @@ def watchlist():
             # Convert to yfinance format
             yfinance_range = yfinance_time_period(selected_time_period)
 
+            print(f"Updated selected time: {selected_time_period} ({yfinance_range})")
+
             # Store yfinance time period in session
             session['yfinance_range'] = yfinance_range
 
@@ -157,6 +160,8 @@ def watchlist():
             # Get the ticker that was clicked on from the form
             added_ticker = request.form['add-ticker']
             added_ticker = added_ticker.upper()
+
+            print("Added ticker: ", added_ticker)
 
             # Add the ticker to favorites table in database
             error = None
@@ -230,3 +235,85 @@ def watchlist():
 
 
     return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist, company_info=company_info, time_periods=time_periods, selected_time_period=selected_time_period, labels=labels, values=values)
+
+
+@bp.route('/bubbles', methods=('GET', 'POST'))
+def bubbles():
+    print("In bubbles route")
+
+    # Dictionary of stock market caps and sectors
+    prices_dict = {}
+
+    # tickers = ['AMZN', 'AAPL', 'NVDA', 'FSLR']
+
+    tickers = ['AAPL', 'AMZN', 'GOOG', 'TSLA', 'AMD', 'MSFT', 'META', 'NVDA', 'FSLR']
+
+    # Get list of all tickers in company_info table that are in the technology sector
+    db = get_db()
+    tech_tickers = db.execute(
+        'SELECT ticker FROM company_info WHERE sector = "Technology"'
+    ).fetchall()
+
+    print("# of tech tickers: ", len(tech_tickers))
+
+    for t in tickers:
+            
+            # Get stock price
+            prices = yf.Ticker(t)
+    
+            # Get stock info
+            stock_info = prices.info
+    
+            # Get market cap and sector
+            prices_dict[t] = {}
+            prices_dict[t]['market_cap'] = stock_info['marketCap']
+            prices_dict[t]['market_cap_billions'] = round((prices_dict[t]['market_cap'] / 1000000000), 2)
+            
+            if prices_dict[t]['market_cap_billions'] > 1000:
+                prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']/1000) + 'T'
+            else:
+                prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']) + 'B'
+
+            prices_dict[t]['market_cap_radius'] = round((prices_dict[t]['market_cap_billions']/100), 2)
+
+            # If the radius is too small, make it big enough to see
+            if prices_dict[t]['market_cap_radius'] < 3:
+                prices_dict[t]['market_cap_radius'] = 3
+
+
+            prices_dict[t]['sector'] = stock_info['sector']
+            prices_dict[t]['pe_ratio'] = round(stock_info['trailingPE'], 2)
+
+
+    labels = []
+    values = []
+
+    x_axis_incrementer = 10
+
+    # Loop over dict
+    for key, value in prices_dict.items():
+        # print(key, value)
+
+        # Labels for bubbles
+        labels.append(key)
+
+        # Space the bubbles out on the x-axis
+        prices_dict[key]['x'] = x_axis_incrementer
+        x_axis_incrementer += 10
+
+        # Values for bubbles
+        new_value = {
+            'x': prices_dict[key]['x'],
+            'y': prices_dict[key]['pe_ratio'],
+            'r': prices_dict[key]['market_cap_radius']
+        }
+
+        values.append(new_value)
+
+    print("Labels: ", labels)
+    print("Values: ", values)
+
+    for key, value in prices_dict.items():
+        print(key, value)
+
+    return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict)

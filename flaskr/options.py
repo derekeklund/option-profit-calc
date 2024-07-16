@@ -500,3 +500,13 @@ def refresh_calc():
     else:
         print("ERROR: No table found in session")
         return("No table found in session")
+    
+
+@bp.route('/max_pain', methods=('GET', 'POST'))
+def max_pain():
+    print("In Max Pain route")
+
+    
+
+
+    return render_template('options/max-pain.html')
