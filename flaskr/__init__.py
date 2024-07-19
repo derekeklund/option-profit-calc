@@ -6,7 +6,6 @@ from flask import Flask
 # flask --app flaskr run --debug
 
 
-
 def create_app(test_config=None):
     # Create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -49,5 +48,10 @@ def create_app(test_config=None):
 
     from . import stocks
     app.register_blueprint(stocks.bp)
-    
+
+    # This is to update the db tables
+    from . import utils
+    app.register_blueprint(utils.bp)
+
+
     return app

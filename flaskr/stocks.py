@@ -244,9 +244,20 @@ def bubbles():
     # Dictionary of stock market caps and sectors
     prices_dict = {}
 
-    # tickers = ['AMZN', 'AAPL', 'NVDA', 'FSLR']
-
     tickers = ['AAPL', 'AMZN', 'GOOG', 'TSLA', 'AMD', 'MSFT', 'META', 'NVDA', 'FSLR']
+
+    # Get all tickers from nasdaq_100 table
+    db = get_db()
+    nasdaq_100_tickers = db.execute(
+        'SELECT ticker FROM nasdaq_100'
+    ).fetchall()
+
+    # Convert objects to strings
+    nasdaq_100_tickers = [t[0] for t in nasdaq_100_tickers]
+
+    print("# of nasdaq 100 tickers: ", len(nasdaq_100_tickers))
+
+    tickers = nasdaq_100_tickers
 
     # Get list of all tickers in company_info table that are in the technology sector
     db = get_db()
@@ -258,31 +269,38 @@ def bubbles():
 
     for t in tickers:
             
-            # Get stock price
-            prices = yf.Ticker(t)
-    
-            # Get stock info
-            stock_info = prices.info
-    
-            # Get market cap and sector
-            prices_dict[t] = {}
-            prices_dict[t]['market_cap'] = stock_info['marketCap']
-            prices_dict[t]['market_cap_billions'] = round((prices_dict[t]['market_cap'] / 1000000000), 2)
-            
-            if prices_dict[t]['market_cap_billions'] > 1000:
-                prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']/1000) + 'T'
-            else:
-                prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']) + 'B'
+        print("Ticker: ", t)
+        
+        # Get stock price
+        prices = yf.Ticker(t)
 
-            prices_dict[t]['market_cap_radius'] = round((prices_dict[t]['market_cap_billions']/100), 2)
+        # Get stock info
+        stock_info = prices.info
 
-            # If the radius is too small, make it big enough to see
-            if prices_dict[t]['market_cap_radius'] < 3:
-                prices_dict[t]['market_cap_radius'] = 3
+        # Get market cap and sector
+        prices_dict[t] = {}
+        prices_dict[t]['market_cap'] = stock_info['marketCap']
+        prices_dict[t]['market_cap_billions'] = round((prices_dict[t]['market_cap'] / 1000000000), 2)
+        
+        if prices_dict[t]['market_cap_billions'] > 1000:
+            prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']/1000) + 'T'
+        else:
+            prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']) + 'B'
+
+        prices_dict[t]['market_cap_radius'] = round((prices_dict[t]['market_cap_billions']/100), 2)
+
+        # If the radius is too small, make it big enough to see
+        if prices_dict[t]['market_cap_radius'] < 3:
+            prices_dict[t]['market_cap_radius'] = 3
 
 
-            prices_dict[t]['sector'] = stock_info['sector']
+        prices_dict[t]['sector'] = stock_info['sector']
+
+        try:
             prices_dict[t]['pe_ratio'] = round(stock_info['trailingPE'], 2)
+        except:
+            # If there is no pe ratio, set it to 0
+            prices_dict[t]['pe_ratio'] = 0
 
 
     labels = []
@@ -310,10 +328,10 @@ def bubbles():
 
         values.append(new_value)
 
-    print("Labels: ", labels)
-    print("Values: ", values)
+    # print("Labels: ", labels)
+    # print("Values: ", values)
 
-    for key, value in prices_dict.items():
-        print(key, value)
+    # for key, value in prices_dict.items():
+    #     print(key, value)
 
     return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict)
