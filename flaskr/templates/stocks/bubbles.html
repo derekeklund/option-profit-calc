@@ -6,11 +6,60 @@
 
 {% block content %}
 
-    <h2>Bubbles</h2>
+    <div class="bubbles-container">
 
-        {# Canvas for stock chart #}
-        <div class="chart">
-            <canvas id="stockChart" width="200" height="100"></canvas>
+        {# Sidebar for dropdown menu #}
+        <div class="bubbles-sidebar">
+
+            <br>
+            <br>
+            <br>
+
+            <form method="post">
+
+                {# Market Index Dropdown #}
+                <div class="sidebar-item">
+                    <label for="index">Index</label>
+                    <select class="dropdown-bubbles" name="index" id="index" onchange="this.form.submit()">
+                        {% for stock_index in indices %}
+                            <option value="{{ stock_index }}" {% if stock_index == selected_index %} selected {% endif %}>{{ stock_index }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {# Sector Dropdown #}
+                <div class="sidebar-item">
+                    <label for="sector">Sector</label>
+                    <select class="dropdown-bubbles" name="sector" id="sector" onchange="this.form.submit()">
+                        {% for sector in sectors %}
+                            <option value="{{ sector }}" {% if sector == selected_sector %} selected {% endif %}>{{ sector }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {# Y-Axis Dropdown #}
+                <div class="sidebar-item">
+                    <label for="yAxis">Y-Axis</label>
+                    <select class="dropdown-bubbles" name="yAxis" id="yAxis" onchange="this.form.submit()">
+                        {% for yAxis in y_axis_options %}
+                            <option value="{{ yAxis }}" {% if yAxis == selected_y_axis %} selected {% endif %}>{{ yAxis }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {# <button type="submit">Submit</button> #}
+
+            </form>
+
+        </div>
+
+        <div class="chart-container">
+
+            {# Canvas for stock chart #}
+            <div class="bubbles-chart">
+                <canvas id="stockChart" width="200" height="100"></canvas>
+            </div>
+
         </div>
 
         {# Chart.js script #}
@@ -23,21 +72,40 @@
                 datasets: [{
                     label: 'Market Cap',
                     data: {{ values | safe }},
-                    backgroundColor: 'rgb(255, 99, 132)'
+                    backgroundColor: 'rgb(255, 99, 132, 0.5)' // 50% transparent red
                 }]
                 },
                 options: {
-                scales: {
-                    x: {
-                        beginAtZero: true
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: '{{ selected_index }} {{ selected_sector }}'
+                        }
                     },
-                    y: {
-                        beginAtZero: true
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Sector'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '{{ selected_y_axis }}'
+                            }
+                        }
                     }
-                }
                 }
             });
         </script>
+
+        {# beginAtZero: true #}
+
+    </div>
 
 
 {% endblock %}

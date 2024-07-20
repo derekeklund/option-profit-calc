@@ -1,8 +1,12 @@
+-- TO UPDATE DATABSE TABLES/STRUCTURE
 -- 1. Enter the venv 
 -- 2. Enable any tables you drop below
 -- 3. 'flask --app flaskr init-db' command
 -- 4. Update the utils.py file if necessary
 -- 5. Go to the /update-db route to update the database
+
+-- TO QUERY (READ) THE DATABASE
+-- 1. Right click on Select statement and run query
 
 -- DROP TABLE IF EXISTS user;
 -- DROP TABLE IF EXISTS post;
@@ -17,6 +21,10 @@
 
 -- ALTER TABLE company_info 
 -- ADD COLUMN market_index TEXT;
+
+
+-- Get tickers that are in the nasdaq_100 table and in the technology sector in the company_info table
+SELECT ticker FROM company_info WHERE sector = 'Technology' AND ticker IN (SELECT ticker FROM nasdaq_100);
 
 
 CREATE TABLE IF NOT EXISTS company_info (

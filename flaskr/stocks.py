@@ -12,6 +12,7 @@ from datetime import datetime
 from flaskr.db import get_db
 from flaskr.auth import login_required
 from flaskr.helpers import get_watchlist
+import numpy as np
 
 
 @bp.route('/watchlist', methods=('GET', 'POST'))
@@ -241,6 +242,43 @@ def watchlist():
 def bubbles():
     print("In bubbles route")
 
+    # Default dropdown values
+    selected_index = 'nasdaq_100'
+    selected_sector = 'Technology'
+    selected_y_axis = 'P/E Ratio'
+
+    # Default target metric
+    target_y_axis = 'trailingPE'
+
+    # If user changes dropdown values, update index and sector
+    if request.method == 'POST':
+        print("POST method")
+
+        # Get the form keys
+        form_keys = request.form.keys()
+        form_keys = list(form_keys)
+
+        print("Form keys: ", form_keys)
+
+        # Check which action the user took
+        if 'index' in form_keys:
+            selected_index = request.form['index']
+        if 'sector' in form_keys:
+            selected_sector = request.form['sector']
+        if 'yAxis' in form_keys:
+            selected_y_axis = request.form['yAxis']
+
+    print("Selected Index: ", selected_index)
+    print("Selected Sector: ", selected_sector)
+    print("Selected Y-Axis: ", selected_y_axis)
+
+    if selected_y_axis == 'P/E Ratio':
+        target_y_axis = 'trailingPE'
+    elif selected_y_axis == 'PEG Ratio':
+        target_y_axis = 'trailingPegRatio'
+    elif selected_y_axis == 'Revenue Growth':
+        target_y_axis = 'revenueGrowth'
+
     # Dictionary of stock market caps and sectors
     prices_dict = {}
 
@@ -255,19 +293,24 @@ def bubbles():
     # Convert objects to strings
     nasdaq_100_tickers = [t[0] for t in nasdaq_100_tickers]
 
-    print("# of nasdaq 100 tickers: ", len(nasdaq_100_tickers))
+    # print("# of nasdaq 100 tickers: ", len(nasdaq_100_tickers))
 
-    tickers = nasdaq_100_tickers
+    # tickers = nasdaq_100_tickers
+
+    # query = f'SELECT ticker FROM company_info WHERE sector = "{selected_sector}"'
+    query = f'SELECT ticker FROM company_info WHERE sector = "{selected_sector}" AND ticker IN (SELECT ticker FROM nasdaq_100);'
 
     # Get list of all tickers in company_info table that are in the technology sector
     db = get_db()
-    tech_tickers = db.execute(
-        'SELECT ticker FROM company_info WHERE sector = "Technology"'
+    target_tickers = db.execute(
+        query
     ).fetchall()
 
-    print("# of tech tickers: ", len(tech_tickers))
+    target_tickers = [t[0] for t in target_tickers]
 
-    for t in tickers:
+    print(f"# of target ({selected_sector}) tickers: ", len(target_tickers))
+
+    for t in target_tickers:
             
         print("Ticker: ", t)
         
@@ -287,20 +330,23 @@ def bubbles():
         else:
             prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']) + 'B'
 
-        prices_dict[t]['market_cap_radius'] = round((prices_dict[t]['market_cap_billions']/100), 2)
+        # prices_dict[t]['market_cap_radius'] = round((prices_dict[t]['market_cap_billions']/100), 2)
+        prices_dict[t]['market_cap_radius'] = round((prices_dict[t]['market_cap_billions']), 2)
 
         # If the radius is too small, make it big enough to see
-        if prices_dict[t]['market_cap_radius'] < 3:
-            prices_dict[t]['market_cap_radius'] = 3
+        # if prices_dict[t]['market_cap_radius'] < 5:
+        #     prices_dict[t]['market_cap_radius'] = 5
 
 
         prices_dict[t]['sector'] = stock_info['sector']
 
         try:
-            prices_dict[t]['pe_ratio'] = round(stock_info['trailingPE'], 2)
+            prices_dict[t][target_y_axis] = round(stock_info[target_y_axis], 2)
         except:
             # If there is no pe ratio, set it to 0
-            prices_dict[t]['pe_ratio'] = 0
+            prices_dict[t][target_y_axis] = 0
+
+            print(f'No {target_y_axis} for {t}')
 
 
     labels = []
@@ -312,6 +358,9 @@ def bubbles():
     for key, value in prices_dict.items():
         # print(key, value)
 
+        # Scale the market cap radius by getting square root
+        prices_dict[key]['market_cap_radius'] = round(np.sqrt(prices_dict[key]['market_cap_radius']), 2)
+
         # Labels for bubbles
         labels.append(key)
 
@@ -322,16 +371,36 @@ def bubbles():
         # Values for bubbles
         new_value = {
             'x': prices_dict[key]['x'],
-            'y': prices_dict[key]['pe_ratio'],
+            'y': prices_dict[key][target_y_axis],
             'r': prices_dict[key]['market_cap_radius']
         }
 
         values.append(new_value)
 
-    # print("Labels: ", labels)
-    # print("Values: ", values)
 
-    # for key, value in prices_dict.items():
-    #     print(key, value)
+    # Get sectors in nasdaq 100 for dropdown
+    sectors = db.execute(
+        'SELECT DISTINCT sector FROM company_info'
+    ).fetchall()
 
-    return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict)
+    sectors = [s[0] for s in sectors]
+
+    print("Sectors: ", sectors)
+
+    indices = ['Nasdaq 100', 'S&P 500', 'Russell 2000']
+
+    if selected_index == 'nasdaq_100':
+        selected_index = 'Nasdaq 100'
+    elif selected_index == 's_and_p_500':
+        selected_index = 'S&P 500'
+    elif selected_index == 'russell_2000':
+        selected_index = 'Russell 2000'
+
+    # Y-axis options
+    y_axis_options = ['P/E Ratio', 'PEG Ratio', 'Revenue Growth']
+
+    
+
+
+
+    return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict, sectors=sectors, selected_sector=selected_sector,  indices=indices, selected_index=selected_index, y_axis_options=y_axis_options, selected_y_axis=selected_y_axis)

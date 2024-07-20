@@ -25,7 +25,7 @@
             {# Dropdown for time period selection #}
             <div>
                 <label for="time-period">Time Period</label>
-                <select name="time-period" id="time-period" onchange="this.form.submit()">
+                <select class="dropdown" name="time-period" id="time-period" onchange="this.form.submit()">
                     {% for period in time_periods %}
                         <option value="{{ period }}" {% if period == selected_time_period %} selected {% endif %}>{{ period }}</option>
                     {% endfor %}
