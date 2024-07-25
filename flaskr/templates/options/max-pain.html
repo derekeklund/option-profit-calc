@@ -38,6 +38,12 @@
                     </select>
                 </div>
 
+                {# <div class="watchlist-sidebar">
+                    <div>Expiration Date: {{ selected_exp_date }}</div>
+                    <div>Max Pain Price: {{ max_pain_strike }}</div>
+                    <div>Previous Close: {{ previous_close }}</div>
+                </div> #}
+
             </form>
 
         </div>
@@ -59,35 +65,42 @@
                 type: 'bar',
                 data: {
                 labels: {{ labels | safe }},
-                datasets: [{
-                    label: 'Max Pain',
-                    data: {{ values | safe }},
-                    backgroundColor: {{ background_colors | safe }}
-                    // 'rgba(54, 162, 235, 0.5)'
-                    // 'rgb(255, 99, 132, 0.5)' // 50% transparent red
-                }]
+                datasets: [
+                    {
+                        label: 'Call Losses',
+                        data: {{ call_losses | safe }},
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)'
+                    },
+                    {
+                        label: 'Put Losses',
+                        data: {{ put_losses | safe }},
+                        backgroundColor: 'rgb(255, 99, 132, 0.5)'
+                    }
+                ]
                 },
                 options: {
                     plugins: {
                         legend: {
-                            display: false
+                            display: true,
                         },
                         title: {
                             display: true,
-                            text: '{{ ticker }} Max Pain'
+                            text: '{{ ticker }} Max Pain = {{ max_pain_strike }} | Previous Close: ${{ previous_close }}',
                         }
                     },
                     scales: {
                         x: {
                             title: {
                                 display: true,
-                                text: 'Strikes'
+                                text: 'Strikes',
+                                stacked: true
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: 'Potential Losses at Expiry'
+                                text: 'Potential Losses at Expiry',
+                                stacked: true
                             }
                         }
                     }

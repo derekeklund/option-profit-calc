@@ -438,3 +438,11 @@ def bubbles():
 
 
     return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict, sectors=sectors, selected_sector=selected_sector,  indices=indices, selected_index=selected_index, y_axis_options=y_axis_options, selected_y_axis=selected_y_axis, x_axis_options=x_axis_options, selected_x_axis=selected_x_axis)
+
+
+@bp.route('/monte_carlo', methods=('GET', 'POST'))
+def monte_carlo():
+    print("In monte carlo route")
+
+
+    return render_template('stocks/monte-carlo.html')

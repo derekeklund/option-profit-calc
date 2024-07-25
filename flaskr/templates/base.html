@@ -14,9 +14,10 @@
             <li class="float-left"><a class="active" href="{{ url_for('blog.index') }}">Home</a></li>
             <li class="float-left"><a class="action" href="{{ url_for('options.scanner') }}">Options Scanner</a></li>
             <li class="float-left"><a class="action" href="{{ url_for('options.profit_calc') }}">Profit Calculator</a></li>
-            <li class="float-left"><a class="action" href="{{ url_for('options.max_pain') }}">Max Pain</a></li>
             <li class="float-left"><a class="action" href="{{ url_for('stocks.watchlist') }}">Watchlist</a></li>
             <li class="float-left"><a class="action" href="{{ url_for('stocks.bubbles') }}">Bubble Charts</a></li>
+            <li class="float-left"><a class="action" href="{{ url_for('options.max_pain') }}">Max Pain</a></li>     
+            <li class="float-left"><a class="action" href="{{ url_for('stocks.monte_carlo') }}">Monte Carlo Simulation</a></li>
             
     
             {% if g.user %}
