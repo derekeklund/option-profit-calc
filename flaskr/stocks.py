@@ -246,9 +246,11 @@ def bubbles():
     selected_index = 'nasdaq_100'
     selected_sector = 'Technology'
     selected_y_axis = 'P/E Ratio'
+    selected_x_axis = 'Sector'
 
     # Default target metric
     target_y_axis = 'trailingPE'
+    target_x_axis = 'sector'
 
     # If user changes dropdown values, update index and sector
     if request.method == 'POST':
@@ -267,10 +269,14 @@ def bubbles():
             selected_sector = request.form['sector']
         if 'yAxis' in form_keys:
             selected_y_axis = request.form['yAxis']
+        if 'xAxis' in form_keys:
+            selected_x_axis = request.form['xAxis']
+
 
     print("Selected Index: ", selected_index)
     print("Selected Sector: ", selected_sector)
     print("Selected Y-Axis: ", selected_y_axis)
+    print("Selected X-Axis: ", selected_x_axis)
 
     if selected_y_axis == 'P/E Ratio':
         target_y_axis = 'trailingPE'
@@ -278,6 +284,13 @@ def bubbles():
         target_y_axis = 'trailingPegRatio'
     elif selected_y_axis == 'Revenue Growth':
         target_y_axis = 'revenueGrowth'
+    
+    if selected_x_axis == 'Sector':
+        target_x_axis = 'sector'
+    elif selected_x_axis == 'Market Cap':
+        target_x_axis = 'market_cap'
+    elif selected_x_axis == 'Beta':
+        target_x_axis = 'beta'
 
     # Dictionary of stock market caps and sectors
     prices_dict = {}
@@ -337,6 +350,13 @@ def bubbles():
         # if prices_dict[t]['market_cap_radius'] < 5:
         #     prices_dict[t]['market_cap_radius'] = 5
 
+        # Get beta
+        try:
+            prices_dict[t]['beta'] = stock_info['beta']
+        except KeyError as e:
+            prices_dict[t]['beta'] = 0
+            print(f'No beta for {t}')
+
 
         prices_dict[t]['sector'] = stock_info['sector']
 
@@ -364,9 +384,22 @@ def bubbles():
         # Labels for bubbles
         labels.append(key)
 
-        # Space the bubbles out on the x-axis
-        prices_dict[key]['x'] = x_axis_incrementer
-        x_axis_incrementer += 10
+        if selected_x_axis == 'Sector':
+            # Space the bubbles out on the x-axis
+            prices_dict[key]['x'] = x_axis_incrementer
+            x_axis_incrementer += 10
+
+        elif selected_x_axis == 'Market Cap':
+            # Get market cap
+            prices_dict[key]['x'] = prices_dict[key]['market_cap_billions']
+
+        elif selected_x_axis == 'Beta':
+            # Get the beta
+            try:
+                prices_dict[key]['x'] = round(prices_dict[key]['beta'], 2)
+            except KeyError as e:
+                prices_dict[key]['x'] = 0
+                print(f'No beta for {key}')
 
         # Values for bubbles
         new_value = {
@@ -399,8 +432,9 @@ def bubbles():
     # Y-axis options
     y_axis_options = ['P/E Ratio', 'PEG Ratio', 'Revenue Growth']
 
-    
+    # X-axis options
+    x_axis_options = ['Sector', 'Market Cap', 'Beta']
 
 
 
-    return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict, sectors=sectors, selected_sector=selected_sector,  indices=indices, selected_index=selected_index, y_axis_options=y_axis_options, selected_y_axis=selected_y_axis)
+    return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict, sectors=sectors, selected_sector=selected_sector,  indices=indices, selected_index=selected_index, y_axis_options=y_axis_options, selected_y_axis=selected_y_axis, x_axis_options=x_axis_options, selected_x_axis=selected_x_axis)

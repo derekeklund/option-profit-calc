@@ -47,6 +47,16 @@
                     </select>
                 </div>
 
+                {# X-Axis Dropdown #}
+                <div class="sidebar-item">
+                    <label for="xAxis">X-Axis</label>
+                    <select class="dropdown-bubbles" name="xAxis" id="xAxis" onchange="this.form.submit()">
+                        {% for xAxis in x_axis_options %}
+                            <option value="{{ xAxis }}" {% if xAxis == selected_x_axis %} selected {% endif %}>{{ xAxis }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
                 {# <button type="submit">Submit</button> #}
 
             </form>
@@ -89,7 +99,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Sector'
+                                text: '{{ selected_x_axis }}'
                             }
                         },
                         y: {

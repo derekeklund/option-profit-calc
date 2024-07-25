@@ -6,6 +6,95 @@
 
 {% block content %}
 
-    <h2>Max Pain</h2>
+    {# <h2>Max Pain</h2> #}
+
+    <div class="bubbles-container">
+
+        {# Sidebar for dropdown menu #}
+        <div class="bubbles-sidebar">
+
+            <br>
+            <br>
+            <br>
+
+            <form method="post">
+
+                {# Market Index Dropdown #}
+                <div class="sidebar-item">
+                    <label for="index">Ticker</label>
+                    <div>
+                    <input class="text-input" name="symbol" placeholder="{{ ticker }}" id="symbol" value="{{ ticker }}" style="text-transform:uppercase" required>
+                    <button class="button" type="submit" value="Search">Update</button>
+                    </div>
+                </div>
+
+                {# Sector Dropdown #}
+                <div class="sidebar-item">
+                    <label for="sector">Expiration</label>
+                    <select class="dropdown-bubbles" name="expiry" id="expiry" onchange="this.form.submit()">
+                        {% for expiry in expiries %}
+                            <option value="{{expiry}}" {% if expiry == selected_exp_date %} selected {% endif %}>{{expiry}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <div class="chart-container">
+
+            {# Canvas for stock chart #}
+            <div class="bubbles-chart">
+                <canvas id="stockChart" width="200" height="100"></canvas>
+            </div>
+
+        </div>
+
+        {# Chart.js script #}
+        <script>
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                labels: {{ labels | safe }},
+                datasets: [{
+                    label: 'Max Pain',
+                    data: {{ values | safe }},
+                    backgroundColor: {{ background_colors | safe }}
+                    // 'rgba(54, 162, 235, 0.5)'
+                    // 'rgb(255, 99, 132, 0.5)' // 50% transparent red
+                }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: '{{ ticker }} Max Pain'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Strikes'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Potential Losses at Expiry'
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+
+    </div>
 
 {% endblock %}

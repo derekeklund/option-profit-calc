@@ -551,6 +551,12 @@ legend {
     padding-top: 5%;
 }
 
+.max-pain-chart {
+    max-width: 75%;
+    margin: 0 auto;
+    padding-top: 5%;
+}
+
 .bubbles-container {
     /* flex: 2; */
     display: flex;
@@ -565,15 +571,4 @@ legend {
     flex-direction: column;
     min-width: 350px;
     border: 1px solid #ccc;
-}
-
-.sidebar-item {
-    display: flex;
-    margin: 10px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    text-align: center;
-    border: 1px solid #ccc;
-    justify-content: space-between;
-    align-items: center;
 }

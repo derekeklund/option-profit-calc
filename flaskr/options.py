@@ -506,7 +506,101 @@ def refresh_calc():
 def max_pain():
     print("In Max Pain route")
 
+    expiry = None
+    ticker = 'SPY'
+
+    if request.method == 'POST':
+        print("POST request")
+        expiry = request.form['expiry']
+
+        ticker = request.form['symbol'].upper()
+
+    print("Expiry date:", expiry)
+
+    print("Ticker:", ticker)
+
     
 
+    # Get ticker info
+    ticker_obj = yf.Ticker(ticker)
 
-    return render_template('options/max-pain.html')
+    # Get expiration dates for options
+    exp_dates = ticker_obj.options
+
+    # Flash error if no options data is available for ticker
+    try:
+        if expiry == None or expiry not in exp_dates:
+            expiry = exp_dates[0]
+
+        options_chain = ticker_obj.option_chain(date=expiry)
+        
+    except:
+        error = 'No options data available for this ticker.'
+        flash(error)
+
+        # On error, get the most recent ticker from session
+        ticker = session.get('ticker')
+
+        # Get SPY ticker info
+        ticker_obj = yf.Ticker(ticker)
+
+        # Get expiration dates for options
+        exp_dates = ticker_obj.options
+
+        options_chain = ticker_obj.option_chain(date=expiry)
+
+ 
+    # Get calls and puts and trim to only the columns we want   
+    calls = options_chain.calls[['strike', 'openInterest']]
+    puts = options_chain.puts[['strike', 'openInterest']]
+
+    # Rename columns
+    calls.columns = ['strike', 'calls_open_interest']
+    puts.columns = ['strike', 'puts_open_interest']
+
+    # Merge calls and puts on strike price
+    all_options = pd.merge(calls, puts, on='strike', how='outer')
+
+    # Replace NaN values with 0
+    all_options = all_options.fillna(0)
+
+    # New column 'total_open_interest' is the sum of calls and puts open interest
+    all_options['total_open_interest'] = all_options['calls_open_interest'] + all_options['puts_open_interest']
+
+    # print("All options:", all_options)
+
+    # Calculate potential losses at each strike
+    losses = []
+
+    for i, strike in all_options.iterrows():
+
+        # print(f"Strike: {strike['strike']} & i: {i}")
+        call_loss = sum((max(0, row['strike'] - strike['strike']) * row['calls_open_interest']) for _, row in all_options.iterrows())
+        put_loss = sum((max(0, strike['strike'] - row['strike']) * row['puts_open_interest']) for _, row in all_options.iterrows())
+
+        # print(f"Call Loss: {call_loss}")
+        # print(f"Put Loss: {put_loss}")
+
+        total_loss = call_loss + put_loss
+        losses.append(total_loss)
+
+
+    all_options['total_loss'] = losses
+
+    max_pain_strike = all_options.loc[all_options['total_loss'].idxmin(), 'strike']
+
+    print(f"Max Pain Point is at Strike Price: {max_pain_strike}")
+
+    # Add new column to dataframe called 'colors' to highlight max pain strike
+    all_options['colors'] = ['rgb(255, 99, 132, 0.5)' if strike == max_pain_strike else 'rgba(54, 162, 235, 0.5)' for strike in all_options['strike']]
+
+    print("All options:", all_options)
+
+    strikes = all_options['strike'].tolist()
+    losses = all_options['total_loss'].tolist()
+    background_colors = all_options['colors'].tolist()
+
+    session['ticker'] = ticker
+
+
+    return render_template('options/max-pain.html', labels=strikes, values=losses, max_pain_strike=max_pain_strike, expiries=exp_dates, selected_exp_date=expiry, ticker=ticker, background_colors=background_colors)
