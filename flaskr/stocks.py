@@ -444,5 +444,167 @@ def bubbles():
 def monte_carlo():
     print("In monte carlo route")
 
+    # Pre-selected variables
+    initial_sum = 10000
+    sim_days = 100
+    num_sims = 100
+    symbol_1 = 'AAPL'
+    symbol_2 = 'MSFT'
+    symbol_3 = 'AMZN'
 
-    return render_template('stocks/monte-carlo.html')
+    labels = [symbol_1, symbol_2, symbol_3]
+    values = [55, 30, 15]
+    colors = [
+      'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      'rgb(255, 205, 86)'
+    ]
+
+    if request.method == 'POST':
+        print("POST method")
+
+        # Get the form keys
+        form_keys = request.form.keys()
+        form_keys = list(form_keys)
+
+        print("Form keys: ", form_keys)
+
+        initial_sum = int(request.form['initial_sum'])
+        sim_days = int(request.form['sim_days'])
+        num_sims = int(request.form['num_sims'])
+
+        print("Initial sum: ", initial_sum)
+        print("Simulation days: ", sim_days)
+        print("Number of simulations: ", num_sims)
+
+        symbol_1 = request.form['symbol_1']
+        symbol_2 = request.form['symbol_2']
+        symbol_3 = request.form['symbol_3']
+        alloc_1 = int(request.form['alloc_1'])
+        alloc_2 = int(request.form['alloc_2'])
+        alloc_3 = int(request.form['alloc_3'])
+        
+        labels = [symbol_1, symbol_2, symbol_3]
+        values = [alloc_1, alloc_2, alloc_3]
+
+        print(f"Symbol 1: {symbol_1} ({alloc_1}%)")
+        print(f"Symbol 2: {symbol_2} ({alloc_2}%)")
+        print(f"Symbol 3: {symbol_3} ({alloc_3}%)")
+
+    # Create plot and return it
+
+    from matplotlib.figure import Figure
+    from io import BytesIO
+    import base64
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import datetime as dt
+    import yfinance as yf
+
+    # Import data
+    def get_data(stocks, start, end):
+
+        # Get closing data for each stock from Yahoo Finance directly
+        for stock in stocks:
+            data = yf.download(stock, start=start, end=end)
+
+            # Keep only date and close columns
+            data = data[['Close']]
+            
+            # Change close column name to stock name
+            data.columns = [stock]
+
+            if stock == stocks[0]:
+                stockData = data
+
+            else:
+                stockData = pd.concat([stockData, data[stock]], axis=1)
+
+        # Get daily changes
+        returns = stockData.pct_change()
+
+        # Calculate mean (daily) returns in a covariance matrix
+        meanReturns = returns.mean()
+
+        # Covariance means the relationship between two variables (stocks in this case) and to what extent they change together
+        # co - together, variance - change
+        covMatrix = returns.cov()
+
+        return meanReturns, covMatrix
+
+
+    # stockList = ['AAPL', 'MSFT', 'AMZN']
+    stockList = labels
+
+    endDate = dt.datetime.now()
+    startDate = endDate - dt.timedelta(days=300)
+
+    meanReturns, covMatrix = get_data(stockList, startDate, endDate)
+
+    # weights = np.array([0.55, 0.30, 0.15])
+    port_percents = [x/100 for x in values]
+    weights = np.array(port_percents)
+
+
+    ''' Monte Carlo Method '''
+
+    # Define number of simulations
+    mc_sims = num_sims
+
+    # Time range in days
+    T = sim_days
+
+    # 2d array of 100 days with the mean returns repeated for each day
+    meanMatrix = np.full(shape=(T, len(weights)), fill_value=meanReturns)
+
+    # Transpose the matrix
+    meanMatrix = meanMatrix.T
+
+    # Portfolio values matrix (100 days x 100 simulations)
+    portfolio_sims = np.full(shape=(T, mc_sims), fill_value=0.0)
+
+    initialPortfolio = initial_sum
+
+    for m in range(0, mc_sims):
+        # MC loops
+        # See 11:20 in the video to see how *Multivariate Normal Distribution* is used and how the *Cholesky Decomposition* to determine the *Lower Triangular Matrix* is used for calculations
+        # So we get the sample data from the normal distribution and we correlate them with the covariance matrix with the lower triangle
+
+
+        Z = np.random.normal(size=(T, len(weights)))
+
+        # Lower triangle
+        L = np.linalg.cholesky(covMatrix)
+
+        # Note that dot and inner are similar. See docs
+        # dailyReturns = meanMatrix + np.dot(L, Z.T)
+        dailyReturns = meanMatrix + np.inner(L, Z)
+
+        # Accumulate the daily returns across the days
+        portfolio_sims[:, m] = np.cumprod(np.inner(weights, dailyReturns.T) + 1)*initialPortfolio
+
+
+    # Generate the figure **without using pyplot**.
+    fig = Figure(facecolor='#f0f0f0')
+    ax = fig.subplots()
+    ax.plot(portfolio_sims)
+
+    # Labels and colors
+    ax.set_xlabel('Days')
+    ax.set_ylabel('Portfolio Value ($)')
+    ax.set_title('Monte Carlo Simulation of a Stock Portfolio')
+    ax.set_facecolor('#f0f0f0')
+
+    # Save it to a temporary buffer.
+    buf = BytesIO()
+    fig.savefig(buf, format="png", bbox_inches='tight')
+
+    # Embed the result in the html output.
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+    plot = f"<img class='matplotlib-chart' src='data:image/png;base64,{data}'/>"
+
+
+
+
+    return render_template('stocks/monte-carlo.html', labels=labels, values=values, colors=colors, initial_sum=initial_sum, sim_days=sim_days, num_sims=num_sims, symbol_1=symbol_1, symbol_2=symbol_2, symbol_3=symbol_3, plot=plot)

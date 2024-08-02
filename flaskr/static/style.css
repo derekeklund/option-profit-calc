@@ -168,6 +168,26 @@ li:hover {
     cursor: pointer;
 }
 
+.blue-button {
+    background-color: #5544e9;
+    color: white;
+    padding: 5px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.red-button {
+    background-color: #e23939;
+    color: white;
+    padding: 5px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
 .gray-button {
     background-color: #9d9194;
     color: white;
@@ -540,9 +560,51 @@ legend {
     border: 1px solid #ccc;
 }
 
+.monte-graph-container {
+    flex: 1 1 auto;
+    justify-content: center;
+    margin: 10px;
+    margin-top: 60px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
 .chart {
+    padding-top: 10%;
     max-width: 80%;
     margin: 0 auto;
+}
+
+.doughnut-chart {
+    max-width: 100%;
+    /* margin: 0 auto; */
+}
+
+.matplotlib-chart {
+    width: 1000px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.sidebar-input {
+    padding: 20px;
+}
+
+.center {
+    text-align: center;
+}
+
+.asset-block {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.asset-block label {
+    font-weight: bold;
+    padding-right: 1em;
 }
 
 .bubbles-chart {

@@ -6,6 +6,169 @@
 
 {% block content %}
 
-    <h2>Monte Carlo Simulation</h2>
+    <div class="bubbles-container">
+
+        {# Sidebar for dropdown menu #}
+        <div class="bubbles-sidebar">
+
+            <br>
+            <br>
+            <br>
+
+            <div class="sidebar-input">
+
+                <form method="post">
+
+                    {# Initial Invenstment #}
+                    <div class="flex-item vertical-center">
+                        <label for="initial_sum">Initial Investment</label>
+                        <input class="text-input" name="initial_sum" id="initial_sum" value="{{ initial_sum }}">
+                    </div>
+
+                    {# Days for sim #}
+                    <div class="flex-item vertical-center">
+                        <label for="sim_days">Days to Simulate</label>
+                        <input class="text-input" name="sim_days" id="sim_days" value="{{ sim_days }}" required>
+                    </div>
+
+                    {# Number of sims #}
+                    <div class="flex-item vertical-center">
+                        <label for="num_sims">Number of Simulations</label>
+                        <input class="text-input" name="num_sims" id="num_sims" value="{{ num_sims }}" required>
+                    </div>
+
+                    <div id="stock_fields">
+                        {# Position 1 #}
+                        <div class="asset-block">
+                            <label for="symbol_1">Asset 1</label>
+                            <span>
+                                <input class="text-input" name="symbol_1" id="symbol_1" value="{{ symbol_1 }}" style="text-transform:uppercase" required>
+                            </span>
+                            <span>
+                                <input class="text-input" name="alloc_1" id="alloc_1" value="{{ values[0] }}" required>
+                            </span>
+                        </div>
+                        {# Position 2 #}
+                        <div class="asset-block">
+                            <label for="symbol_2">Asset 2</label>
+                            <span>
+                                <input class="text-input" name="symbol_2" id="symbol_2" value="{{ symbol_2 }}" style="text-transform:uppercase" required>
+                            </span>
+                            <span>
+                                <input class="text-input" name="alloc_2" id="alloc_2" value="{{ values[1] }}" required>
+                            </span>
+                        </div>
+                        {# Position 3 #}
+                        <div class="asset-block">
+                            <label for="symbol_3">Asset 3</label>
+                            <span>
+                                <input class="text-input" name="symbol_3" id="symbol_3" value="{{ symbol_3 }}" style="text-transform:uppercase" required>
+                            </span>
+                            <span>
+                                <input class="text-input" name="alloc_3" id="alloc_3" value="{{ values[2] }}" required>
+                            </span>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="center">
+                        <button type="button" class="button" onclick="addField()">Add Stock</button>
+                        <button type="button" class="red-button" onclick="removeField()">Remove Stock</button>
+                    </div>
+                    <div class="center">
+                        <button type="submit" class="blue-button">Run Simulation</button>
+                    </div>
+
+                </form>
+
+                {# Add and remove stock + allocation fields #}
+                <script>
+                    let fieldCount = 3;
+                    let maxFields = 10;
+                    const stockFields = document.getElementById('stock_fields');
+
+                    function addField() {
+                        if (fieldCount < maxFields) {
+                            fieldCount++;
+                            let alloc_array_position = '{{ values[' + (fieldCount - 1) + '] }}';
+                            // let alloc_array_position = '{{ values[' + string((fieldCount - 1)) + '] }}';
+                            let symbol_count = 'symbol_' + fieldCount;
+                            // let symbol_count = 'symbol_' + string(fieldCount);
+                            const newField = document.createElement('div');
+                            newField.className = 'asset-block';
+                            newField.innerHTML = 
+                                `<label for="symbol_${fieldCount}">Asset ${fieldCount}</label>
+                                <span>
+                                    <input class="text-input" name="symbol_${fieldCount}" id="symbol_${fieldCount}" value="" style="text-transform:uppercase" required>
+                                </span>
+                                <span>
+                                    <input class="text-input" name="alloc_${fieldCount}" id="alloc_${fieldCount}" value="${alloc_array_position}" required>
+                                </span>`;
+                            stockFields.appendChild(newField);
+                        } else {
+                            alert('Max number of 10 stocks allowed.');
+                        }
+                        console.log(fieldCount);
+                        console.log(stockFields);
+                    }
+
+                    function removeField() {
+                        console.log(stockFields.lastChild);
+                        // if stockFiedls.lastChild != null {
+                        if (stockFields.lastChild == " ") {
+                            stockFields.removeChild(stockFields.lastChild);
+                        }
+                        if (fieldCount > 1) {
+                            stockFields.removeChild(stockFields.lastChild);
+                            fieldCount--;
+                        } else {
+                            alert('At least one stock field must remain.');
+                        }
+                        console.log(fieldCount);
+                        console.log(stockFields);
+                    }
+
+                </script>
+
+            </div>
+
+            <br>
+            <br>
+            <br>
+
+            {# Canvas for stock chart #}
+            <div class="doughnut-chart">
+                <canvas id="stockChart" width="200" height="100"></canvas>
+            </div>
+
+
+
+        </div>
+
+        <div class="monte-graph-container">
+
+            {# Canvas for stock chart #}
+            {{ plot | safe }}
+
+        </div>
+
+        {# Chart.js donut script #}
+        <script>
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                labels: {{ labels | safe }},
+                datasets: [{
+                    label: 'Portfolio Allocation',
+                    data: {{ values | safe }},
+                    backgroundColor: {{ colors | safe }}
+                }]
+                },
+            });
+        </script>
+
+    </div>
 
 {% endblock %}
