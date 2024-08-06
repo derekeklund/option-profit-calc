@@ -457,26 +457,31 @@ def monte_carlo():
     labels = [symbol_1, symbol_2, symbol_3]
     values = [55, 30, 15]
     colors = [
-      'rgb(255, 99, 132)',
-      'rgb(54, 162, 235)',
-      'rgb(255, 205, 86)'
+      'rgb(255, 99, 132)', # red
+      'rgb(54, 162, 235)', # blue
+      'rgb(255, 205, 86)', # yellow
+      'rgba(0, 204, 102)', # green
+      'rgba(153, 102, 255)', # purple
+      'rgba(255, 159, 64)', # orange
+      'rgba(102, 255, 255)', # teal
+      'rgba(255, 153, 204)', # pink
+      'rgba(201, 203, 207)', # gray
+      'rgba(64, 64, 64)' # dark gray
     ]
+
+    field_count = 3
 
     if request.method == 'POST':
         print("POST method")
 
-        # symbols = request.form.getlist('symbols')
-        # allocations = request.form.getlist('allocations')
-
-        # # Convert allocations to integers
-        # allocations = [int(a) for a in allocations]
-
-        # print("SYMBOLS: ", symbols)
-        # print("ALLOCATIONS: ", allocations)
-
         # Clear values and labels
         values = []
         labels = []
+
+        # Capture the submitted form data
+        field_count = int(request.form.get('field_count', 3))  # Default to 3 if not found
+
+        print("Field count: ", field_count)
 
         # Get the form keys
         form_keys = request.form.keys()
@@ -492,43 +497,12 @@ def monte_carlo():
         print("Simulation days: ", sim_days)
         print("Number of simulations: ", num_sims)
 
-        i = 1
-        while i < 11:
-            try:
-                symbol = request.form[f'symbol_{i}']
-                alloc = request.form[f'alloc_{i}']
-
-                if symbol != '' and alloc != '':
-                    labels.append(symbol)
-                    values.append(int(alloc))
-                    
-                else:
-                    break
-
-                print(f"Symbol {i}: {symbol} ({alloc}%)")
-                i += 1
-
-            except KeyError as e:
-                break
-
-        holdings = i - 1
-
-        # symbol_1 = request.form['symbol_1']
-        # symbol_2 = request.form['symbol_2']
-        # symbol_3 = request.form['symbol_3']
-        # alloc_1 = int(request.form['alloc_1'])
-        # alloc_2 = int(request.form['alloc_2'])
-        # alloc_3 = int(request.form['alloc_3'])
-        
-        # labels = [symbol_1, symbol_2, symbol_3]
-        # values = [alloc_1, alloc_2, alloc_3]
-
-        # print(f"Symbol 1: {symbol_1} ({alloc_1}%)")
-        # print(f"Symbol 2: {symbol_2} ({alloc_2}%)")
-        # print(f"Symbol 3: {symbol_3} ({alloc_3}%)")
-
-        # for value in values:
-        #     print("Value: ", value)
+        for i in range(1, field_count + 1):
+            symbol = request.form.get(f'symbol_{i}').upper()
+            alloc = int(request.form.get(f'alloc_{i}'))
+            if symbol and alloc:
+                labels.append(symbol)
+                values.append(alloc)
 
         print("Sum values: ", sum(values))
 
@@ -536,8 +510,7 @@ def monte_carlo():
             error = 'Allocation percentages must add up to 100.'
             flash(error)
 
-            return render_template('stocks/monte-carlo.html', labels=labels, values=values, colors=colors, initial_sum=initial_sum, sim_days=sim_days, num_sims=num_sims, symbol_1=symbol_1, symbol_2=symbol_2, symbol_3=symbol_3)
-
+            return render_template('stocks/monte-carlo.html', labels=labels, values=values, colors=colors, initial_sum=initial_sum, sim_days=sim_days, num_sims=num_sims, symbol_1=symbol_1, symbol_2=symbol_2, symbol_3=symbol_3, field_count=field_count)
         
 
     # Create plot and return it
@@ -556,6 +529,7 @@ def monte_carlo():
 
         # Get closing data for each stock from Yahoo Finance directly
         for stock in stocks:
+
             data = yf.download(stock, start=start, end=end)
 
             # Keep only date and close columns
@@ -654,6 +628,6 @@ def monte_carlo():
     plot = f"<img class='matplotlib-chart' src='data:image/png;base64,{data}'/>"
 
 
+    print("field_count: ", field_count)
 
-
-    return render_template('stocks/monte-carlo.html', labels=labels, values=values, colors=colors, initial_sum=initial_sum, sim_days=sim_days, num_sims=num_sims, symbol_1=symbol_1, symbol_2=symbol_2, symbol_3=symbol_3, plot=plot)
+    return render_template('stocks/monte-carlo.html', labels=labels, values=values, colors=colors, initial_sum=initial_sum, sim_days=sim_days, num_sims=num_sims, symbol_1=symbol_1, symbol_2=symbol_2, symbol_3=symbol_3, plot=plot, field_count=field_count)

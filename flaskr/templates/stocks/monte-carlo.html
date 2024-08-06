@@ -38,40 +38,20 @@
                     </div>
 
                     <div id="stock_fields">
-                        {# Position 1 #}
+                        {% for i in range(field_count) %}
                         <div class="asset-block">
-                            <label for="symbol_1">Asset 1</label>
+                            <label for="symbol_{{ i+1 }}">Asset {{ i+1 }}</label>
                             <span>
-                                <input class="text-input" name="symbol_1" id="symbol_1" value="{{ symbol_1 }}" style="text-transform:uppercase" required>
+                                <input class="text-input" name="symbol_{{ i+1 }}" id="symbol_{{ i+1 }}" value="{{ labels[i] }}" style="text-transform:uppercase" required>
                             </span>
                             <span>
-                                <input class="text-input" name="alloc_1" id="alloc_1" value="{{ values[0] }}" required>
+                                <input class="text-input" name="alloc_{{ i+1 }}" id="alloc_{{ i+1 }}" value="{{ values[i] }}" required>
                             </span>
                         </div>
-                        {# Position 2 #}
-                        <div class="asset-block">
-                            <label for="symbol_2">Asset 2</label>
-                            <span>
-                                <input class="text-input" name="symbol_2" id="symbol_2" value="{{ symbol_2 }}" style="text-transform:uppercase" required>
-                            </span>
-                            <span>
-                                <input class="text-input" name="alloc_2" id="alloc_2" value="{{ values[1] }}" required>
-                            </span>
-                        </div>
-                        {# Position 3 #}
-                        <div class="asset-block">
-                            <label for="symbol_3">Asset 3</label>
-                            <span>
-                                <input class="text-input" name="symbol_3" id="symbol_3" value="{{ symbol_3 }}" style="text-transform:uppercase" required>
-                            </span>
-                            <span>
-                                <input class="text-input" name="alloc_3" id="alloc_3" value="{{ values[2] }}" required>
-                            </span>
-                        </div>
-
-                        
-
+                        {% endfor %}
                     </div>
+        
+                    <input type="hidden" name="field_count" id="field_count" value="{{ field_count }}">
 
 
                     <br>
@@ -88,9 +68,10 @@
 
                 {# Add and remove stock + allocation fields #}
                 <script>
-                    let fieldCount = 3;
+                    let fieldCount = {{ field_count }};
                     let maxFields = 10;
                     const stockFields = document.getElementById('stock_fields');
+                    const fieldCountInput = document.getElementById('field_count');
 
                     function addField() {
                         if (fieldCount < maxFields) {
@@ -110,6 +91,7 @@
                                 <input class="text-input" name="alloc_${fieldCount}" id="alloc_${fieldCount}" required>
                             </span>`;
                             stockFields.appendChild(newField);
+                            fieldCountInput.value = fieldCount; // Update hidden input
                         } else {
                             alert('Max number of 10 stocks allowed.');
                         }
@@ -125,6 +107,7 @@
                             const lastFieldDiv = stockFieldDivs[stockFieldDivs.length - 1];
                             stockFields.removeChild(lastFieldDiv);
                             fieldCount--;
+                            fieldCountInput.value = fieldCount; // Update hidden input
                         } else {
                             alert('At least one stock field must remain.');
                         }
@@ -162,7 +145,7 @@
                 data: {
                 labels: {{ labels | safe }},
                 datasets: [{
-                    label: 'Portfolio Allocation',
+                    label: 'Allocation %',
                     data: {{ values | safe }},
                     backgroundColor: {{ colors | safe }}
                 }]
