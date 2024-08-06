@@ -141,6 +141,15 @@ li:hover {
     width: 75px;
 }
 
+.small-text-input {
+    padding: 5px;
+    margin: 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    width: 25px;
+}
+
+
 .dropdown {
     padding: 5px;
     margin: 5px;

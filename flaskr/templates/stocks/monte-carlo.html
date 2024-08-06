@@ -68,7 +68,11 @@
                                 <input class="text-input" name="alloc_3" id="alloc_3" value="{{ values[2] }}" required>
                             </span>
                         </div>
+
+                        
+
                     </div>
+
 
                     <br>
 
@@ -98,35 +102,32 @@
                             const newField = document.createElement('div');
                             newField.className = 'asset-block';
                             newField.innerHTML = 
-                                `<label for="symbol_${fieldCount}">Asset ${fieldCount}</label>
-                                <span>
-                                    <input class="text-input" name="symbol_${fieldCount}" id="symbol_${fieldCount}" value="" style="text-transform:uppercase" required>
-                                </span>
-                                <span>
-                                    <input class="text-input" name="alloc_${fieldCount}" id="alloc_${fieldCount}" value="${alloc_array_position}" required>
-                                </span>`;
+                            `<label for="symbol_${fieldCount}">Asset ${fieldCount}</label>
+                            <span>
+                                <input class="text-input" name="symbol_${fieldCount}" id="symbol_${fieldCount}" style="text-transform:uppercase" required>
+                            </span>
+                            <span>
+                                <input class="text-input" name="alloc_${fieldCount}" id="alloc_${fieldCount}" required>
+                            </span>`;
                             stockFields.appendChild(newField);
                         } else {
                             alert('Max number of 10 stocks allowed.');
                         }
                         console.log(fieldCount);
                         console.log(stockFields);
+                        console.log("Added, yo")
                     }
 
                     function removeField() {
-                        console.log(stockFields.lastChild);
-                        // if stockFiedls.lastChild != null {
-                        if (stockFields.lastChild == " ") {
-                            stockFields.removeChild(stockFields.lastChild);
-                        }
                         if (fieldCount > 1) {
-                            stockFields.removeChild(stockFields.lastChild);
+                            // Find the last stock-field element
+                            const stockFieldDivs = stockFields.getElementsByClassName('asset-block');
+                            const lastFieldDiv = stockFieldDivs[stockFieldDivs.length - 1];
+                            stockFields.removeChild(lastFieldDiv);
                             fieldCount--;
                         } else {
                             alert('At least one stock field must remain.');
                         }
-                        console.log(fieldCount);
-                        console.log(stockFields);
                     }
 
                 </script>

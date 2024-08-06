@@ -444,6 +444,8 @@ def bubbles():
 def monte_carlo():
     print("In monte carlo route")
 
+    error = None
+
     # Pre-selected variables
     initial_sum = 10000
     sim_days = 100
@@ -463,6 +465,19 @@ def monte_carlo():
     if request.method == 'POST':
         print("POST method")
 
+        # symbols = request.form.getlist('symbols')
+        # allocations = request.form.getlist('allocations')
+
+        # # Convert allocations to integers
+        # allocations = [int(a) for a in allocations]
+
+        # print("SYMBOLS: ", symbols)
+        # print("ALLOCATIONS: ", allocations)
+
+        # Clear values and labels
+        values = []
+        labels = []
+
         # Get the form keys
         form_keys = request.form.keys()
         form_keys = list(form_keys)
@@ -477,19 +492,53 @@ def monte_carlo():
         print("Simulation days: ", sim_days)
         print("Number of simulations: ", num_sims)
 
-        symbol_1 = request.form['symbol_1']
-        symbol_2 = request.form['symbol_2']
-        symbol_3 = request.form['symbol_3']
-        alloc_1 = int(request.form['alloc_1'])
-        alloc_2 = int(request.form['alloc_2'])
-        alloc_3 = int(request.form['alloc_3'])
-        
-        labels = [symbol_1, symbol_2, symbol_3]
-        values = [alloc_1, alloc_2, alloc_3]
+        i = 1
+        while i < 11:
+            try:
+                symbol = request.form[f'symbol_{i}']
+                alloc = request.form[f'alloc_{i}']
 
-        print(f"Symbol 1: {symbol_1} ({alloc_1}%)")
-        print(f"Symbol 2: {symbol_2} ({alloc_2}%)")
-        print(f"Symbol 3: {symbol_3} ({alloc_3}%)")
+                if symbol != '' and alloc != '':
+                    labels.append(symbol)
+                    values.append(int(alloc))
+                    
+                else:
+                    break
+
+                print(f"Symbol {i}: {symbol} ({alloc}%)")
+                i += 1
+
+            except KeyError as e:
+                break
+
+        holdings = i - 1
+
+        # symbol_1 = request.form['symbol_1']
+        # symbol_2 = request.form['symbol_2']
+        # symbol_3 = request.form['symbol_3']
+        # alloc_1 = int(request.form['alloc_1'])
+        # alloc_2 = int(request.form['alloc_2'])
+        # alloc_3 = int(request.form['alloc_3'])
+        
+        # labels = [symbol_1, symbol_2, symbol_3]
+        # values = [alloc_1, alloc_2, alloc_3]
+
+        # print(f"Symbol 1: {symbol_1} ({alloc_1}%)")
+        # print(f"Symbol 2: {symbol_2} ({alloc_2}%)")
+        # print(f"Symbol 3: {symbol_3} ({alloc_3}%)")
+
+        # for value in values:
+        #     print("Value: ", value)
+
+        print("Sum values: ", sum(values))
+
+        if sum(values) != 100:
+            error = 'Allocation percentages must add up to 100.'
+            flash(error)
+
+            return render_template('stocks/monte-carlo.html', labels=labels, values=values, colors=colors, initial_sum=initial_sum, sim_days=sim_days, num_sims=num_sims, symbol_1=symbol_1, symbol_2=symbol_2, symbol_3=symbol_3)
+
+        
 
     # Create plot and return it
 
