@@ -25,7 +25,26 @@
                 <li class="float-right"><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
             {% else %}
                 <li class="float-right"><a href="{{ url_for('auth.register') }}">Register</a></li>
-                <li class="float-right"><a href="{{ url_for('auth.login') }}">Log In</a></li>
+                {# <li class="float-right"><a href="{{ url_for('auth.login') }}">Log In</a></li> #}
+
+                {# <button class="login-button float-right" onclick="openLoginForm()">Log In</button> #}
+
+                <li class="login-button float-right" id="toggleButton" onclick="openLoginForm()">Log In</li>
+
+                <div class="form-popup" id="loginForm">
+                    <form method="post" class="form-container">
+                        {# <h3>Login</h3> #}
+
+                        <label for="email"><b>Username</b></label>
+                        <input type="text" placeholder="Enter Username" name="username" id="username" required>
+
+                        <label for="psw"><b>Password</b></label>
+                        <input type="password" placeholder="Enter Password" name="password" id="password" required>
+
+                        <input type="submit" class="btn" value="Log In">
+                        <button type="button" class="btn cancel" onclick="closeLoginForm()">Close</button>
+                    </form>
+                </div>
             {% endif %}
         </ul>
     </nav>
@@ -39,6 +58,24 @@
         {% endfor %}
         {% block content %}{% endblock %}
     </section>
+
+    <script>
+        const toggleButton = document.getElementById('toggleButton');
+        const form = document.getElementById('loginForm');
+
+        toggleButton.addEventListener('click', () => {
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+                // toggleButton.textContent = 'Close';
+                // toggleButton.style.backgroundColor = '#e23939';
+            } else {
+                form.style.display = 'none';
+                // toggleButton.textContent = 'Log In';
+            }
+        });
+    </script>
+
+
 
     <script>
         // Sticky navbar on page Y-axis scroll

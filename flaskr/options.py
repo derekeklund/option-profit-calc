@@ -10,16 +10,35 @@ import yfinance as yf
 import pandas as pd
 from datetime import datetime
 from flaskr.db import get_db
-from .helpers import get_moneyness, get_selected_expiration, get_buy_write
+from .helpers import get_moneyness, get_selected_expiration, get_buy_write, test_login
 
 
 @bp.route('/scanner', methods=('GET', 'POST'))
 def scanner():
-    if request.method == 'GET':
-        show_div = False
+    print("In scanner route")
+
+    show_div = False
+    test_login()
+
+    # if request.method == 'GET':
+    #     show_div = False
 
     # If user submits a ticker, redirect to the same page
     if request.method == 'POST':
+
+        username = None
+
+        try:
+            username = request.form['username']
+        except:
+            pass
+
+        print("Username:", username)
+
+        if username != None:
+            print("session:", session)
+
+            return render_template('options/scanner.html', show_div=show_div)
 
         moneyness = get_moneyness()
         print("Moneyness:", moneyness)
@@ -112,7 +131,7 @@ def profit_calc():
     show_div = False
     
     if request.method == 'GET':
-        session.clear()
+        # session.clear() # Removed bc it was logging user out
 
         moneyness = get_moneyness()
         

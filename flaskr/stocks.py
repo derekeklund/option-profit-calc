@@ -20,8 +20,12 @@ import numpy as np
 def watchlist():
     print("In watchlist route")
 
+    print("g.user: ", g.user)
+
     # Get the user's watchlist
     user_id = g.user['id']
+
+    print("User ID: ", user_id)
     watchlist = get_watchlist(user_id)
 
     # Input list of tickers to get prices dict
@@ -82,8 +86,6 @@ def watchlist():
 
     # Time periods to pass to dropdown
     time_periods = ['1 Day', '5 Days', '1 Month', '3 Months', '6 Months', 'YTD', '1 Year', '2 Year', '5 Year', '10 Year', 'Max']
-
-
 
     
     if request.method == 'GET':
@@ -292,6 +294,13 @@ def bubbles():
     elif selected_x_axis == 'Beta':
         target_x_axis = 'beta'
 
+    if selected_index == 'Nasdaq 100':
+        selected_index = 'nasdaq_100'
+    elif selected_index == 'S&P 500':
+        selected_index = 's_and_p_500'
+    elif selected_index == 'Russell 2000':
+        selected_index = 'russell_2000'
+
     # Dictionary of stock market caps and sectors
     prices_dict = {}
 
@@ -300,7 +309,7 @@ def bubbles():
     # Get all tickers from nasdaq_100 table
     db = get_db()
     nasdaq_100_tickers = db.execute(
-        'SELECT ticker FROM nasdaq_100'
+        f'SELECT ticker FROM {selected_index}'
     ).fetchall()
 
     # Convert objects to strings
@@ -311,7 +320,7 @@ def bubbles():
     # tickers = nasdaq_100_tickers
 
     # query = f'SELECT ticker FROM company_info WHERE sector = "{selected_sector}"'
-    query = f'SELECT ticker FROM company_info WHERE sector = "{selected_sector}" AND ticker IN (SELECT ticker FROM nasdaq_100);'
+    query = f'SELECT ticker FROM company_info WHERE sector = "{selected_sector}" AND ticker IN (SELECT ticker FROM {selected_index});'
 
     # Get list of all tickers in company_info table that are in the technology sector
     db = get_db()
@@ -321,7 +330,7 @@ def bubbles():
 
     target_tickers = [t[0] for t in target_tickers]
 
-    print(f"# of target ({selected_sector}) tickers: ", len(target_tickers))
+    print(f"# of target ({selected_index} {selected_sector}) tickers: ", len(target_tickers))
 
     for t in target_tickers:
             

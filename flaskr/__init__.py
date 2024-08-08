@@ -1,5 +1,4 @@
 import os
-
 from flask import Flask
 
 # https://flask.palletsprojects.com/en/2.3.x/tutorial/factory/
@@ -53,5 +52,6 @@ def create_app(test_config=None):
     from . import utils
     app.register_blueprint(utils.bp)
 
+    print("App created")
 
     return app

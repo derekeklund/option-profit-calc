@@ -61,7 +61,8 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            # return redirect(url_for('index'))
+            return redirect(url_for('stocks.watchlist'))
 
         flash(error)
 
@@ -90,6 +91,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
+            print("User is None")
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)
