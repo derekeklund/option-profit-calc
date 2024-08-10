@@ -8,18 +8,49 @@ from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
+from .helpers import login_user
 
 bp = Blueprint('blog', __name__)
 
-@bp.route('/')
+@bp.route('/', methods=('GET', 'POST'))
 def index():
+    print("Blog index")
     db = get_db()
+
+    # Get the form keys
+    form_keys = request.form.keys()
+    form_keys = list(form_keys)
+
+    print("Form keys: ", form_keys)
+
+    # Check if user has entered login info in from this page
+    username = None
+
+    try:
+        username = request.form['username']
+    except:
+        pass
+
+    print("Username: ", username)
+
+    # If yes, log user in + refresh page
+    if username != None:
+        login_user()
+
+    '''
+    # This is no longer needed but keeping for reference
+    
     posts = db.execute(
         'SELECT p.id, title, body, created, author_id, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
+
     return render_template('blog/index.html', posts=posts)
+    '''
+
+    return render_template('blog/index.html')
+    
 
 
 @bp.route('/create', methods=('GET', 'POST'))

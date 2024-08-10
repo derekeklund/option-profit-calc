@@ -10,7 +10,7 @@ import yfinance as yf
 import pandas as pd
 from datetime import datetime
 from flaskr.db import get_db
-from .helpers import get_moneyness, get_selected_expiration, get_buy_write, test_login
+from .helpers import get_moneyness, get_selected_expiration, get_buy_write, login_user
 
 
 @bp.route('/scanner', methods=('GET', 'POST'))
@@ -18,14 +18,11 @@ def scanner():
     print("In scanner route")
 
     show_div = False
-    test_login()
-
-    # if request.method == 'GET':
-    #     show_div = False
 
     # If user submits a ticker, redirect to the same page
     if request.method == 'POST':
 
+        # Check if user has entered login info in from this page
         username = None
 
         try:
@@ -33,10 +30,9 @@ def scanner():
         except:
             pass
 
-        print("Username:", username)
-
+        # If yes, log user in + refresh page
         if username != None:
-            print("session:", session)
+            login_user()
 
             return render_template('options/scanner.html', show_div=show_div)
 
@@ -142,6 +138,20 @@ def profit_calc():
 
     if request.method == 'POST':
         print("POST request")
+
+        # Check if user has entered login info in from this page
+        username = None
+
+        try:
+            username = request.form['username']
+        except:
+            pass
+
+        # If yes, log user in + refresh page
+        if username != None:
+            login_user()
+
+            return render_template('options/profit-calc.html', show_div=show_div)
 
         tables = []
 
@@ -502,6 +512,7 @@ def profit_calc():
         return render_template('options/profit-calc.html', tables=tables, show_div=show_div, last_price=price, selected_strike=strike, expiries=exp_dates, selected_exp_date=expiry, moneyness=moneyness, buy_write=buy_write, lower_bound=lower_bound, upper_bound=upper_bound)
 
 
+# This refreshes the profit loss table in the profit-calc route
 @bp.route('/refresh-calc', methods=('POST', 'GET'))
 def refresh_calc():
 
@@ -530,9 +541,29 @@ def max_pain():
 
     if request.method == 'POST':
         print("POST request")
-        expiry = request.form['expiry']
 
-        ticker = request.form['symbol'].upper()
+        # Check if user has entered login info in from this page
+        username = None
+
+        try:
+            username = request.form['username']
+        except:
+            pass
+
+        # If yes, log user in + refresh page
+        if username != None:
+            login_user()
+
+        else:
+            # Get ticker + expiration date from form
+            expiry = request.form['expiry']
+            ticker = request.form['symbol'].upper()
+
+        # Get the form keys
+        form_keys = request.form.keys()
+        form_keys = list(form_keys)
+        print("Form keys:", form_keys)
+        
 
     # Get ticker info
     ticker_obj = yf.Ticker(ticker)

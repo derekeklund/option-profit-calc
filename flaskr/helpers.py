@@ -8,7 +8,7 @@ from flaskr.db import get_db
 from werkzeug.security import check_password_hash
 
 
-def test_login():
+def login_user():
     username = None
     password = None
 
@@ -16,7 +16,7 @@ def test_login():
         username = request.form['username']
         password = request.form['password']
     except Exception as e:
-        print("ERROR: ", e)
+        print("LOGIN EXCEPTION: ", e)
 
         return None
 
@@ -31,16 +31,20 @@ def test_login():
     elif not check_password_hash(user['password'], password):
         error = 'Incorrect password.'
 
-    print(f"loginTest Username: {username}")
-    print(f"loginTest Password: {password}")
-    print(f"loginTest User: {user}")
-    print(f"loginTest Error: {error}")
-
     if error is None:
+        # Clear the session and set the user_id
         session.clear()
         session['user_id'] = user['id']
-        # return redirect(url_for('index'))
-        return redirect(url_for('stocks.watchlist'))
+        user_id = session.get('user_id')
+
+        if user_id is None:
+            g.user = None
+        else:
+            g.user = get_db().execute(
+                'SELECT * FROM user WHERE id = ?', (user_id,)
+            ).fetchone()
+
+    return
     
 
 

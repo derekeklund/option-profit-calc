@@ -11,7 +11,7 @@ import pandas as pd
 from datetime import datetime
 from flaskr.db import get_db
 from flaskr.auth import login_required
-from flaskr.helpers import get_watchlist
+from flaskr.helpers import get_watchlist, login_user
 import numpy as np
 
 
@@ -264,6 +264,18 @@ def bubbles():
 
         print("Form keys: ", form_keys)
 
+        # Check if user has entered login info in from this page
+        username = None
+
+        try:
+            username = request.form['username']
+        except:
+            pass
+
+        # If yes, log user in + refresh page
+        if username != None:
+            login_user()
+
         # Check which action the user took
         if 'index' in form_keys:
             selected_index = request.form['index']
@@ -445,7 +457,6 @@ def bubbles():
     x_axis_options = ['Sector', 'Market Cap', 'Beta']
 
 
-
     return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict, sectors=sectors, selected_sector=selected_sector,  indices=indices, selected_index=selected_index, y_axis_options=y_axis_options, selected_y_axis=selected_y_axis, x_axis_options=x_axis_options, selected_x_axis=selected_x_axis)
 
 
@@ -483,43 +494,57 @@ def monte_carlo():
     if request.method == 'POST':
         print("POST method")
 
-        # Clear values and labels
-        values = []
-        labels = []
-
-        # Capture the submitted form data
-        field_count = int(request.form.get('field_count', 3))  # Default to 3 if not found
-
-        print("Field count: ", field_count)
-
         # Get the form keys
         form_keys = request.form.keys()
         form_keys = list(form_keys)
 
         print("Form keys: ", form_keys)
 
-        initial_sum = int(request.form['initial_sum'])
-        sim_days = int(request.form['sim_days'])
-        num_sims = int(request.form['num_sims'])
+        # Check if user has entered login info in from this page
+        username = None
 
-        print("Initial sum: ", initial_sum)
-        print("Simulation days: ", sim_days)
-        print("Number of simulations: ", num_sims)
+        try:
+            username = request.form['username']
+        except:
+            pass
 
-        for i in range(1, field_count + 1):
-            symbol = request.form.get(f'symbol_{i}').upper()
-            alloc = int(request.form.get(f'alloc_{i}'))
-            if symbol and alloc:
-                labels.append(symbol)
-                values.append(alloc)
+        # If yes, log user in + refresh page
+        if username != None:
+            login_user()
+        else:
+            # No login info entered, continue with simulation form data
 
-        print("Sum values: ", sum(values))
+            # Clear values and labels
+            values = []
+            labels = []
 
-        if sum(values) != 100:
-            error = 'Allocation percentages must add up to 100.'
-            flash(error)
+            # Capture the submitted form data
+            field_count = int(request.form.get('field_count', 3))  # Default to 3 if not found
 
-            return render_template('stocks/monte-carlo.html', labels=labels, values=values, colors=colors, initial_sum=initial_sum, sim_days=sim_days, num_sims=num_sims, symbol_1=symbol_1, symbol_2=symbol_2, symbol_3=symbol_3, field_count=field_count)
+            print("Field count: ", field_count)
+
+            initial_sum = int(request.form['initial_sum'])
+            sim_days = int(request.form['sim_days'])
+            num_sims = int(request.form['num_sims'])
+
+            print("Initial sum: ", initial_sum)
+            print("Simulation days: ", sim_days)
+            print("Number of simulations: ", num_sims)
+
+            for i in range(1, field_count + 1):
+                symbol = request.form.get(f'symbol_{i}').upper()
+                alloc = int(request.form.get(f'alloc_{i}'))
+                if symbol and alloc:
+                    labels.append(symbol)
+                    values.append(alloc)
+
+            print("Sum values: ", sum(values))
+
+            if sum(values) != 100:
+                error = 'Allocation percentages must add up to 100.'
+                flash(error)
+
+                return render_template('stocks/monte-carlo.html', labels=labels, values=values, colors=colors, initial_sum=initial_sum, sim_days=sim_days, num_sims=num_sims, symbol_1=symbol_1, symbol_2=symbol_2, symbol_3=symbol_3, field_count=field_count)
         
 
     # Create plot and return it
