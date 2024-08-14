@@ -2,6 +2,7 @@
 
 :root {
     --gray: #c2c8c5;
+    --dark-gray: #757070;
     --white: #ffffff;
     --green: #009879;
     --background: #eee;
@@ -13,17 +14,24 @@
     border: 1px solid var(--white);
 }
 
-.gradient1 {
-    background: linear-gradient(90deg, #48a2a8 0%, #47df68 100%);
-    color: var(--white);
-    max-width: 80%;
-    margin: auto;
-    margin-top: 50px;
-    min-height: 100px;
-    text-align: center;
-    font-size: 30px;
-    font-weight: 600;
-    padding-top: 50px;
+.condensed-content {
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+.grid-columns {
+    display: grid;
+    grid-gap: 5px;
+    justify-content: start;
+}
+
+.center {
+    justify-content: center;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 .gradient2 {
@@ -126,7 +134,8 @@ li:hover {
 }
 
 .sticky{
-    position: fixed;
+    /* position: fixed; */
+    position: sticky;
     top: 0;
     left: 0;
     width: 100%;
@@ -204,14 +213,6 @@ li:hover {
 
 /* End popup form */
 
-.text-input {
-    padding: 5px;
-    margin: 5px;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-    width: 75px;
-}
-
 .small-text-input {
     padding: 5px;
     margin: 5px;
@@ -220,6 +221,21 @@ li:hover {
     width: 25px;
 }
 
+.text-input {
+    padding: 5px;
+    /* margin: 5px; */
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    width: 75px;
+}
+
+.large-text-input {
+    padding: 5px;
+    margin: 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    width: 125px;
+}
 
 .dropdown {
     padding: 5px;
@@ -293,21 +309,21 @@ hr { border: none; border-top: 1px solid lightgray; }
 nav h1 a { text-decoration: none; padding: 0.25rem 0.5rem; }
 nav ul  { display: flex; list-style: none; margin: 0; padding: 0; }
 nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; } */
-.content { padding: 0 1rem 1rem; }
+/* .content { padding: 0 1rem 1rem; }
 .content > header { border-bottom: 1px solid lightgray; display: flex; align-items: flex-end; }
-.content > header h1 { flex: auto; margin: 1rem 0 0.25rem 0; }
+.content > header h1 { flex: auto; margin: 1rem 0 0.25rem 0; } */
 .flash { margin: 1em 0; padding: 1em; background: #cae6f6; border: 1px solid #377ba8; }
-.post > header { display: flex; align-items: flex-end; font-size: 0.85em; }
+/* .post > header { display: flex; align-items: flex-end; font-size: 0.85em; }
 .post > header > div:first-of-type { flex: auto; }
 .post > header h1 { font-size: 1.5em; margin-bottom: 0; }
 .post .about { color: slategray; font-style: italic; }
-.post .body { white-space: pre-line; }
-.content:last-child { margin-bottom: 0; }
+.post .body { white-space: pre-line; } */
+/* .content:last-child { margin-bottom: 0; }
 .content form { margin: 1em 0; display: flex; flex-direction: column; }
 .content label { font-weight: normal; margin-bottom: 0em; }
 .content input, .content textarea { margin-bottom: 0em; max-width: 10em; }
 .content select { width: 10em; }
-.content textarea { min-height: 12em; resize: vertical; }
+.content textarea { min-height: 12em; resize: vertical; } */
 /* input.danger { color: #cc2f2e; }
 input[type=submit] { align-self: start; min-width: 10em; } */
 
@@ -412,8 +428,79 @@ input[type=submit] { align-self: start; min-width: 10em; } */
     display: flex;
 }
 
+.grid-container {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    grid-gap: 10px;
+    /* border: 1px solid rgba(0, 0, 0, 0.8); */
+}
+
 .flex-item {
     flex-grow: 1;
+}
+
+/* Calculator page */
+
+.calc-page {
+    display: inline-flex;
+    margin: 0 auto;
+    max-width: 70%;
+    padding: 0px 20px;
+}
+
+.calc-container {
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-right: 20px;
+    width: 400px;
+    height: 460px;
+    display: grid;
+    grid-gap: 10px;
+    background-color: var(--dark-gray);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.calc-button {
+    display: flex;
+    justify-content: flex-start;
+    /* border: 1px solid rgba(0, 0, 0, 0.8); */
+    width: 200px;
+    height: 100px;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    background-color: var(--gray);
+}
+
+.calc-buttons {
+    font-weight: bold;
+}
+
+.grid-form {
+    display: grid;
+    grid-gap: 10px;
+}
+
+.gradient1 {
+    display: block;
+    background: linear-gradient(90deg, #48a2a8 0%, #47df68 100%);
+    color: var(--white);
+    width: 100%;
+    margin: auto;
+    /* margin-top: 50px; */
+    min-height: 80px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    padding-top: 50px;
+    border-radius: 10px;
+}
+
+.radio-bundled {
+    display: flex;
+    flex-direction: column;
 }
 
 .vertical-center {
@@ -458,12 +545,13 @@ legend {
 
 .tables-container {
     display: flex;
+    margin-top: 50px;
     justify-content: space-between;
 }
 
 .table-item-small {
-    margin-top: -10px;
-    margin-right: 10px;
+    /* margin-top: -10px; */
+    margin-right: 20px;
     /* padding: 20px; */
     /* background-color: #f0f0f0; */
     text-align: center; 
@@ -575,6 +663,10 @@ legend {
     height: 90vh;
 }
 
+.stock-summary {
+    width: 75%;
+}
+
 .financial-summary {
     flex: 1;
     /* min-height: 300px; */
@@ -591,11 +683,22 @@ legend {
     min-width: 350px;
 }
 
+.home-sidebar {
+    display: flex;
+    flex-direction: column;
+    min-width: 250px;
+    position: absolute;
+    right: 0;
+    width: 15%;
+    padding-top: 50px;
+}
+
 .sidebar-item {
     display: flex;
     margin: 10px;
     padding: 10px;
-    background-color: #f0f0f0;
+    /* background-color: #f0f0f0; */
+    background-color: rgba(240, 240, 240, 0.5);
     text-align: center;
     border: 1px solid #ccc;
     justify-content: space-between;

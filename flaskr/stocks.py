@@ -11,14 +11,17 @@ import pandas as pd
 from datetime import datetime
 from flaskr.db import get_db
 from flaskr.auth import login_required
-from flaskr.helpers import get_watchlist, login_user
+from flaskr.helpers import get_watchlist, get_prices_dict, login_user
 import numpy as np
 
 
 @bp.route('/watchlist', methods=('GET', 'POST'))
+# @bp.route('/watchlist/<ticker>', methods=('GET', 'POST'))
 @login_required
 def watchlist():
     print("In watchlist route")
+
+    # print("Ticker: ", ticker)
 
     print("g.user: ", g.user)
 
@@ -26,35 +29,12 @@ def watchlist():
     user_id = g.user['id']
 
     print("User ID: ", user_id)
+
+    # Get user's stock watchlist
     watchlist = get_watchlist(user_id)
 
-    # Input list of tickers to get prices dict
-    def get_prices_dict(watchlist):
-
-        prices_dict = {}
-
-        for t in watchlist:
-
-            # Get SPY stock price
-            prices = yf.Ticker(t)
-
-            # Get previous couple day's prices
-            historical_prices = prices.history(period="5d", interval="1d")
-
-            # Get latest price, % change, and time (AM/PM format)
-            latest_price = historical_prices['Close'].iloc[-1].round(2)
-            day_before = historical_prices['Close'].iloc[-2].round(2)
-
-            change = ((latest_price - day_before) * 100 / day_before).round(2)
-
-            # time = historical_prices.index[-1].strftime('%I:%M %p')
-
-            # Add price and percent change to nested dictionary
-            prices_dict[t] = {}
-            prices_dict[t]['price'] = latest_price
-            prices_dict[t]['change'] = change
-
-        return prices_dict
+    # Get prices for each stock in watchlist
+    prices_dict = get_prices_dict(watchlist)
 
     # Convert time period to yfinance format
     def yfinance_time_period(selected_time_period):
@@ -118,11 +98,13 @@ def watchlist():
         form_keys = request.form.keys()
         form_keys = list(form_keys)
 
+        print("Form keys: ", form_keys)
+
         # Check which action the user took
-        if request.form['add-ticker'] != '':
-            user_action = 'add_ticker'
-        elif 'summary' in form_keys:
+        if 'summary' in form_keys:
             user_action = 'summary'
+        elif request.form['add-ticker'] != '':
+            user_action = 'add_ticker'
         elif 'remove-ticker' in form_keys:
             user_action = 'remove_ticker'
         else:

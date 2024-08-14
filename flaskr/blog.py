@@ -49,7 +49,23 @@ def index():
     return render_template('blog/index.html', posts=posts)
     '''
 
-    return render_template('blog/index.html')
+    from .helpers import get_watchlist, get_prices_dict
+
+    # If logged in, get user's watchlist + stock prices
+    try:
+        user_id = g.user['id']
+
+        watchlist = get_watchlist(user_id)
+
+        prices_dict = get_prices_dict(watchlist)
+
+        return render_template('blog/index.html', watchlist=watchlist, prices_dict=prices_dict)
+    
+    except:
+        watchlist = None
+        prices_dict = None
+
+        return render_template('blog/index.html')
     
 
 

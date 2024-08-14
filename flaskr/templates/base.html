@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <nav class="nav" id="navbar">
+    <nav class="nav sticky" id="navbar">
         <ul>
             <li class="float-left"><a class="active" href="{{ url_for('blog.index') }}">Home</a></li>
             <li class="float-left"><a class="action" href="{{ url_for('options.scanner') }}">Options Scanner</a></li>
@@ -56,8 +56,11 @@
         {% for message in get_flashed_messages() %}
             <div class="flash">{{ message }}</div>
         {% endfor %}
+
         {% block content %}{% endblock %}
     </section>
+
+
 
     <script>
         const toggleButton = document.getElementById('toggleButton');

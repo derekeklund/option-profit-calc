@@ -10,7 +10,7 @@ import yfinance as yf
 import pandas as pd
 from datetime import datetime
 from flaskr.db import get_db
-from .helpers import get_moneyness, get_selected_expiration, get_buy_write, login_user
+from .helpers import get_moneyness, get_selected_expiration, get_buy_write, login_user, get_watchlist, get_prices_dict
 
 
 @bp.route('/scanner', methods=('GET', 'POST'))

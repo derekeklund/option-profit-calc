@@ -6,10 +6,44 @@
 
 {% block content %}
 
-    <div class="img-container">
-        <div class="fade-in">
-        </div>
-    </div>
+
+
+        <form method="POST" action="{{ url_for('stocks.watchlist') }}">
+
+            <div class="page-container">
+
+                <div class="img-container">
+                    <div class="fade-in">
+                    </div>
+                </div>
+
+                <div class="home-sidebar">
+                                
+                    {% for ticker in watchlist %}
+
+                        <div class="sidebar-item">
+
+                            {# Click to view summary #}
+                            <button class="fake-link" name="summary" type="submit" value="{{ ticker }}">{{ ticker }}</button>
+
+                            <div>${{ prices_dict[ticker]['price'] }}</div>
+                            {% if prices_dict[ticker]['change'] > 0 %}
+                                <div class="green-triangle"></div>
+                                <div style="color: green; font-weight: bold;">{{ prices_dict[ticker]['change'] }}%</div>
+                            {% else %}
+                                <div class="red-triangle"></div>
+                                <div style="color: red; font-weight: bold;">{{ prices_dict[ticker]['change'] }}%</div>
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </form>
 
 
     {% for post in posts %}

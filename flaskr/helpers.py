@@ -78,6 +78,7 @@ def get_buy_write():
     return buy_write
 
 
+# Get the user's stock watchlist
 def get_watchlist(user_id):
     db = get_db()
     results = db.execute(
@@ -89,3 +90,31 @@ def get_watchlist(user_id):
 
     return watchlist
 
+
+# Input list of tickers to get prices dict
+def get_prices_dict(watchlist):
+
+    prices_dict = {}
+
+    for t in watchlist:
+
+        # Get SPY stock price
+        prices = yf.Ticker(t)
+
+        # Get previous couple day's prices
+        historical_prices = prices.history(period="5d", interval="1d")
+
+        # Get latest price, % change, and time (AM/PM format)
+        latest_price = historical_prices['Close'].iloc[-1].round(2)
+        day_before = historical_prices['Close'].iloc[-2].round(2)
+
+        change = ((latest_price - day_before) * 100 / day_before).round(2)
+
+        # time = historical_prices.index[-1].strftime('%I:%M %p')
+
+        # Add price and percent change to nested dictionary
+        prices_dict[t] = {}
+        prices_dict[t]['price'] = latest_price
+        prices_dict[t]['change'] = change
+
+    return prices_dict
