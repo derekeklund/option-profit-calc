@@ -77,20 +77,30 @@ def watchlist():
 
         # print("Company info city: ", company_info['city'])
 
+        ''' 
+        yfinance intervals:
+        “1m”, “2m”, “5m”, “15m”, “30m”, “60m”, “90m”, “1h”, “1d”, “5d”, “1wk”, “1mo”, “3mo”
+        '''
+
         # Defaults for chart
         session['summary_ticker'] = 'SPY'
         session['yfinance_range'] = '1mo'
         selected_time_period = '1 Month'
         yfinance_range = '1mo'
-        hist = current_company.history(period=yfinance_range)
+        time_interval = '1h'
+        hist = current_company.history(period=yfinance_range, interval=time_interval)
 
         labels = hist.index
         values = hist['Close']
 
-        labels = [str(label.date()) for label in labels]
+        # Get date and time in AM/PM format
+        time_format = '%m-%d-%Y %I:%M %p'
+
+        labels = [label.strftime(time_format) for label in labels]
+        # labels = [str(label.date()) for label in labels]
         values = [value for value in values]
 
-        print("values: ", values)
+        # print("values: ", values)
 
     
     if request.method == 'POST':
@@ -213,18 +223,61 @@ def watchlist():
         current_company = yf.Ticker(summary_ticker)
         company_info = current_company.info
 
+        print("yfinance_range: ", yfinance_range)
+
+        ''' 
+        yfinance intervals:
+        “1m”, “2m”, “5m”, “15m”, “30m”, “60m”, “90m”, “1h”, “1d”, “5d”, “1wk”, “1mo”, “3mo”
+        '''
+
+        # Default time interval (2 years or more is 1 week)
+        time_interval = '1wk'
+
+        if yfinance_range == '1d':
+            time_interval = '1m'
+        elif yfinance_range == '5d':
+            time_interval = '15m'
+        elif yfinance_range == '1mo':
+            time_interval = '1h'
+        elif yfinance_range == '3mo':
+            time_interval = '1h'
+        elif yfinance_range == '6mo':
+            time_interval = '1d'
+        elif yfinance_range == 'ytd':
+            time_interval = '1d'
+        elif yfinance_range == '1y':
+            time_interval = '1d'
+
+
         # Get prices & dates for chart
-        hist = current_company.history(period=yfinance_range)
+        hist = current_company.history(period=yfinance_range, interval=time_interval)
         labels = hist.index
         values = hist['Close']
-        labels = [str(label.date()) for label in labels]
+
+        print("labels: ", labels)
+
+        # Get date and time in AM/PM format
+        time_format = '%m-%d-%Y %I:%M %p'
+
+        # Add time to labels if time_interval is less than 1 day
+        if yfinance_range == '1d' or yfinance_range == '5d' or yfinance_range == '1mo' or yfinance_range == "3mo":
+            labels = [label.strftime(time_format) for label in labels]
+        else:
+            labels = [str(label.date()) for label in labels]
+
         values = [value for value in values]
+
+    # If stock is up during period, color is green, else red
+    if values[-1] > values[0]:
+        background_color = 'rgba(0, 204, 102, 0.1)'
+        border_color = 'rgba(0, 204, 102, 1)'
+    else:
+        background_color = 'rgba(255, 99, 132, 0.1)'
+        border_color = 'rgba(255, 99, 132, 1)'
 
 
     # Format company info values for table
     for key, value in company_info.items():
-        print(key, value)
-        print("Type: ", type(value))
 
         if type(value) == float:
             # Commas and 2 decimal places for floats
@@ -244,7 +297,10 @@ def watchlist():
     if 'marketCap' not in company_info:
         company_info['marketCap'] = '--'
 
-    return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist, company_info=company_info, time_periods=time_periods, selected_time_period=selected_time_period, labels=labels, values=values)
+    print("background_color: ", background_color)   
+    print("border_color: ", border_color)
+
+    return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist, company_info=company_info, time_periods=time_periods, selected_time_period=selected_time_period, labels=labels, values=values, background_color=background_color, border_color=border_color)
 
 
 @bp.route('/bubbles', methods=('GET', 'POST'))

@@ -37,18 +37,27 @@
                 <canvas id="stockChart" width="200" height="100"></canvas>
             </div>
     
+
+            {# 'rgb(255, 99, 132)', # red
+            'rgb(54, 162, 235)', # blue
+            'rgba(0, 204, 102)', # green #}
             {# Chart.js script #}
             <script>
                 const ctx = document.getElementById('stockChart').getContext('2d');
                 new Chart(ctx, {
                     type: 'line',
                     data: {
-                    labels: {{ labels | safe }},
-                    datasets: [{
-                        label: 'Stock Price',
-                        data: {{ values | safe }},
-                        borderWidth: 1
-                    }]
+                        labels: {{ labels | safe }},
+                        datasets: [{
+                            label: 'Stock Price',
+                            data: {{ values | safe }},
+                            borderWidth: 1,
+                            tension: 0.1,
+                            pointRadius: 1,
+                            backgroundColor: '{{ background_color | safe }}',
+                            borderColor: '{{ border_color | safe }}',
+                            fill: true
+                        }]
                     },
                     options: {
                     scales: {
