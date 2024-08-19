@@ -168,6 +168,6 @@ def blackScholes(r, S, K, T, sigma, type="c"):
     6. Option type (c for call, p for put) 
 """
 
-option_price = blackScholes(0.05, 213, 208, 1/365, 0.2, type='c')
+option_price = blackScholes(0.05, 210, 200, 8/365, 0.3, type='p')
 
 print("Option price: ", round(option_price[1], 2))

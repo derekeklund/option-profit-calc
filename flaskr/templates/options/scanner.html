@@ -8,72 +8,90 @@
 
 {% block content %}
 
-    <div class="content">
+    {# <div class="content"> #}
+    <div class="scanner-page">
 
-        <div class="gradient2">Options Scanner</div>
+        <div class="scanner-container">
 
-        {# Option scanner form #}
-        <form method="POST">
+            <div class="gradient2">Options Scanner</div>
 
-            <div class="flex-container">
+            {# Option scanner form #}
+            <form class="grid-form" method="POST">
 
-                {# Search for ticker #}
-                <div class="flex-item vertical-center">
-                    <label for="symbol">Symbol</label>
-                    <input class="text-input" name="symbol" placeholder="ABC" id="symbol" value="{{ request.form['symbol'] }}" style="text-transform:uppercase" required>
-                    <input class="button" type="submit" value="Scan">
-                </div>
-                
-                {# Only show these fields if the symbol is entered and valid #}
-                {# {% if show_div == True %} #}
+                {# <div class="flex-container"> #}
+                <div class="three-wide-grid-container">
 
-                {# Search for expiration date #}
-                <div class="flex-item vertical-center">
-                    <label for="expiry">Expiration Dates</label>
-                    <select class="large-text-input" name="expiry" id="expiry" onchange="this.form.submit()">
-                        {% for expiry in expiries %}
-                            <option value="{{expiry}}" {% if expiry == selected_exp_date %} selected {% endif %}>{{expiry}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <br>
-
-                {# Select for moneyness #}
-                <div class="flex-item vertical-center">
-                    <fieldset>
-                    <legend>Moneyness</legend>
-                    <input type="radio" id="near" name="moneyness" value="near" {% if moneyness == 'near' %} checked {% endif %} onchange="this.form.submit()">
-                    <label for="near" class="normal-font">Near the Money</label><br>
-                    <input type="radio" id="all" name="moneyness" value="all" {% if moneyness == 'all' %} checked {% endif %} onchange="this.form.submit()">
-                    <label for="all" class="normal-font">All Contracts</label>
-                    </fieldset>
-                </div>
+                    {# Search for ticker #}
+                    {# <div class="flex-item vertical-center"> #}
+                    <div class="calc-button">
+                        {# <label for="symbol">Symbol</label> #}
+                        <span>
+                            <p class="calc-button-text">Enter Symbol</p>
+                            <input class="text-input" name="symbol" placeholder="ABC" id="symbol" value="{{ request.form['symbol'] }}" style="text-transform:uppercase" required>
+                            <input class="button" type="submit" value="Scan">
+                        </span>
+                    </div>
                     
-                {# {% endif %} #}
+                    {# Only show these fields if the symbol is entered and valid #}
+                    {# {% if show_div == True %} #}
 
-            </div>
+                    {# Search for expiration date #}
+                    {# <div class="flex-item vertical-center"> #}
+                    <div class="calc-button">
+                        <span>
+                            {# <label for="expiry">Expiration Dates</label> #}
+                            <p class="calc-button-text">Expiration Dates</p>
+                            <select class="large-text-input" name="expiry" id="expiry" onchange="this.form.submit()">
+                                {% for expiry in expiries %}
+                                    <option value="{{expiry}}" {% if expiry == selected_exp_date %} selected {% endif %}>{{expiry}}</option>
+                                {% endfor %}
+                            </select>
+                        </span>
+                    </div>
+                    {# <br> #}
 
-            <br>
+                    {# Select for moneyness #}
+                    {# <div class="flex-item vertical-center"> #}
+                    <div class="calc-button">
+                        {# <fieldset>
+                        <legend>Moneyness</legend> #}
+                        <p class="calc-button-text">Moneyness</p>
+                        <span>
+                            <input type="radio" id="near" name="moneyness" value="near" {% if moneyness == 'near' %} checked {% endif %} onchange="this.form.submit()">
+                            <label for="near" class="normal-font">Near the Money</label><br>
+                            <input type="radio" id="all" name="moneyness" value="all" {% if moneyness == 'all' %} checked {% endif %} onchange="this.form.submit()">
+                            <label for="all" class="normal-font">All Contracts</label>
+                            {# </fieldset> #}
+                        </span>
+                    </div>
+                        
+                    {# {% endif %} #}
+
+                </div>
+
+                <br>
+                
+            </form>
             
-        </form>
-        
-        {% if show_div == True %}
-        
-            <div id="textbox">
-                <h3 class="alignleft">Calls</h3>
-                <h3 class="alignright">Puts</h3>
-            </div>
+            {% if show_div == True %}
+            
+                <div id="textbox">
+                    <h3 class="alignleft">Calls</h3>
+                    <h3 class="alignright">Puts</h3>
+                </div>
 
-        {% endif %}
-
-        <div style="clear: both;"></div>
-
-        {% for table in tables %}
-            {{ table|safe }}
-            {% if not loop.last %}
-                <hr>
             {% endif %}
-        {% endfor %}
+
+            <div style="clear: both;"></div>
+
+            {% for table in tables %}
+                {{ table|safe }}
+                {% if not loop.last %}
+                    <hr>
+                {% endif %}
+            {% endfor %}
+
+        </div>
 
     </div>
 

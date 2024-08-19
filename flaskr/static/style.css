@@ -34,19 +34,6 @@
     font-weight: bold;
 }
 
-.gradient2 {
-    background: linear-gradient(90deg, #48a2a8 0%, #e1d048 100%);
-    color: var(--white);
-    max-width: 80%;
-    margin: auto;
-    margin-top: 50px;
-    min-height: 100px;
-    text-align: center;
-    font-size: 30px;
-    font-weight: 600;
-    padding-top: 50px;
-}
-
 .img-container {
     height: 100%;
     margin: 0;
@@ -351,6 +338,10 @@ input[type=submit] { align-self: start; min-width: 10em; } */
     white-space: nowrap;
 }
 
+.watchlist td {
+    min-width: 50px;
+}
+
 /* .pd-table thead tr:first-child th:nth-child(2) {
     background: var(--green);
     cursor: pointer;
@@ -428,10 +419,20 @@ input[type=submit] { align-self: start; min-width: 10em; } */
     display: flex;
 }
 
-.grid-container {
+.two-wide-grid-container {
     display: inline-grid;
     grid-template-columns: auto auto;
     grid-gap: 10px;
+    /* border: 1px solid rgba(0, 0, 0, 0.8); */
+}
+
+.three-wide-grid-container {
+    display: inline-grid;
+    justify-content: space-around;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10px;
+    background-color: var(--gray);
+    border-radius: 10px;
     /* border: 1px solid rgba(0, 0, 0, 0.8); */
 }
 
@@ -474,7 +475,8 @@ input[type=submit] { align-self: start; min-width: 10em; } */
     background-color: var(--gray);
 }
 
-.calc-buttons {
+.calc-button-text {
+    text-align: center;
     font-weight: bold;
 }
 
@@ -501,6 +503,45 @@ input[type=submit] { align-self: start; min-width: 10em; } */
 .radio-bundled {
     display: flex;
     flex-direction: column;
+}
+
+/* Scanner page */
+
+.scanner-page {
+    /* display: inline-flex;
+    flex-direction: column; */
+    margin: 0 auto;
+    max-width: 70%;
+    padding: 0px 20px;
+}
+
+.scanner-container {
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-right: 20px;
+    width: 800px;
+    /* height: 460px; */
+    display: grid;
+    grid-gap: 10px;
+    /* background-color: var(--dark-gray); */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.gradient2 {
+    display: block;
+    background: linear-gradient(90deg, #48a2a8 0%, #e1d048 100%);
+    color: var(--white);
+    width: 100%;
+    margin: auto;
+    /* margin-top: 50px; */
+    min-height: 80px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    padding-top: 50px;
+    border-radius: 10px;
 }
 
 .vertical-center {

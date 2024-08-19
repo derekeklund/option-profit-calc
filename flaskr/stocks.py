@@ -75,6 +75,8 @@ def watchlist():
         current_company = yf.Ticker('SPY')
         company_info = current_company.info
 
+        # print("Company info city: ", company_info['city'])
+
         # Defaults for chart
         session['summary_ticker'] = 'SPY'
         session['yfinance_range'] = '1mo'
@@ -218,6 +220,29 @@ def watchlist():
         labels = [str(label.date()) for label in labels]
         values = [value for value in values]
 
+
+    # Format company info values for table
+    for key, value in company_info.items():
+        print(key, value)
+        print("Type: ", type(value))
+
+        if type(value) == float:
+            # Commas and 2 decimal places for floats
+            company_info[key] = "{:,.2f}".format(company_info[key])
+
+        elif type(value) == int:
+            # Commas for ints
+            company_info[key] = "{:,}".format(company_info[key])
+
+    company_info_items = ['shortName', 'totalRevenue', 'currentPrice', 'trailingPE', 'priceToBook', 'returnOnAssets', 'symbol', 'netIncomeToCommon', 'targetMeanPrice', 'forwardPE', 'debtToEquity', 'operatingCashflow', 'city', 'freeCashflow', 'fiftyTwoWeekLow', 'pegRatio', 'revenuePerShare', 'ebitda', 'sector', 'totalDebt', 'fiftyTwoWeekHigh', 'trailingEps', 'priceToSalesTrailing12Months', 'revenueGrowth', 'industry', 'sharesOutstanding', '52WeekChange', 'forwardEps', 'profitMargins', 'earningsGrowth', 'marketCap', 'returnOnEquity', 'quickRatio', 'beta', 'totalCashPerShare', 'shortPercentOfFloat']
+
+    for item in company_info_items:
+        if item not in company_info:
+            company_info[item] = '--'
+
+    # Check if there's a market cap key
+    if 'marketCap' not in company_info:
+        company_info['marketCap'] = '--'
 
     return render_template('stocks/watchlist.html', prices_dict=prices_dict,watchlist=watchlist, company_info=company_info, time_periods=time_periods, selected_time_period=selected_time_period, labels=labels, values=values)
 

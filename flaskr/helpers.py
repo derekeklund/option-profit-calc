@@ -52,6 +52,7 @@ def get_moneyness():
     try:
         moneyness = request.form['moneyness']
     except:
+        print("MONEYNESS EXCEPTION")
         moneyness = 'near'
         pass
 
@@ -61,7 +62,9 @@ def get_moneyness():
 def get_selected_expiration():
     try:
         selected_exp_date = request.form['expiry']
+        print("SELECTED EXPIRATION: ", selected_exp_date)
     except:
+        print("EXPIRATION EXCEPTION")
         selected_exp_date = None
         pass
 
@@ -69,11 +72,24 @@ def get_selected_expiration():
 
 
 def get_buy_write():
+
+    # Get the form keys
+    form_keys = request.form.keys()
+    form_keys = list(form_keys)
+
+    print("Form keys: ", form_keys)
+
+
     try:
         buy_write = request.form['buy_write']
-    except:
+
+    except Exception as e:
+        print("Exception: ", e)
+        print("BUY WRITE EXCEPTION")
         buy_write = 'buy'
         pass
+
+    print("BUY WRITE: ", buy_write)
 
     return buy_write
 

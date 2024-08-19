@@ -105,7 +105,8 @@
     {# Bottom section #}
     <div class="financial-summary">
 
-        <table class="summary-table">
+        {# <table class="summary-table "> #}
+        <table class="pd-table watchlist">
             <tbody>
                 <tr>
                     <td class="td-label">Name</td>
@@ -139,7 +140,12 @@
                 {# Third Row #}
                 <tr>
                     <td class="td-label">Location</td>
-                    <td>{{ company_info['city'] }}, {{ company_info['state'] }}</td>
+                    {# Only add comma if city and state are defined #}
+                    {% if company_info['city'] != '--' %}
+                        <td>{{ company_info['city'] }}, {{ company_info['state'] }}</td>
+                    {% else %}
+                        <td>{{ company_info['city'] }}</td>
+                    {% endif %}
                     <td class="td-label">Free Cash Flow</td>
                     <td>{{ company_info['freeCashflow'] }}</td>
                     <td class="td-label">52 Week Low</td>

@@ -69,6 +69,12 @@ def scanner():
         # All floats to 2 decimal places
         pd.options.display.float_format = "{:,.2f}".format
 
+        # Format volume and open interest with no decimals
+        calls['volume'] = calls['volume'].apply(lambda x: "{:,.0f}".format(x))
+        calls['openInterest'] = calls['openInterest'].apply(lambda x: "{:,.0f}".format(x))
+        puts['volume'] = puts['volume'].apply(lambda x: "{:,.0f}".format(x))
+        puts['openInterest'] = puts['openInterest'].apply(lambda x: "{:,.0f}".format(x))
+
         # Merge calls and puts on strike price
         all_options = pd.merge(calls, puts, on='strike', how='outer')
 
@@ -181,6 +187,7 @@ def profit_calc():
             upper_bound = int(json_values['upper_bound'])
             lower_bound = int(json_values['lower_bound'])
             price = float(json_values['price'])
+            buy_write = json_values['buy_write']
 
             print("initial Json strike:", strike)
 
@@ -199,6 +206,7 @@ def profit_calc():
             print("Price (price):", price)
             print("Lower bound (lower_bound):", lower_bound)
             print("Upper bound (upper_bound):", upper_bound)
+            print("Buy write (buy_write):", buy_write)
             print("---------------------")
 
             # Get current date
@@ -260,10 +268,20 @@ def profit_calc():
 
             from .greeks import blackScholes
 
+            if option_type == 'call':
+                scholes_type = 'c'
+            else:
+                scholes_type = 'p'
+
+            print("***********************")
+            print("Scholes type:", scholes_type)
+            print("strike:", strike)
+            print("***********************")
+
             for d in days_to_expiry_list:
 
                 # Calculate option price for each day to expiry at each strike price
-                df_profit_loss[f'{d}'] = df_profit_loss[f'{column_header}'].apply(lambda x: round(blackScholes(0.05, x, strike, d/365, 0.2, type='c')[1], 2)) # x = S (underlying stock price)
+                df_profit_loss[f'{d}'] = df_profit_loss[f'{column_header}'].apply(lambda x: round(blackScholes(0.05, x, strike, d/365, 0.2, type=scholes_type)[1], 2)) # x = S (underlying stock price)
 
             # print("Profit loss table:", df_profit_loss)
 
@@ -278,7 +296,12 @@ def profit_calc():
             # print("Profit loss table:", df_profit_loss)
 
             def calculate_profit(option_value, initial_strike_value):
+                # print("Buy/Write:", buy_write)
+
                 profit = round(option_value - initial_strike_value, 2)
+
+                if buy_write == 'write':
+                    profit = profit * -1
 
                 percent = round((profit / initial_strike_value * 100), 0)
 
@@ -316,18 +339,29 @@ def profit_calc():
                     background = 'p-75'
                 elif percent >= -100 and percent < -75:
                     background = 'p-100'
+                elif percent < -100:
+                    background = 'p-101'
 
                 return background
+            
+            if buy_write == 'buy':
+                long_short = 'Long'
+            else:
+                long_short = 'Short'
+
+            if option_type == 'call':
+                header_type = 'Call'
+            else:
+                header_type = 'Put'
 
             # Add strike to top of table
-            html_pl = f"<p>Selected Strike: <b>{strike}</b></p>"
-
-            # Create actual table
-            # html_pl += '<table border="1" class="dataframe pd-table"><thead><tr style="text-align: right;">'
-            # html_pl += '<th>' + '</th><th>'.join(df_profit_loss.columns) + '</th></tr></thead><tbody>'
+            # html_pl = f"<p>Selected Strike: <b>{strike}</b></p>"
+            html_pl = f"<p><b>{long_short} {strike} {header_type}</b></p>"
 
             html_pl += f'<table border="1" class="dataframe pd-table profit-table"><thead><tr><th class="top-left-cell"></th><th class="top-right-cell" colspan={num_columns} haligh="left">{upper_header}</th></tr><tr style="text-align: right;">'
             html_pl += '<th>' + '</th><th>'.join(lower_header) + '</th></tr></thead><tbody>'
+
+            # print(df_profit_loss)
 
             for i, row in df_profit_loss.iterrows():
                 html_pl += "<tr>"
@@ -335,6 +369,8 @@ def profit_calc():
                 j = 0
                 # Iterate over each column value in the row
                 for value in row:
+
+                    # print(f"Value: {value}, initial_strike_value: {initial_strike_value}")
 
                     profit_and_percent = calculate_profit(value, initial_strike_value)
 
@@ -529,6 +565,10 @@ def refresh_calc():
         return table
     else:
         print("ERROR: No table found in session")
+
+        # Can't refresh b/c gets stuck in a loop
+        # refresh_calc()
+
         return("No table found in session")
     
 
