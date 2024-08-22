@@ -1,156 +1,79 @@
-'''
-First, a simple example.
-
-1. Assume we have a process in 3 stages (X1, X2, X3).
-2. Each has an average duratin (5, 10, 15 minutes)
-3. Each follow a normal distribution and have a variance of 1 minute. The notation of normal distribution is N(average, variance). For example...
-    X1 = N(5, 1)
-4. We want to know what the probility is that the process will take more than 34 minutes. The total time is...
-    Y = X1 + X2 + X3
-5. Use numpy
-'''
-
-import numpy.random as rnd
-import numpy as np
-
-def mc_normal(mean, std_dev, samples):
-
-    results = []
-    for _ in range(samples):
-        results.append(rnd.normal(mean, std_dev))
-
-    return np.array(results)
-
-
-# Configuration
-s = 100000 # number of samples
-upper_limit = 34 # upper limit from specification
-
-# Components
-component_1 = mc_normal(5, 1, s)
-component_2 = mc_normal(10, 1, s)
-component_3 = mc_normal(15, 1, s)
-
-# Relationships
-total = component_1 + component_2 + component_3
-
-# Success conditions
-probability = np.sum(total > upper_limit)/len(total)*100
-
-print("Probability of exceeding the time limit: ", round(probability, 3), "%")
-
-'''
-Now, a more complex example with portfolio returns
-https://www.youtube.com/watch?v=6-dhdMDiYWQ
-'''
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import datetime as dt
-# from pandas_datareader import data as pdr
 import yfinance as yf
+import time
 
-# Import data
-def get_data(stocks, start, end):
+start = time.time()
 
-    # Get closing data for each stock from Yahoo Finance directly
-    for stock in stocks:
-        data = yf.download(stock, start=start, end=end)
+# Dictionary of stock market caps and sectors
+prices_dict = {}
 
-        # Keep only date and close columns
-        data = data[['Close']]
+target_tickers = ['AAPL', 'AMZN', 'MSFT', 'TSLA', 'NVDA', 'META']
+
+target_y_axis = 'trailingPE'
+
+for t in target_tickers:
         
-        # Change close column name to stock name
-        data.columns = [stock]
+    # print("Ticker: ", t)
+    
+    # Get stock price
+    prices = yf.Ticker(t)
 
-        if stock == stocks[0]:
-            stockData = data
+    # Get stock info
+    stock_info = prices.info
 
-        else:
-            stockData = pd.concat([stockData, data[stock]], axis=1)
+    # Get market cap and sector
+    prices_dict[t] = {}
+    prices_dict[t]['market_cap'] = stock_info['marketCap']
+    prices_dict[t]['market_cap_billions'] = round((prices_dict[t]['market_cap'] / 1000000000), 2)
+    
+    if prices_dict[t]['market_cap_billions'] > 1000:
+        prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']/1000) + 'T'
+    else:
+        prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']) + 'B'
 
-    # print(stockData)
+    # prices_dict[t]['market_cap_radius'] = round((prices_dict[t]['market_cap_billions']/100), 2)
+    prices_dict[t]['market_cap_radius'] = round((prices_dict[t]['market_cap_billions']), 2)
 
+    # If the radius is too small, make it big enough to see
+    # if prices_dict[t]['market_cap_radius'] < 5:
+    #     prices_dict[t]['market_cap_radius'] = 5
 
-
-    # Get daily changes
-    returns = stockData.pct_change()
-
-    # print("Returns: ", returns)
-
-    # Calculate mean (daily) returns in a covariance matrix
-    meanReturns = returns.mean()
-
-    # print("Mean Returns: ", meanReturns)
-
-    # Covariance means the relationship between two variables (stocks in this case) and to what extent they change together
-    # co - together, variance - change
-    covMatrix = returns.cov()
-
-    # print("Covariance Matrix: ", covMatrix)
-
-    return meanReturns, covMatrix
-
-
-stockList = ['AAPL', 'MSFT', 'AMZN', 'GOOGL', 'META']
-
-endDate = dt.datetime.now()
-startDate = endDate - dt.timedelta(days=300)
-
-meanReturns, covMatrix = get_data(stockList, startDate, endDate)
-
-print("Mean returns: ", meanReturns)
-
-weights = np.array([0.2, 0.2, 0.2, 0.2, 0.2])
-
-print(weights)
-
-# Monte Carlo Method
-
-# Define number of simulations
-mc_sims = 100
-
-# Time range in days
-T = 100
-
-# 2d array of 100 days with the mean returns repeated for each day
-meanMatrix = np.full(shape=(T, len(weights)), fill_value=meanReturns)
-
-# Transpose the matrix
-meanMatrix = meanMatrix.T
-
-print("Mean Matrix: ", meanMatrix)
-
-# Portfolio values matrix (100 days x 100 simulations)
-portfolio_sims = np.full(shape=(T, mc_sims), fill_value=0.0)
-
-print("Portfolio Sims: ", portfolio_sims)
-
-initialPortfolio = 1000
-
-for m in range(0, mc_sims):
-    # MC loops
-    # See 11:20 in the video to see how *Multivariate Normal Distribution* is used and how the *Cholesky Decomposition* to determine the *Lower Triangular Matrix* is used for calculations
-    # So we get the sample data from the normal distribution and we correlate them with the covariance matrix with the lower triangle
+    # Get beta
+    try:
+        prices_dict[t]['beta'] = stock_info['beta']
+    except KeyError as e:
+        prices_dict[t]['beta'] = 0
+        print(f'No beta for {t}')
 
 
-    Z = np.random.normal(size=(T, len(weights)))
+    prices_dict[t]['sector'] = stock_info['sector']
 
-    # Lower triangle
-    L = np.linalg.cholesky(covMatrix)
+    try:
+        prices_dict[t][target_y_axis] = round(stock_info[target_y_axis], 2)
+    except:
+        # If there is no pe ratio, set it to 0
+        prices_dict[t][target_y_axis] = 0
 
-    # Note that dot and inner are similar. See docs
-    # dailyReturns = meanMatrix + np.dot(L, Z.T)
-    dailyReturns = meanMatrix + np.inner(L, Z)
+        print(f'No {target_y_axis} for {t}')
 
-    # Accumulate the daily returns across the days
-    portfolio_sims[:, m] = np.cumprod(np.inner(weights, dailyReturns.T) + 1)*initialPortfolio
+print("Time taken: ", time.time() - start)
 
-plt.plot(portfolio_sims)
-plt.ylabel('Portfolio Value ($)')
-plt.xlabel('Days')
-plt.title('Monte Carlo Simulation of a Stock Portfolio')
-plt.show()
+start = time.time()
 
-# Note* the covariance matrix and the time period are extremely important parameters
+for t in target_tickers:
+    stock_info = yf.Ticker(t).info
+    market_cap = stock_info.get('marketCap', 0)
+    market_cap_billions = round(market_cap / 1000000000, 2)
+    
+    data = {
+        'market_cap': market_cap,
+        'market_cap_billions': market_cap_billions,
+        'str_market_cap_billions': f'{market_cap_billions / 1000}T' if market_cap_billions > 1000 else f'{market_cap_billions}B',
+        'market_cap_radius': round(market_cap_billions, 2),
+        'beta': stock_info.get('beta', 0),
+        'sector': stock_info.get('sector', "Unknown"),
+        target_y_axis: round(stock_info.get(target_y_axis, 0), 2)
+    }
+    prices_dict[t] = data
+
+
+print("Time taken: ", time.time() - start)

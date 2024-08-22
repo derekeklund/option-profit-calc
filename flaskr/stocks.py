@@ -13,6 +13,7 @@ from flaskr.db import get_db
 from flaskr.auth import login_required
 from flaskr.helpers import get_watchlist, get_prices_dict, login_user
 import numpy as np
+import time
 
 
 @bp.route('/watchlist', methods=('GET', 'POST'))
@@ -305,6 +306,8 @@ def watchlist():
 
 @bp.route('/bubbles', methods=('GET', 'POST'))
 def bubbles():
+    start_time = time.time()
+
     print("In bubbles route")
 
     # Default dropdown values
@@ -407,6 +410,27 @@ def bubbles():
 
     print(f"# of target ({selected_index} {selected_sector}) tickers: ", len(target_tickers))
 
+    # Get stock info for each ticker
+    # Avoid repeatedly accessing prices_dict[t] to speed up
+    # Consider function for this
+    for t in target_tickers:
+        stock_info = yf.Ticker(t).info
+        market_cap = stock_info.get('marketCap', 0)
+        market_cap_billions = round(market_cap / 1000000000, 2)
+        
+        data = {
+            'market_cap': market_cap,
+            'market_cap_billions': market_cap_billions,
+            'str_market_cap_billions': f'{market_cap_billions / 1000}T' if market_cap_billions > 1000 else f'{market_cap_billions}B',
+            'market_cap_radius': round(market_cap_billions, 2),
+            'beta': stock_info.get('beta', 0),
+            'sector': stock_info.get('sector', "Unknown"),
+            target_y_axis: round(stock_info.get(target_y_axis, 0), 2)
+        }
+        prices_dict[t] = data
+
+    '''
+    # FOR LOOP TO SPEED UP
     for t in target_tickers:
             
         print("Ticker: ", t)
@@ -451,13 +475,17 @@ def bubbles():
             prices_dict[t][target_y_axis] = 0
 
             print(f'No {target_y_axis} for {t}')
+    
+    '''
 
+    print("Prices dict: ", prices_dict)
 
     labels = []
     values = []
 
     x_axis_incrementer = 10
 
+    # FOR LOOP TO SPEED UP
     # Loop over dict
     for key, value in prices_dict.items():
         # print(key, value)
@@ -519,6 +547,13 @@ def bubbles():
     # X-axis options
     x_axis_options = ['Sector', 'Market Cap', 'Beta']
 
+    end_time = time.time()
+    run_time = end_time - start_time
+    pace = run_time / len(values)
+
+    print(f"Bubbles time taken (for {len(values)} stock): {run_time} ({pace}/stock) ")
+    # Average before refactoring is ~0.08 seconds per stock
+    
 
     return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict, sectors=sectors, selected_sector=selected_sector,  indices=indices, selected_index=selected_index, y_axis_options=y_axis_options, selected_y_axis=selected_y_axis, x_axis_options=x_axis_options, selected_x_axis=selected_x_axis)
 

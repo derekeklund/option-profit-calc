@@ -569,7 +569,7 @@ def refresh_calc():
         # Can't refresh b/c gets stuck in a loop
         # refresh_calc()
 
-        return("No table found in session")
+        return("\nNo table found in session. Please retry!")
     
 
 @bp.route('/max-pain', methods=('GET', 'POST'))
