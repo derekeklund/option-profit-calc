@@ -216,6 +216,21 @@ li:hover {
     width: 75px;
 }
 
+.allocation-input {
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    width: 40px;
+}
+
+.percent {
+    pointer-events: none; /* Prevent click on % symbol */
+}
+
+.margin-5 {
+    margin: 5px;
+}
+
 .large-text-input {
     padding: 5px;
     margin: 5px;
@@ -716,7 +731,7 @@ legend {
     padding: 20px;
     background-color: #f0f0f0;
     text-align: center;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
 }
 
 .watchlist-sidebar {
@@ -745,6 +760,23 @@ legend {
     border: 1px solid #ccc;
     justify-content: space-between;
     align-items: center;
+}
+
+.sidebar-blurb {
+    /* display: flex; */
+    margin: 10px;
+    padding: 10px;
+    /* background-color: #f0f0f0; */
+    background-color: rgba(240, 240, 240, 0.5);
+    text-align: center;
+    border: 1px solid #ccc;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 28px;
 }
 
 .watchlist-container {
@@ -859,7 +891,7 @@ legend {
 }
 
 .bubbles-sidebar {
-    /* flex: 1; */
+    flex: 1;
     display: flex;
     flex-direction: column;
     min-width: 350px;

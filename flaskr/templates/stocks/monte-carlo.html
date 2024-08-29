@@ -22,19 +22,19 @@
                     {# Initial Invenstment #}
                     <div class="flex-item vertical-center">
                         <label for="initial_sum">Initial Investment</label>
-                        <input class="text-input" name="initial_sum" id="initial_sum" value="{{ initial_sum }}">
+                        <input class="text-input margin-5" name="initial_sum" id="initial_sum" value="{{ initial_sum }}">
                     </div>
 
                     {# Days for sim #}
                     <div class="flex-item vertical-center">
                         <label for="sim_days">Days to Simulate</label>
-                        <input class="text-input" name="sim_days" id="sim_days" value="{{ sim_days }}" required>
+                        <input class="text-input margin-5" name="sim_days" id="sim_days" value="{{ sim_days }}" required>
                     </div>
 
                     {# Number of sims #}
                     <div class="flex-item vertical-center">
                         <label for="num_sims">Number of Simulations</label>
-                        <input class="text-input" name="num_sims" id="num_sims" value="{{ num_sims }}" required>
+                        <input class="text-input margin-5" name="num_sims" id="num_sims" value="{{ num_sims }}" required>
                     </div>
 
                     <div id="stock_fields">
@@ -42,10 +42,11 @@
                         <div class="asset-block">
                             <label for="symbol_{{ i+1 }}">Asset {{ i+1 }}</label>
                             <span>
-                                <input class="text-input" name="symbol_{{ i+1 }}" id="symbol_{{ i+1 }}" value="{{ labels[i] }}" style="text-transform:uppercase" required>
+                                <input class="text-input margin-5" name="symbol_{{ i+1 }}" id="symbol_{{ i+1 }}" value="{{ labels[i] }}" style="text-transform:uppercase" required>
                             </span>
                             <span>
-                                <input class="text-input" name="alloc_{{ i+1 }}" id="alloc_{{ i+1 }}" value="{{ values[i] }}" required>
+                                <input class="allocation-input margin-5" name="alloc_{{ i+1 }}" id="alloc_{{ i+1 }}" value="{{ values[i] }}" required>
+                                <span class="percent">%</span>
                             </span>
                         </div>
                         {% endfor %}
@@ -85,10 +86,11 @@
                             newField.innerHTML = 
                             `<label for="symbol_${fieldCount}">Asset ${fieldCount}</label>
                             <span>
-                                <input class="text-input" name="symbol_${fieldCount}" id="symbol_${fieldCount}" style="text-transform:uppercase" required>
+                                <input class="text-input margin-5" name="symbol_${fieldCount}" id="symbol_${fieldCount}" style="text-transform:uppercase" required>
                             </span>
                             <span>
-                                <input class="text-input" name="alloc_${fieldCount}" id="alloc_${fieldCount}" required>
+                                <input class="allocation-input margin-5" name="alloc_${fieldCount}" id="alloc_${fieldCount}" required>
+                                <span class="percent">%</span>
                             </span>`;
                             stockFields.appendChild(newField);
                             fieldCountInput.value = fieldCount; // Update hidden input
