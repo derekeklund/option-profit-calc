@@ -753,7 +753,7 @@ def monte_carlo():
 
     # Save it to a temporary buffer.
     buf = BytesIO()
-    fig.savefig(buf, format="png", bbox_inches='tight')
+    fig.savefig(buf, format="png", bbox_inches='tight', dpi=200)
 
     # Embed the result in the html output.
     data = base64.b64encode(buf.getbuffer()).decode("ascii")

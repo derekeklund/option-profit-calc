@@ -517,8 +517,8 @@ def profit_calc():
                 next_strike = all_options["Strike"][i]
 
                 if identifier != "strike":
-                    # HTMX link to refresh the table
-                    html += f'<td><a class="strike-select" href=".top" onclick="getUserInput(this)" hx-target="#profit-loss-table" hx-trigger="click delay:1.2s" hx-swap="innerHTML show:#top-scroll:top" hx-get="/refresh-calc" value="{identifier}_{next_strike}_{value}">{value}</a></td>'
+                    # HTMX link to refresh the table (was 1.2s on 30Aug)
+                    html += f'<td><a class="strike-select" href=".top" onclick="getUserInput(this)" hx-target="#profit-loss-table" hx-trigger="click delay:1.5s" hx-swap="innerHTML show:#top-scroll:top" hx-get="/refresh-calc" value="{identifier}_{next_strike}_{value}">{value}</a></td>'
 
                 else:
                     html += f'<td><b>{value}</b></td>'
@@ -564,7 +564,7 @@ def refresh_calc():
         print("Table found in session")
         return table
     else:
-        print("ERROR: No table found in session")
+        print("\nERROR: No table found in session")
 
         # Can't refresh b/c gets stuck in a loop
         # refresh_calc()
