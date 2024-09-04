@@ -518,7 +518,7 @@ def profit_calc():
 
                 if identifier != "strike":
                     # HTMX link to refresh the table (was 1.2s on 30Aug)
-                    html += f'<td><a class="strike-select" href=".top" onclick="getUserInput(this)" hx-target="#profit-loss-table" hx-trigger="click delay:1.5s" hx-swap="innerHTML show:#top-scroll:top" hx-get="/refresh-calc" value="{identifier}_{next_strike}_{value}">{value}</a></td>'
+                    html += f'<td><a class="strike-select" href=".top" onclick="getUserInput(this)" hx-target="#profit-loss-table" hx-trigger="click delay:2.0s" hx-swap="innerHTML show:#top-scroll:top" hx-get="/refresh-calc" value="{identifier}_{next_strike}_{value}">{value}</a></td>'
 
                 else:
                     html += f'<td><b>{value}</b></td>'
@@ -569,7 +569,7 @@ def refresh_calc():
         # Can't refresh b/c gets stuck in a loop
         # refresh_calc()
 
-        return("\nNo table found in session. Please retry!")
+        return("\n\n\nNo table found in session. Please retry!")
     
 
 @bp.route('/max-pain', methods=('GET', 'POST'))

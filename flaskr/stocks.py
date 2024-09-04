@@ -406,9 +406,39 @@ def bubbles():
         query
     ).fetchall()
 
+    def color_code(sector):
+        if sector == 'Industrials':
+            return 'rgba(0, 204, 102, 0.5)'
+        elif sector == 'Real Estate':
+            return 'rgba(255, 99, 132, 0.5)'
+        elif sector == 'Finance':
+            return 'rgba(54, 162, 235, 0.5)'
+        elif sector == 'Health Care':
+            return 'rgba(255, 205, 86, 0.5)'
+        elif sector == 'Consumer Staples':
+            return 'rgba(153, 102, 255, 0.5)'
+        elif sector == 'Consumer Discretionary':
+            return 'rgba(255, 159, 64, 0.5)'
+        elif sector == 'Miscellaneous':
+            return 'rgba(102, 255, 255, 0.5)'
+        elif sector == 'Technology':
+            return 'rgba(255, 153, 204, 0.5)'
+        elif sector == 'Basic materials':
+            return 'rgba(201, 203, 207, 0.5)'
+        elif sector == 'Energy':
+            return 'rgba(64, 64, 64, 0.5)'
+        elif sector == 'Telecommunications':
+            return 'rgba(0, 204, 102, 0.5)'
+        elif sector == 'Utilities':
+            return 'rgba(255, 99, 132, 0.5)'
+        else:
+            return 'rgba(0, 0, 0, 0.1)'
+
     target_tickers = [t[0] for t in target_tickers]
 
     print(f"# of target ({selected_index} {selected_sector}) tickers: ", len(target_tickers))
+
+    bubble_colors = [color_code(selected_sector) for t in target_tickers]
 
     # Get stock info for each ticker
     # Avoid repeatedly accessing prices_dict[t] to speed up
@@ -417,6 +447,7 @@ def bubbles():
         stock_info = yf.Ticker(t).info
         market_cap = stock_info.get('marketCap', 0)
         market_cap_billions = round(market_cap / 1000000000, 2)
+        sector = stock_info.get('sector', 'Unknown')
         
         data = {
             'market_cap': market_cap,
@@ -424,7 +455,7 @@ def bubbles():
             'str_market_cap_billions': f'{market_cap_billions / 1000}T' if market_cap_billions > 1000 else f'{market_cap_billions}B',
             'market_cap_radius': round(market_cap_billions, 2),
             'beta': stock_info.get('beta', 0),
-            'sector': stock_info.get('sector', "Unknown"),
+            'sector': sector,
             target_y_axis: round(stock_info.get(target_y_axis, 0), 2)
         }
         prices_dict[t] = data
@@ -478,7 +509,7 @@ def bubbles():
     
     '''
 
-    print("Prices dict: ", prices_dict)
+    # print("Prices dict: ", prices_dict)
 
     labels = []
     values = []
@@ -547,15 +578,17 @@ def bubbles():
     # X-axis options
     x_axis_options = ['Sector', 'Market Cap', 'Beta']
 
-    end_time = time.time()
-    run_time = end_time - start_time
-    pace = run_time / len(values)
-
-    print(f"Bubbles time taken (for {len(values)} stock): {run_time} ({pace}/stock) ")
+    try:
+        end_time = time.time()
+        run_time = end_time - start_time
+        pace = run_time / len(values)
+        print(f"Bubbles time taken (for {len(values)} stock): {run_time} ({pace}/stock) ")
     # Average before refactoring is ~0.08 seconds per stock
+    except:
+        print("No values to calculate pace")
     
 
-    return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict, sectors=sectors, selected_sector=selected_sector,  indices=indices, selected_index=selected_index, y_axis_options=y_axis_options, selected_y_axis=selected_y_axis, x_axis_options=x_axis_options, selected_x_axis=selected_x_axis)
+    return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict, sectors=sectors, selected_sector=selected_sector,  indices=indices, selected_index=selected_index, y_axis_options=y_axis_options, selected_y_axis=selected_y_axis, x_axis_options=x_axis_options, selected_x_axis=selected_x_axis, bubble_colors=bubble_colors)
 
 
 @bp.route('/monte_carlo', methods=('GET', 'POST'))
@@ -726,7 +759,6 @@ def monte_carlo():
         # See 11:20 in the video to see how *Multivariate Normal Distribution* is used and how the *Cholesky Decomposition* to determine the *Lower Triangular Matrix* is used for calculations
         # So we get the sample data from the normal distribution and we correlate them with the covariance matrix with the lower triangle
 
-
         Z = np.random.normal(size=(T, len(weights)))
 
         # Lower triangle
@@ -745,11 +777,18 @@ def monte_carlo():
     ax = fig.subplots()
     ax.plot(portfolio_sims)
 
-    # Labels and colors
+    # Styling
     ax.set_xlabel('Days')
     ax.set_ylabel('Portfolio Value ($)')
     ax.set_title('Monte Carlo Simulation of a Stock Portfolio')
     ax.set_facecolor('#f0f0f0')
+    ax.grid(True)
+
+    # Give y axis thousands separator
+    ax.get_yaxis().set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
+
+    # Add initial line to graph
+    ax.axhline(y=initialPortfolio, color='k', linestyle='--', label='Initial Portfolio Value')
 
     # Save it to a temporary buffer.
     buf = BytesIO()

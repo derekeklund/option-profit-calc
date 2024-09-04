@@ -82,7 +82,7 @@
                 datasets: [{
                     label: 'Market Cap',
                     data: {{ values | safe }},
-                    backgroundColor: 'rgb(255, 99, 132, 0.5)' // 50% transparent red
+                    backgroundColor: {{ bubble_colors | safe }}//'rgb(255, 99, 132, 0.5)' // 50% transparent red
                 }]
                 },
                 options: {
