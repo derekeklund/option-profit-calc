@@ -1,68 +1,47 @@
 import yfinance as yf
 import time
 
-start = time.time()
-
-# Dictionary of stock market caps and sectors
-prices_dict = {}
-
-target_tickers = ['AAPL', 'AMZN', 'MSFT', 'TSLA', 'NVDA', 'META']
+target_tickers = ['AAPL', 'ADBE', 'ADI', 'ADP', 'ADSK', 'AMAT', 'AMD', 'ANSS', 'ARM', 'ASML', 'AVGO', 'CDNS', 'CRWD', 'CTSH', 'DDOG', 'EA', 'FTNT', 'GFS', 'GOOG', 'GOOGL', 'INTC', 'INTU', 'KLAC', 'LRCX', 'MCHP', 'MDB', 'META', 'MRVL', 'MSFT', 'MU', 'NVDA', 'NXPI', 'ON', 'PANW', 'QCOM', 'SNPS', 'TEAM', 'TTD', 'TTWO', 'TXN', 'WDAY', 'ZS']
 
 target_y_axis = 'trailingPE'
 
-for t in target_tickers:
-        
-    # print("Ticker: ", t)
-    
-    # Get stock price
-    prices = yf.Ticker(t)
+start_time = time.time()
 
-    # Get stock info
-    stock_info = prices.info
+from yahooquery import Ticker
 
-    # Get market cap and sector
-    prices_dict[t] = {}
-    prices_dict[t]['market_cap'] = stock_info['marketCap']
-    prices_dict[t]['market_cap_billions'] = round((prices_dict[t]['market_cap'] / 1000000000), 2)
-    
-    if prices_dict[t]['market_cap_billions'] > 1000:
-        prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']/1000) + 'T'
-    else:
-        prices_dict[t]['str_market_cap_billions'] = str(prices_dict[t]['market_cap_billions']) + 'B'
+all_symbols = " ".join(target_tickers)
+myInfo = Ticker(all_symbols)
+myDict = myInfo.price
 
-    # prices_dict[t]['market_cap_radius'] = round((prices_dict[t]['market_cap_billions']/100), 2)
-    prices_dict[t]['market_cap_radius'] = round((prices_dict[t]['market_cap_billions']), 2)
-
-    # If the radius is too small, make it big enough to see
-    # if prices_dict[t]['market_cap_radius'] < 5:
-    #     prices_dict[t]['market_cap_radius'] = 5
-
-    # Get beta
-    try:
-        prices_dict[t]['beta'] = stock_info['beta']
-    except KeyError as e:
-        prices_dict[t]['beta'] = 0
-        print(f'No beta for {t}')
+for ticker in target_tickers:
+    ticker = str(ticker)
+    longName = myDict[ticker]['longName']
+    market_cap = myDict[ticker]['marketCap']
+    price = myDict[ticker]['regularMarketPrice']
+    print(ticker, longName, market_cap, price)
 
 
-    prices_dict[t]['sector'] = stock_info['sector']
+end_time = time.time()
+run_time = round((end_time - start_time), 2)
+print(f"All tickers run time: {run_time}")
 
-    try:
-        prices_dict[t][target_y_axis] = round(stock_info[target_y_axis], 2)
-    except:
-        # If there is no pe ratio, set it to 0
-        prices_dict[t][target_y_axis] = 0
+''' New code '''
+start_time = time.time()
+prices_dict = {}
+# stock_info = yf.Ticker('AAPL AMZN MSFT TSLA NVDA META')
 
-        print(f'No {target_y_axis} for {t}')
+string_tickers = " ".join(target_tickers)
 
-print("Time taken: ", time.time() - start)
+tickers = yf.Tickers(string_tickers)
 
-start = time.time()
+# print("New\n", tickers.tickers)
 
-for t in target_tickers:
-    stock_info = yf.Ticker(t).info
+for t in tickers.tickers:
+    stock_info = tickers.tickers[t].info
+
     market_cap = stock_info.get('marketCap', 0)
     market_cap_billions = round(market_cap / 1000000000, 2)
+    sector = stock_info.get('sector', 'Unknown')
     
     data = {
         'market_cap': market_cap,
@@ -70,10 +49,59 @@ for t in target_tickers:
         'str_market_cap_billions': f'{market_cap_billions / 1000}T' if market_cap_billions > 1000 else f'{market_cap_billions}B',
         'market_cap_radius': round(market_cap_billions, 2),
         'beta': stock_info.get('beta', 0),
-        'sector': stock_info.get('sector', "Unknown"),
+        'sector': sector,
         target_y_axis: round(stock_info.get(target_y_axis, 0), 2)
     }
     prices_dict[t] = data
 
+# print("New\n", prices_dict)
 
-print("Time taken: ", time.time() - start)
+try:
+    end_time = time.time()
+    run_time = end_time - start_time
+    pace = run_time
+    print(f"New way run time: {run_time}")
+# Average before refactoring is ~0.08 seconds per stock
+except:
+    print("No values to calculate pace")
+
+
+'''Old way'''
+start_time = time.time()
+prices_dict = {}
+
+for t in target_tickers:
+    
+    # Get stock price
+    stock_info = yf.Ticker(t).info
+
+    # print("OG\n", stock_info)
+
+    market_cap = stock_info.get('marketCap', 0)
+    market_cap_billions = round(market_cap / 1000000000, 2)
+    sector = stock_info.get('sector', 'Unknown')
+    
+    data = {
+        'market_cap': market_cap,
+        'market_cap_billions': market_cap_billions,
+        'str_market_cap_billions': f'{market_cap_billions / 1000}T' if market_cap_billions > 1000 else f'{market_cap_billions}B',
+        'market_cap_radius': round(market_cap_billions, 2),
+        'beta': stock_info.get('beta', 0),
+        'sector': sector,
+        target_y_axis: round(stock_info.get(target_y_axis, 0), 2)
+    }
+    prices_dict[t] = data
+
+# print("OG\n", prices_dict)
+
+try:
+    end_time = time.time()
+    run_time = end_time - start_time
+    pace = run_time
+    print(f"Old way run time: {run_time}")
+# Average before refactoring is ~0.08 seconds per stock
+except:
+    print("No values to calculate pace")
+
+
+
