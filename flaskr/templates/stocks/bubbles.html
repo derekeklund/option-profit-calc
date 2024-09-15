@@ -80,13 +80,21 @@
                 data: {
                 labels: {{ labels | safe }},
                 datasets: [{
-                    label: 'Market Cap',
+                    //label: 'Market Cap',
                     data: {{ values | safe }},
                     backgroundColor: {{ bubble_colors | safe }}//'rgb(255, 99, 132, 0.5)' // 50% transparent red
                 }]
                 },
                 options: {
                     plugins: {
+                        tooltip: {
+                            callbacks: { // Only show selected y-axis value in tooltip for hover label
+                                label: (context) => {
+                                    console.log(context);
+                                    return `{{ selected_y_axis }}: ${context.raw.y}`;
+                                }
+                            }
+                        },
                         legend: {
                             display: false
                         },

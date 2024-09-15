@@ -397,8 +397,10 @@ def bubbles():
 
     # tickers = nasdaq_100_tickers
 
-    # query = f'SELECT ticker FROM company_info WHERE sector = "{selected_sector}"'
-    query = f'SELECT ticker FROM company_info WHERE sector = "{selected_sector}" AND ticker IN (SELECT ticker FROM {selected_index});'
+    if selected_sector == 'All':
+        query = f'SELECT ticker FROM company_info WHERE ticker IN (SELECT ticker FROM {selected_index});'
+    else:
+        query = f'SELECT ticker FROM company_info WHERE sector = "{selected_sector}" AND ticker IN (SELECT ticker FROM {selected_index});'
 
     # Get list of all tickers in company_info table that are in the technology sector
     db = get_db()
@@ -407,32 +409,34 @@ def bubbles():
     ).fetchall()
 
     def color_code(sector):
-        if sector == 'Industrials':
-            return 'rgba(0, 204, 102, 0.5)'
+        if sector == 'All':
+            return 'rgba(255, 99, 132, 0.5)' # red
+        elif sector == 'Industrials':
+            return 'rgba(0, 204, 102, 0.5)' # green
         elif sector == 'Real Estate':
-            return 'rgba(255, 99, 132, 0.5)'
+            return 'rgba(255, 99, 132, 0.5)' # red
         elif sector == 'Finance':
-            return 'rgba(54, 162, 235, 0.5)'
+            return 'rgba(54, 162, 235, 0.5)' # blue
         elif sector == 'Health Care':
-            return 'rgba(255, 205, 86, 0.5)'
+            return 'rgba(255, 205, 86, 0.5)' # yellow
         elif sector == 'Consumer Staples':
-            return 'rgba(153, 102, 255, 0.5)'
+            return 'rgba(153, 102, 255, 0.5)' # purple
         elif sector == 'Consumer Discretionary':
-            return 'rgba(255, 159, 64, 0.5)'
+            return 'rgba(255, 159, 64, 0.5)' # orange
         elif sector == 'Miscellaneous':
-            return 'rgba(102, 255, 255, 0.5)'
+            return 'rgba(102, 255, 255, 0.5)' # teal
         elif sector == 'Technology':
-            return 'rgba(255, 153, 204, 0.5)'
+            return 'rgba(255, 153, 204, 0.5)' # pink
         elif sector == 'Basic materials':
-            return 'rgba(201, 203, 207, 0.5)'
+            return 'rgba(201, 203, 207, 0.5)' # light gray
         elif sector == 'Energy':
-            return 'rgba(64, 64, 64, 0.5)'
+            return 'rgba(64, 64, 64, 0.5)' # dark gray
         elif sector == 'Telecommunications':
-            return 'rgba(0, 204, 102, 0.5)'
+            return 'rgba(0, 204, 102, 0.5)' # green
         elif sector == 'Utilities':
-            return 'rgba(255, 99, 132, 0.5)'
+            return 'rgba(255, 99, 132, 0.5)' # red
         else:
-            return 'rgba(0, 0, 0, 0.1)'
+            return 'rgba(0, 0, 0, 0.1)' # black
 
     target_tickers = [t[0] for t in target_tickers]
 
@@ -444,7 +448,7 @@ def bubbles():
 
     # Get stats for each ticker and store in prices_dict
     def get_stats(ticker):
-        print("Getting stats for: ", ticker)
+        # print("Getting stats for: ", ticker)
         stock_info = yf.Ticker(ticker).info
         market_cap = stock_info.get('marketCap', 0)
         market_cap_billions = round(market_cap / 1000000000, 2)
@@ -532,6 +536,11 @@ def bubbles():
 
     sectors = [s[0] for s in sectors]
 
+    sectors.append('All')
+
+    # Make 'All' is first in the list, Technology is second, Telecommunications is third, None is last
+    sectors.sort(key=lambda x: (x != 'All', x != 'Technology', x != 'Telecommunications'))
+
     print("Sectors: ", sectors)
 
     indices = ['Nasdaq 100', 'S&P 500', 'Russell 2000']
@@ -539,9 +548,11 @@ def bubbles():
     if selected_index == 'nasdaq_100':
         selected_index = 'Nasdaq 100'
     elif selected_index == 's_and_p_500':
-        selected_index = 'S&P 500'
+        selected_index = 'S+P 500'
     elif selected_index == 'russell_2000':
         selected_index = 'Russell 2000'
+
+    print("Selected index: ", selected_index)
 
     # Y-axis options
     y_axis_options = ['P/E Ratio', 'PEG Ratio', 'Revenue Growth']
@@ -557,6 +568,15 @@ def bubbles():
     # Average before refactoring is ~0.08 seconds per stock
     except:
         print("No values to calculate pace")
+
+    print("Values: ", values)
+
+    # Update values to only be the 'y' value
+    # values = [value['y'] for value in values]
+
+    # print("Values: ", values)
+
+    print("labels: ", labels)
     
 
     return render_template('stocks/bubbles.html', labels=labels, values=values, prices_dict=prices_dict, sectors=sectors, selected_sector=selected_sector,  indices=indices, selected_index=selected_index, y_axis_options=y_axis_options, selected_y_axis=selected_y_axis, x_axis_options=x_axis_options, selected_x_axis=selected_x_axis, bubble_colors=bubble_colors)
