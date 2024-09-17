@@ -68,6 +68,10 @@ def index():
         return render_template('blog/index.html')
     
 
+@bp.route('/resume', methods=('GET', 'POST'))
+def resume():
+
+    return render_template('blog/resume.html')
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required

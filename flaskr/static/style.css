@@ -897,3 +897,180 @@ legend {
     min-width: 350px;
     border: 1px solid #ccc;
 }
+
+/* Resume page */
+
+/* ------ About Me ------ */
+
+.about-me-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 968px;
+    margin: auto;
+}
+  
+@media screen and (min-width: 1000px) {
+    .about-me-container {
+        flex-direction: row;
+    }
+}
+  
+.blurb {
+    color: var(--text-color);
+    max-width: 500px;
+    text-align: justify;
+}
+  
+.blurb p {
+    margin-bottom: 2rem;
+    font-size: large;
+}
+  
+.profile-pic img {
+    width: 75%;
+    border-radius: 50%;
+    margin: auto 10%;
+}
+
+.resume-button {
+    border-radius: 1rem;
+    border: 1px solid #009879;
+    margin: 0 auto;
+    background-color: #009879;
+    color: white;
+    display: inline-block;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 1rem 1rem;
+  }
+
+/* ------ Projects ------ */
+
+.projects-container {
+    max-width: 968px;
+    margin: auto;
+    text-align: center;
+    padding: 5%;
+}
+  
+.project-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 32px;
+}
+  
+.card {
+    background-color: #fff;
+    box-shadow: 2.4px 2.4px 3.6px rgba(0, 0, 0, .15);
+    padding: 1.25rem;
+    text-align: start;
+}
+  
+.card-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 1rem;
+    border: 1px solid rgba(0, 0, 0, .1);
+    transition: 0.3s;
+}
+  
+.card-img:hover {
+    transform: scale(1.1);
+    transition: ease-out 0.3s;
+    cursor: pointer;
+}
+  
+.card a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+  
+/* ------ Skills ------ */
+  
+.skills {
+    text-align: center;
+    margin-top: 2rem;
+}
+  
+.skills-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 1rem;
+    margin-top: 2rem;
+    text-align: center;
+    max-width: 500px;
+    margin: auto;
+}
+  
+.skills__item {
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+  
+.skills__item img:hover {
+    transform: scale(1.1);
+    transition: ease-out 0.3s;
+}
+  
+.skills img {
+    max-width: 80px;
+    margin-bottom: -5px;
+}
+  
+/* ------ Contact/Footer ------ */
+  
+footer {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 80%;
+    margin: auto;
+}
+  
+.footer-container {
+    margin: 5%;
+}
+  
+.footer__nav {
+    width: 100%;
+    display: flex;
+    min-height: 30px;
+    padding: 10px;
+    bottom: 0;
+    text-align: center;
+    justify-content: space-between;
+}
+  
+.footer__nav-links {
+    display: none;
+}
+  
+.footer__nav-links li a {
+    text-decoration: none;
+    color: black;
+    text-transform: uppercase;
+}
+  
+.footer__nav-hr {
+    width: 85%;
+    margin-bottom: 40px;
+}
+  
+footer p {
+    max-width: 400px;
+    padding-bottom: 1rem;
+    margin: 0 auto;
+}
+  
+.to-top {
+    list-style-type: none;
+    justify-self: flex-end;
+    text-transform: uppercase;
+}
+  
+.to-top a {
+    text-decoration: none;
+    color: black;
+}
