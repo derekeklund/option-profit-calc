@@ -31,34 +31,46 @@
       <h2>Projects</h2>
       <div class="project-cards">
         <div class="card">
-          <img src="{{ url_for('static', filename='images/option-scanner.png') }}" class="card-img" alt="Project 1">
-          <h3>Options Scanner</h3>
-          <a href="#">Link <i class="icon fa-solid fa-arrow-right"></i></a>
+            <a href="{{ url_for('options.scanner') }}">
+                <img src="{{ url_for('static', filename='images/option-scanner.png') }}" class="card-img" alt="Project 1">
+            </a>
+            <h3>Options Scanner</h3>
+            <a href="{{ url_for('options.scanner') }}">Link <i class="icon fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="card">
-          <img src="{{ url_for('static', filename='images/profit-calc.png') }}" class="card-img" alt="Project 2">
-          <h3>Options Profit Calculator</h3>
-          <a href="#">Link <i class="icon fa-solid fa-arrow-right"></i></a>
+            <a href="{{ url_for('options.profit_calc') }}">
+                <img src="{{ url_for('static', filename='images/profit-calc.png') }}" class="card-img" alt="Project 2">
+            </a>
+            <h3>Options Profit Calculator</h3>
+            <a href="{{ url_for('options.profit_calc') }}">Link <i class="icon fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="card">
-          <img src="{{ url_for('static', filename='images/watchlist.png') }}" class="card-img" alt="Project 3">
-          <h3>Stock Watchlist</h3>
-          <a href="#">Link <i class="icon fa-solid fa-arrow-right"></i></a>
+            <a href="{{ url_for('stocks.watchlist') }}">
+                <img src="{{ url_for('static', filename='images/watchlist.png') }}" class="card-img" alt="Project 3">
+            </a>
+            <h3>Stock Watchlist</h3>
+            <a href="{{ url_for('stocks.watchlist') }}">Link <i class="icon fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="card">
-          <img src="{{ url_for('static', filename='images/bubble-chart.png') }}" class="card-img" alt="Project 4">
-          <h3>Bubble Stock Screener</h3>
-          <a href="#">Link <i class="icon fa-solid fa-arrow-right"></i></a>
+            <a href="{{ url_for('stocks.bubbles') }}">
+                <img src="{{ url_for('static', filename='images/bubble-chart.png') }}" class="card-img" alt="Project 4">
+            </a>
+            <h3>Bubble Stock Screener</h3>
+            <a href="{{ url_for('stocks.bubbles') }}">Link <i class="icon fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="card">
-          <img src="{{ url_for('static', filename='images/max-pain.png') }}" class="card-img" alt="Project 5">
-          <h3>Max Pain Calculator</h3>
-          <a href="#">Link <i class="icon fa-solid fa-arrow-right"></i></a>
+            <a href="{{ url_for('options.max_pain') }}">
+                <img src="{{ url_for('static', filename='images/max-pain.png') }}" class="card-img" alt="Project 5">
+            </a>
+            <h3>Max Pain Calculator</h3>
+            <a href="{{ url_for('options.max_pain') }}">Link <i class="icon fa-solid fa-arrow-right"></i></a>
         </div>
         <div class="card">
-          <img src="{{ url_for('static', filename='images/monte-carlo.png') }}" class="card-img" alt="Project 6">
-          <h3>Monte Carlo Portfolio Simulation</h3>
-          <a href="#">Link <i class="icon fa-solid fa-arrow-right"></i></a>
+            <a href="{{ url_for('stocks.monte_carlo') }}">
+                <img src="{{ url_for('static', filename='images/monte-carlo.png') }}" class="card-img" alt="Project 6">
+            </a>
+            <h3>Monte Carlo Portfolio Simulation</h3>
+            <a href="{{ url_for('stocks.monte_carlo') }}">Link <i class="icon fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
     </div>
