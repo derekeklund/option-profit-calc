@@ -918,7 +918,7 @@ legend {
   
 .blurb {
     color: var(--text-color);
-    max-width: 500px;
+    max-width: 650px;
     text-align: justify;
 }
   
@@ -951,7 +951,7 @@ legend {
     max-width: 968px;
     margin: auto;
     text-align: center;
-    padding: 5%;
+    padding: 2%;
 }
   
 .project-cards {
