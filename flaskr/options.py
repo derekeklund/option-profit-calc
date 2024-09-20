@@ -692,6 +692,11 @@ def max_pain():
     # print("All options:", all_options)
 
     strikes = all_options['strike'].tolist()
+    print("Unordered strikes:", strikes)
+    # Sort strikes from lowest to highest
+    strikes.sort()
+    print("Ordered strikes:", strikes)
+
     call_losses = all_options['call_losses'].tolist()
     put_losses = all_options['put_losses'].tolist()
     losses = all_options['total_loss'].tolist()
