@@ -691,29 +691,34 @@ def max_pain():
     # Add new column to dataframe called 'colors' to highlight max pain strike
     all_options['colors'] = ['rgb(255, 99, 132, 0.5)' if strike == max_pain_strike else 'rgba(54, 162, 235, 0.5)' for strike in all_options['strike']]
 
-    # print("All options:", all_options)
+    print("All options:", all_options)
 
     # Create empty dictionary of all options
     dict_all_options = all_options.to_dict()
 
     print("All options dict:", dict_all_options)
 
-    strikes = all_options['strike'].tolist()
-    # print("Unordered strikes:", strikes)
-    # # Sort strikes from lowest to highest
-    strikes.sort()
-    # print("Ordered strikes:", strikes)
+    # Get values from dictionary into lists for jinja
+    strikes = list(dict_all_options['strike'].values())
+    call_losses = list(dict_all_options['call_losses'].values())
+    put_losses = list(dict_all_options['put_losses'].values())
+    losses = list(dict_all_options['total_loss'].values())
+    background_colors = list(dict_all_options['colors'].values())
 
-    call_losses = all_options['call_losses'].tolist()
-    # call_losses.sort() # doesn't work
+    print("Strikes:", strikes)
+    print("Call losses:", call_losses)
+    print("Put losses:", put_losses)
+    print("Losses:", losses)
+    print("Background colors:", background_colors)
 
-    put_losses = all_options['put_losses'].tolist()
-    # put_losses.sort() # doesn't work
-
-    losses = all_options['total_loss'].tolist()
-    background_colors = all_options['colors'].tolist()
+    # Old way (works in dev but not prod for some reason...)
+    # strikes = all_options['strike'].tolist()
+    # call_losses = all_options['call_losses'].tolist()
+    # put_losses = all_options['put_losses'].tolist()
+    # losses = all_options['total_loss'].tolist()
+    # background_colors = all_options['colors'].tolist()
 
     session['ticker'] = ticker
 
 
-    return render_template('options/max-pain.html', labels=strikes, values=losses, max_pain_strike=max_pain_strike, expiries=exp_dates, selected_exp_date=expiry, ticker=ticker, background_colors=background_colors, call_losses=call_losses, put_losses=put_losses, previous_close=previous_close)
+    return render_template('options/max-pain.html', labels=strikes, values=losses, max_pain_strike=max_pain_strike, expiries=exp_dates, selected_exp_date=expiry, ticker=ticker, background_colors=background_colors, call_losses=call_losses, put_losses=put_losses, previous_close=previous_close, dict_all_options=dict_all_options)
