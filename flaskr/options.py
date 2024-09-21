@@ -603,6 +603,8 @@ def max_pain():
         form_keys = request.form.keys()
         form_keys = list(form_keys)
         print("Form keys:", form_keys)
+
+    print("Ticker:", ticker)
         
 
     # Get ticker info
@@ -691,14 +693,23 @@ def max_pain():
 
     # print("All options:", all_options)
 
+    # Create empty dictionary of all options
+    dict_all_options = all_options.to_dict()
+
+    print("All options dict:", dict_all_options)
+
     strikes = all_options['strike'].tolist()
-    print("Unordered strikes:", strikes)
-    # Sort strikes from lowest to highest
+    # print("Unordered strikes:", strikes)
+    # # Sort strikes from lowest to highest
     strikes.sort()
-    print("Ordered strikes:", strikes)
+    # print("Ordered strikes:", strikes)
 
     call_losses = all_options['call_losses'].tolist()
+    # call_losses.sort() # doesn't work
+
     put_losses = all_options['put_losses'].tolist()
+    # put_losses.sort() # doesn't work
+
     losses = all_options['total_loss'].tolist()
     background_colors = all_options['colors'].tolist()
 
