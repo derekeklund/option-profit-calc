@@ -691,7 +691,11 @@ def max_pain():
     # Add new column to dataframe called 'colors' to highlight max pain strike
     all_options['colors'] = ['rgb(255, 99, 132, 0.5)' if strike == max_pain_strike else 'rgba(54, 162, 235, 0.5)' for strike in all_options['strike']]
 
-    print("All options:", all_options)
+    print("All options DF before sort:", all_options)
+
+    all_options = all_options.sort_values(by='strike')
+
+    print("All options DF after sort:", all_options)
 
     # Create empty dictionary of all options
     dict_all_options = all_options.to_dict()
