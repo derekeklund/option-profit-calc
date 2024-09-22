@@ -163,6 +163,8 @@ def profit_calc():
 
         profit_loss_table = session.get('profit_loss_table')
 
+        # print("Profit loss table:", profit_loss_table)
+
         strike = None
         show_div = True
 
@@ -397,13 +399,17 @@ def profit_calc():
 
             profit_loss_table = f"<p>Selected Strike: <b>{strike}</b></p>" + profit_loss_table
 
-            # print("Profit loss table:", profit_loss_table)
+            # print("UPDATED Profit loss table:", profit_loss_table)
+            # print("HTML PL:", html_pl)
 
             # Store table in session
             session['profit_loss_table'] = profit_loss_table # styled_table
 
             # Styled one
             session['profit_loss_table'] = html_pl
+
+            profit_loss_table = session.get('profit_loss_table')
+            # print("Profit loss table from session:", profit_loss_table)
 
         
         else:

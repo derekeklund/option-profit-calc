@@ -9,6 +9,8 @@ from werkzeug.security import check_password_hash
 
 
 def login_user():
+    print("Login attempt from helpers.py...")
+
     username = None
     password = None
 
@@ -28,8 +30,10 @@ def login_user():
 
     if user is None:
         error = 'Incorrect username.'
+        flash(error)
     elif not check_password_hash(user['password'], password):
         error = 'Incorrect password.'
+        flash(error)
 
     if error is None:
         # Clear the session and set the user_id
