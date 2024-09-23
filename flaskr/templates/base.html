@@ -11,45 +11,53 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <nav class="nav sticky" id="navbar">
-        <ul>
-            <li class="float-left"><a class="active" href="{{ url_for('blog.index') }}">Home</a></li>
-            <li class="float-left"><a class="action" href="{{ url_for('options.scanner') }}">Options Scanner</a></li>
-            <li class="float-left"><a class="action" href="{{ url_for('options.profit_calc') }}">Profit Calculator</a></li>
-            <li class="float-left"><a class="action" href="{{ url_for('stocks.watchlist') }}">Watchlist</a></li>
-            <li class="float-left"><a class="action" href="{{ url_for('stocks.bubbles') }}">Bubble Charts</a></li>
-            <li class="float-left"><a class="action" href="{{ url_for('options.max_pain') }}">Max Pain</a></li>     
-            <li class="float-left"><a class="action" href="{{ url_for('stocks.monte_carlo') }}">Monte Carlo Simulation</a></li>
-            <li class="float-left"><a class="action" href="{{ url_for('blog.resume') }}">Resume</a></li>
-            
-    
-            {% if g.user %}
-                <li class="float-right"><a class="action" href="{{ url_for('stocks.watchlist') }}"><span>Hi <i>{{ g.user['username'] }}</i>!</span></a></li>
-                <li class="float-right"><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
-            {% else %}
-                <li class="float-right"><a href="{{ url_for('auth.register') }}">Register</a></li>
-                {# <li class="float-right"><a href="{{ url_for('auth.login') }}">Log In</a></li> #}
+    <nav role="navigation" class="nav sticky" id="navbar">
 
-                {# <button class="login-button float-right" onclick="openLoginForm()">Log In</button> #}
+        <div id="menuToggle">
+            <div class="button-background"></div>
+            <input type="checkbox">
+            <span></span>
+            <span></span>
+            <span></span>
 
-                <li class="login-button float-right" id="toggleButton" onclick="openLoginForm()">Log In</li>
+            <ul id="menu">
+                <li class="float-left"><a class="active" href="{{ url_for('blog.index') }}">Home</a></li>
+                <li class="float-left"><a class="action" href="{{ url_for('options.scanner') }}">Options Scanner</a></li>
+                <li class="float-left"><a class="action" href="{{ url_for('options.profit_calc') }}">Profit Calculator</a></li>
+                <li class="float-left"><a class="action" href="{{ url_for('stocks.watchlist') }}">Watchlist</a></li>
+                <li class="float-left"><a class="action" href="{{ url_for('stocks.bubbles') }}">Bubble Charts</a></li>
+                <li class="float-left"><a class="action" href="{{ url_for('options.max_pain') }}">Max Pain</a></li>     
+                <li class="float-left"><a class="action" href="{{ url_for('stocks.monte_carlo') }}">Monte Carlo Simulation</a></li>
+                <li class="float-left"><a class="action" href="{{ url_for('blog.resume') }}">Resume</a></li>
+                
+        
+                {% if g.user %}
+                    <li class="float-right"><a class="action" href="{{ url_for('stocks.watchlist') }}"><span>Hi <i>{{ g.user['username'] }}</i>!</span></a></li>
+                    <li class="float-right"><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+                {% else %}
+                    <li class="float-right"><a href="{{ url_for('auth.register') }}">Register</a></li>
 
-                <div class="form-popup" id="loginForm">
-                    <form method="post" class="form-container">
-                        {# <h3>Login</h3> #}
+                    <li class="login-button float-right" id="toggleButton" onclick="openLoginForm()">Log In</li>
 
-                        <label for="email"><b>Username</b></label>
-                        <input type="text" placeholder="Enter Username" name="username" id="username" required>
+                    <div class="form-popup" id="loginForm">
+                        <form method="post" class="form-container">
+                            {# <h3>Login</h3> #}
 
-                        <label for="psw"><b>Password</b></label>
-                        <input type="password" placeholder="Enter Password" name="password" id="password" required>
+                            <label for="email"><b>Username</b></label>
+                            <input type="text" placeholder="Enter Username" name="username" id="username" required>
 
-                        <input type="submit" class="btn" value="Log In">
-                        <button type="button" class="btn cancel" onclick="closeLoginForm()">Close</button>
-                    </form>
-                </div>
-            {% endif %}
-        </ul>
+                            <label for="psw"><b>Password</b></label>
+                            <input type="password" placeholder="Enter Password" name="password" id="password" required>
+
+                            <input type="submit" class="btn" value="Log In">
+                            <button type="button" class="btn cancel" onclick="closeLoginForm()">Close</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </ul>
+
+        </div>
+
     </nav>
 
     <section>
