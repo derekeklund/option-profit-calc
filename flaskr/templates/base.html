@@ -15,7 +15,7 @@
 
         <div id="menuToggle">
             <div class="button-background"></div>
-            <input type="checkbox">
+            <input type="checkbox" class="noDisplay">
             <span></span>
             <span></span>
             <span></span>
@@ -50,7 +50,7 @@
                             <input type="password" placeholder="Enter Password" name="password" id="password" required>
 
                             <input type="submit" class="btn" value="Log In">
-                            <button type="button" class="btn cancel" onclick="closeLoginForm()">Close</button>
+                            <button type="button" class="btn cancel" id="closeForm" onclick="closeLoginForm()">Close</button>
                         </form>
                     </div>
                 {% endif %}
@@ -75,8 +75,10 @@
 
     <script>
         const toggleButton = document.getElementById('toggleButton');
+        const closeButton = document.getElementById('closeForm');
         const form = document.getElementById('loginForm');
 
+        // 'Log In' button
         toggleButton.addEventListener('click', () => {
             if (form.style.display === 'none' || form.style.display === '') {
                 form.style.display = 'block';
@@ -85,6 +87,16 @@
             } else {
                 form.style.display = 'none';
                 // toggleButton.textContent = 'Log In';
+            }
+        });
+
+        // 'Close' button
+        closeButton.addEventListener('click', () => {
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+
+            } else {
+                form.style.display = 'none';
             }
         });
     </script>
