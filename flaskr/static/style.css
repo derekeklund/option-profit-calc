@@ -120,6 +120,17 @@ li:hover {
     background-color: #111;
 }
 
+@media screen and (max-width: 1300px) {
+    .active:hover {
+        background-color: var(--background);
+    }
+
+    li:hover {
+        background-color: var(--background);
+    }
+    
+}
+
 .sticky{
     /* position: fixed; */
     position: sticky;
@@ -151,6 +162,14 @@ li:hover {
 
 .login-button:hover {
     background-color: #111;
+}
+
+@media screen and (max-width: 1300px) {
+    .login-button:hover {
+        background-color: var(--background);
+        color: var(--green)
+    }
+    
 }
 
 /* Add styles to the form container */
@@ -1077,13 +1096,13 @@ footer p {
 
 /* ------ Test Hamburger Menu ------ */
 
-#menuToggle input {
+.noDisplay {
     display: none;
     /* top: 0px; */
 }
 
 @media only screen and (min-width: 1300px) {
-    #menuToggle input {
+    .noDisplay {
         display: none;
         /* top: 0px; */
     }
@@ -1111,10 +1130,10 @@ footer p {
     }
 
     #menuToggle a:hover {
-        color: tomato;
+        color: var(--green);
     }
 
-    #menuToggle input {
+    #menuToggle .noDisplay {
         display: block;
         width: 40px;
         height: 32px;
@@ -1168,7 +1187,7 @@ footer p {
     #menuToggle input:checked ~ span {
         opacity: 1;
         transform: rotate(45deg) translate(-2px, -1px);
-        background: #232323;
+        /* background: #232323; */
     }
 
     /*
