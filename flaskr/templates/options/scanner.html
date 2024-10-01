@@ -19,7 +19,7 @@
             <form class="grid-form" method="POST">
 
                 {# <div class="flex-container"> #}
-                <div class="three-wide-grid-container">
+                <div class="flex-wrap">
 
                     {# Search for ticker #}
                     {# <div class="flex-item vertical-center"> #}
@@ -84,12 +84,14 @@
 
             <div style="clear: both;"></div>
 
-            {% for table in tables %}
-                {{ table|safe }}
-                {% if not loop.last %}
-                    <hr>
-                {% endif %}
-            {% endfor %}
+            <div class="scanner-table">
+                {% for table in tables %}
+                    {{ table|safe }}
+                    {% if not loop.last %}
+                        <hr>
+                    {% endif %}
+                {% endfor %}
+            </div>
 
         </div>
 
