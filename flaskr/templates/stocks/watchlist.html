@@ -29,8 +29,8 @@
             </div>
 
             {# Canvas for stock chart #}
-            <div class="watchlistChart">
-                <canvas id="stockChart" width="200" height="100"></canvas>
+            <div class="watchlist-chart">
+                <canvas id="stockChart"></canvas>
             </div>
     
 
@@ -56,11 +56,16 @@
                         }]
                     },
                     options: {
-                    scales: {
-                        y: {
-                            beginAtZero: false
+                        scales: {
+                            x: {
+                                ticks: {
+                                    maxTicksLimit: 10
+                                }
+                            },
+                            y: {
+                                beginAtZero: false
+                            }
                         }
-                    }
                     }
                 });
             </script>
