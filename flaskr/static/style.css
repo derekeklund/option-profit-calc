@@ -16,8 +16,8 @@
 
 .condensed-content {
     position: absolute;
-    top: 20%;
-    left: 30%;
+    top: 10%;
+    left: 10%;
 }
 
 .left-center {
@@ -565,6 +565,16 @@ input[type=submit] { align-self: start; min-width: 10em; } */
 @media screen and (max-width: 1300px) {
     .calc-page {
         padding-top: 50px;
+        flex-direction: column;
+    }
+
+    .tables-container {
+        flex-direction: column;
+    }
+
+    .table-item-big {
+        margin-top: 0px !important;
+        padding-bottom: 20px;
     }
 
     .calc-container {
@@ -910,6 +920,33 @@ legend {
     border: 1px solid #ccc;
 }
 
+#stockChart {
+    width: 100% !important;
+    height: 50% !important;
+}
+
+@media screen and (max-width: 800px) {
+    .watchlist-container {
+        flex-direction: column;
+    }
+
+    .chart-container {
+        padding: 0px;
+        margin: 0px;
+        margin-top: 25%;
+    }
+
+    .watchlist-chart {
+        max-width: 100% !important;
+    }
+
+    #stockChart {
+        width: 100% !important;
+        height: 75% !important;
+    }
+    
+}
+
 .monte-graph-container {
     flex: 1 1 auto;
     justify-content: center;
@@ -927,7 +964,7 @@ legend {
     margin: 0 auto;
 }
 
-.watchlistChart {
+.watchlist-chart {
     max-width: 80%;
     margin: 0 auto;
 }

@@ -91,17 +91,14 @@ def watchlist():
         time_interval = '1h'
         hist = current_company.history(period=yfinance_range, interval=time_interval)
 
+        # Labels for chart x-axis (dates)
         labels = hist.index
-        values = hist['Close']
-
-        # Get date and time in AM/PM format
-        time_format = '%m-%d-%Y %I:%M %p'
-
+        time_format = '%m/%d/%Y'
         labels = [label.strftime(time_format) for label in labels]
-        # labels = [str(label.date()) for label in labels]
-        values = [value for value in values]
 
-        # print("values: ", values)
+        # Values for chart y-axis (prices)
+        values = hist['Close']
+        values = [value for value in values]
 
     
     if request.method == 'POST':
@@ -249,19 +246,14 @@ def watchlist():
         elif yfinance_range == '1y':
             time_interval = '1d'
 
-
         # Get prices & dates for chart
         hist = current_company.history(period=yfinance_range, interval=time_interval)
         labels = hist.index
         values = hist['Close']
 
-        print("labels: ", labels)
-
-        # Get date and time in AM/PM format
-        time_format = '%m-%d-%Y %I:%M %p'
-
-        # Add time to labels if time_interval is less than 1 day
-        if yfinance_range == '1d' or yfinance_range == '5d' or yfinance_range == '1mo' or yfinance_range == "3mo":
+        # Add time to labels if time_interval is 1-5 days
+        if yfinance_range == '1d' or yfinance_range == '5d':
+            time_format = '%m/%d %I:%M %p'
             labels = [label.strftime(time_format) for label in labels]
         else:
             labels = [str(label.date()) for label in labels]
