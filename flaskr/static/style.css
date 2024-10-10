@@ -973,10 +973,13 @@ legend {
         flex-direction: column;
     }
 
+    .watchlist-container .chart-container {
+        margin-top: 25%;
+    }
+
     .chart-container {
         padding: 0px;
         margin: 0px;
-        margin-top: 25%;
     }
 
     .watchlist-chart {
@@ -1051,7 +1054,9 @@ legend {
 }
 
 .bubbles-chart {
-    max-width: 95%;
+    /* max-width: 95%; */
+    width: 95%;
+    height: 70%;
     margin: 0 auto;
     padding-top: 5%;
 }
@@ -1070,12 +1075,17 @@ legend {
     height: 100vh;
 }
 
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 968px) {
     .bubbles-container {
         flex-direction: column;
         padding-top: 10%;
     }
     
+    .bubbles-chart {
+        width: 100%;
+        height: 60%;
+        padding: 0px;
+    }
 }
 
 .bubbles-sidebar {

@@ -67,14 +67,14 @@
 
             {# Canvas for stock chart #}
             <div class="bubbles-chart">
-                <canvas id="stockChart" width="200" height="100"></canvas>
+                <canvas id="bubblesChart" width="200" height="100"></canvas>
             </div>
 
         </div>
 
         {# Chart.js script #}
         <script>
-            const ctx = document.getElementById('stockChart').getContext('2d');
+            const ctx = document.getElementById('bubblesChart').getContext('2d');
             new Chart(ctx, {
                 type: 'bubble',
                 data: {
@@ -86,6 +86,7 @@
                 }]
                 },
                 options: {
+                    maintainAspectRatio: false,
                     plugins: {
                         tooltip: {
                             callbacks: { // Only show selected y-axis value in tooltip for hover label

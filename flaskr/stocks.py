@@ -447,7 +447,8 @@ def bubbles():
         sector = stock_info.get('sector', 'Unknown')
         beta = stock_info.get('beta', 0)
         str_market_cap_billions = f'{market_cap_billions / 1000}T' if market_cap_billions > 1000 else f'{market_cap_billions}B'
-        market_cap_radius = round(market_cap_billions, 2)
+        # Divided by 2 to make the bubbles smaller for mobile
+        market_cap_radius = round(market_cap_billions/2, 2)
 
         data = {
             'market_cap': market_cap,
