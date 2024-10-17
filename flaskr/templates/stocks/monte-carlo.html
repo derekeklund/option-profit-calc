@@ -118,7 +118,7 @@
 
             {# Canvas for stock chart #}
             <div class="doughnut-chart">
-                <canvas id="stockChart" width="200" height="100"></canvas>
+                <canvas id="pieChart" width="200" height="100"></canvas>
             </div>
 
 
@@ -134,7 +134,7 @@
 
         {# Chart.js donut script #}
         <script>
-            const ctx = document.getElementById('stockChart').getContext('2d');
+            const ctx = document.getElementById('pieChart').getContext('2d');
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {

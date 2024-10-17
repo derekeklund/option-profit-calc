@@ -32,7 +32,7 @@
                 
         
                 {% if g.user %}
-                    <li class="float-right"><a class="action" href="{{ url_for('stocks.watchlist') }}"><span>Hi <i>{{ g.user['username'] }}</i>!</span></a></li>
+                    <li id="user-greeting" class="float-right"><a class="action" href="{{ url_for('stocks.watchlist') }}"><span>Hi <i>{{ g.user['username'] }}</i>!</span></a></li>
                     <li class="float-right"><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
                 {% else %}
                     <li class="float-right"><a href="{{ url_for('auth.register') }}">Register</a></li>
