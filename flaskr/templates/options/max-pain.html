@@ -8,14 +8,10 @@
 
     {# <h2>Max Pain</h2> #}
 
-    <div class="bubbles-container">
+    <div class="pain-container">
 
         {# Sidebar for dropdown menu #}
-        <div class="bubbles-sidebar">
-
-            <br>
-            <br>
-            <br>
+        <div class="pain-sidebar">
 
             <form method="post">
 
@@ -38,15 +34,15 @@
                     </select>
                 </div>
 
-                <div class="sidebar-blurb">
-                    <p class="title">What is a Max Pain Calculation?</p>
-                    <p>The max pain price is the strike price with the most option contracts (both calls and puts) and is the price at which the stock would cause the greatest financial loss at expiration. The theory is that some larger financial institutions that are selling the majority of these option contracts might try and push a stock towards this max pain price to harvest the most capital from their positions.</p>
-                </div>
-                
                 <div class="sidebar-item">
                     {# <div>Expiration Date: {{ selected_exp_date }}</div> #}
                     <div>Max Pain Price: <b>${{ max_pain_strike }}</b></div>
                     <div>Previous Close: <b>${{ previous_close }}</b></div>
+                </div>
+
+                <div class="sidebar-blurb">
+                    <p class="title">What is a Max Pain Calculation?</p>
+                    <p>The max pain price is the strike price with the most option contracts (both calls and puts) and is the price at which the stock would cause the greatest financial loss at expiration. The theory is that some larger financial institutions that are selling the majority of these option contracts might try and push a stock towards this max pain price to harvest the most capital from their positions.</p>
                 </div>
 
             </form>
@@ -57,15 +53,15 @@
         <div class="chart-container">
 
             {# Canvas for stock chart #}
-            <div class="bubbles-chart">
-                <canvas id="stockChart" width="200" height="100"></canvas>
+            <div class="pain-chart">
+                <canvas id="maxPainChart" width="200" height="100"></canvas>
             </div>
 
         </div>
 
         {# Chart.js script #}
         <script>
-            const ctx = document.getElementById('stockChart').getContext('2d');
+            const ctx = document.getElementById('maxPainChart').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
                 data: {
