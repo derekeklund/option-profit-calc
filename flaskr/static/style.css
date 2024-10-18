@@ -169,12 +169,17 @@ li:hover {
 .form-popup {
     display: none;
     position: fixed;
-    /* bottom: 0; */
-    /* top: 0; */
-    /* border: 3px solid #f1f1f1; */
     right: 0;
     top: 46px; /* seems hacky but works atm */
     z-index: 9;
+}
+
+@media screen and (max-width: 968px) {
+    .form-popup {
+        top: 15%;
+        left: 7%;
+    }
+    
 }
 
 .login-button {
@@ -1209,7 +1214,7 @@ legend {
   
 .blurb p {
     margin-bottom: 2rem;
-    font-size: large;
+    font-size: medium;
 }
   
 .profile-pic img {
@@ -1228,7 +1233,22 @@ legend {
     cursor: pointer;
     text-decoration: none;
     padding: 1rem 1rem;
-  }
+}
+
+@media screen and (max-width: 968px) {
+    .blurb {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .profile-pic img {
+        width: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+}
 
 /* ------ Projects ------ */
 
@@ -1243,6 +1263,14 @@ legend {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-gap: 32px;
+}
+
+@media screen and (max-width: 968px) {
+    .project-cards {
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+    
 }
   
 .card {
