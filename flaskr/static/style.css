@@ -60,7 +60,7 @@
 .fade-in {
     /* background: url('/static/images/bull_and_bear_expressionism.png') no-repeat center fixed; */
     background: url('/static/images/monocle_bull.png') no-repeat center fixed;
-    width: 100%;
+    width: 100vh;
     height: 100vh;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -92,6 +92,10 @@ html, body {
     font-family: Verdana, sans-serif;
     background: #eee;
     margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
 }
 
 .content {
@@ -481,15 +485,15 @@ input[type=submit] { align-self: start; min-width: 10em; } */
 
 /* Scanner styles */
 .align-left {
-	float: left;
-    margin-left: 25%;
+	  float: left;
+    margin-left: 20%;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
 .align-right {
-	float: right;
+	  float: right;
     margin-right: 25%;
     display: flex;
     align-items: center;
@@ -763,6 +767,7 @@ legend {
     /* background-color: #f0f0f0; */
     text-align: center;
     /* border: 1px solid #ccc; */
+    overflow-x: auto;
 }
 
 .pl-td {
@@ -866,9 +871,9 @@ legend {
 
 .financial-summary {
     flex: 1;
-    /* min-height: 300px; */
-    margin: 10px;
-    margin-right: 15%;
+    min-height: 200px;
+    /* margin: 10px;
+    margin-right: 15%; */
     padding: 20px;
     background-color: #f0f0f0;
     text-align: center;
@@ -877,7 +882,7 @@ legend {
 
 @media screen and (max-width: 968px) {
     .financial-summary {
-        overflow: scroll;
+        overflow-x: scroll;
         margin: 0;
         padding: 0;
     }
@@ -895,9 +900,9 @@ legend {
         white-space: wrap;
     }
 
-    .watchlist-sidebar {
+    /* .watchlist-sidebar {
         display: none !important;
-    }
+    } */
     
 }
 
@@ -972,7 +977,8 @@ legend {
     }
 
     .sidebar-item {
-        flex-direction: column;
+        margin: 0px 20px 0px 20px;
+        padding: 0px;
     }
     
 }
