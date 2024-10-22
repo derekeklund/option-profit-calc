@@ -485,7 +485,7 @@ input[type=submit] { align-self: start; min-width: 10em; } */
 
 /* Scanner styles */
 .align-left {
-	float: left;
+	  float: left;
     margin-left: 20%;
     display: flex;
     align-items: center;
@@ -493,8 +493,8 @@ input[type=submit] { align-self: start; min-width: 10em; } */
 }
 
 .align-right {
-	float: right;
-    margin-right: 20%;
+	  float: right;
+    margin-right: 25%;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -939,6 +939,15 @@ legend {
     border: 1px solid #ccc;
     justify-content: space-between;
     align-items: center;
+}
+
+@media screen and (max-width: 968px) {
+    .sidebar-item {
+        display: block;
+        margin: 0px;
+        padding: 0px;
+    }
+    
 }
 
 .sidebar-blurb {
