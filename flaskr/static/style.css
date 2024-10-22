@@ -60,7 +60,7 @@
 .fade-in {
     /* background: url('/static/images/bull_and_bear_expressionism.png') no-repeat center fixed; */
     background: url('/static/images/monocle_bull.png') no-repeat center fixed;
-    width: 100vh;
+    /* width: 100vh; */
     height: 100vh;
     -webkit-background-size: cover;
     -moz-background-size: cover;
