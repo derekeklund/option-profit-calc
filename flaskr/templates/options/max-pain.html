@@ -50,17 +50,27 @@
         </div>
 
 
-        <div class="chart-container">
+        <div class="pad-right chart-container">
 
             {# Canvas for stock chart #}
             <div class="pain-chart">
-                <canvas id="maxPainChart" width="200" height="100"></canvas>
+                <canvas id="maxPainChart"></canvas>
             </div>
 
         </div>
 
         {# Chart.js script #}
         <script>
+
+            // Function to get aspect ratio based on screen width
+            function getAspectRatio() {
+                if (window.innerWidth >= 500) { // Desktop
+                    return 2; // Aspect ratio 2:1
+                } else { // Mobile
+                    return 1.3; // Aspect ratio 1.3:1
+                }
+            }
+
             const ctx = document.getElementById('maxPainChart').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
@@ -80,6 +90,8 @@
                 ]
                 },
                 options: {
+                    responsive: true,
+                    aspectRatio: getAspectRatio(),
                     plugins: {
                         legend: {
                             display: true,
@@ -106,6 +118,12 @@
                         }
                     }
                 }
+            });
+
+            // Update chart aspect ratio on window resize
+            window.addEventListener('resize', function() {
+                myChart.options.aspectRatio = getAspectRatio();
+                myChart.resize(); // Resizes the chart
             });
         </script>
 

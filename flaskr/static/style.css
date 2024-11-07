@@ -48,6 +48,10 @@
     justify-content: center;
 }
 
+.pad-right {
+    padding-right: 5% !important;
+}
+
 .bold {
     font-weight: bold;
 }
