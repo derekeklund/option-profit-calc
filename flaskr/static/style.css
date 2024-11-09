@@ -290,7 +290,7 @@ li:hover {
 
 @media screen and (max-width: 968px) {
     .margin-5 {
-        margin: 0px;
+        margin: 2px;
     }
     
     #stock_fields span .text-input {
@@ -613,9 +613,13 @@ input[type=submit] { align-self: start; min-width: 10em; } */
         flex-direction: column;
     }
 
+    .calc-page .tables-container {
+        padding-bottom: 20px;
+    }
+
     .table-item-big {
         margin-top: 0px !important;
-        padding-bottom: 20px;
+        /* padding-bottom: 20px; */
     }
 
     .calc-container {
@@ -707,6 +711,7 @@ input[type=submit] { align-self: start; min-width: 10em; } */
 .vertical-center {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .flex-item label {
@@ -752,6 +757,7 @@ legend {
     color: #069;
     text-decoration: underline;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .tables-container {
@@ -913,6 +919,8 @@ legend {
     .watchlist-sidebar {
         /* display: none !important; */
         max-height: 200px !important;
+        min-width: 200px !important;
+        margin: 2% !important;
     }
     
 }
@@ -928,11 +936,52 @@ legend {
     display: flex;
     flex-direction: column;
     max-height: 500px;
-    min-width: 375px;
+    min-width: 380px;
     overflow: auto;
     background-color: rgba(140, 220, 180, 0.5);
     border-radius: 10px;
-    margin: 2%
+    margin: 1%
+}
+
+.watchlist-sidebar::-webkit-scrollbar {
+    width: 10px;
+}
+
+.watchlist-sidebar::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid var(--green);
+    /* should match background, can't be transparent */
+    background-color: var(--green);
+}
+
+.scanner-table::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scanner-table::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid var(--green);
+    /* should match background, can't be transparent */
+    background-color: var(--green);
+}
+
+.table-item-big::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-item-big::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid var(--green);
+    /* should match background, can't be transparent */
+    background-color: var(--green);
+}
+
+.watchlist-sidebar .sidebar-item {
+    border: none;
+}
+
+.bubbles-sidebar .sidebar-item {
+    border: none;
 }
 
 .sidebar-item div {
@@ -1008,7 +1057,7 @@ legend {
     }
 
     .sidebar-item {
-        margin: 0px 20px 0px 20px;
+        margin: 0px 0px 0px 0px;
         padding: 0px;
     }
     
@@ -1061,6 +1110,7 @@ legend {
 @media screen and (max-width: 800px) {
     .watchlist-container {
         flex-direction: column;
+        padding: 5px;
     }
 
     .watchlist-container .chart-container {
@@ -1074,6 +1124,7 @@ legend {
 
     .watchlist-chart {
         max-width: 100% !important;
+        margin-right: 5px !important;
     }
 
     #stockChart {

@@ -17,7 +17,7 @@
 
                 {# Market Index Dropdown #}
                 <div class="sidebar-item">
-                    <label for="index">Ticker</label>
+                    {# <label for="index">Ticker</label> #}
                     <div>
                     <input class="text-input" name="symbol" placeholder="{{ ticker }}" id="symbol" value="{{ ticker }}" style="text-transform:uppercase" required>
                     <button class="button" type="submit" value="Search">Update</button>
@@ -26,7 +26,7 @@
 
                 {# Sector Dropdown #}
                 <div class="sidebar-item">
-                    <label for="sector">Expiration</label>
+                    <label for="sector">Expiration:</label>
                     <select class="dropdown-bubbles" name="expiry" id="expiry" onchange="this.form.submit()">
                         {% for expiry in expiries %}
                             <option value="{{expiry}}" {% if expiry == selected_exp_date %} selected {% endif %}>{{expiry}}</option>
