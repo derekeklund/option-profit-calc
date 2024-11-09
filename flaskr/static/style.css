@@ -948,32 +948,32 @@ legend {
 }
 
 .watchlist-sidebar::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    border: 2px solid var(--green);
+    border-radius: 8px  !important;
+    border: 2px solid var(--green) !important;
     /* should match background, can't be transparent */
-    background-color: var(--green);
+    background-color: var(--green) !important;
 }
 
 .scanner-table::-webkit-scrollbar {
-    height: 8px;
+    height: 8px !important;
 }
 
 .scanner-table::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    border: 2px solid var(--green);
+    border-radius: 8px !important;
+    border: 2px solid var(--green) !important;
     /* should match background, can't be transparent */
-    background-color: var(--green);
+    background-color: var(--green) !important;
 }
 
 .table-item-big::-webkit-scrollbar {
-    height: 8px;
+    height: 8px !important;
 }
 
 .table-item-big::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    border: 2px solid var(--green);
+    border-radius: 8px !important;
+    border: 2px solid var(--green) !important;
     /* should match background, can't be transparent */
-    background-color: var(--green);
+    background-color: var(--green) !important;
 }
 
 .watchlist-sidebar .sidebar-item {
