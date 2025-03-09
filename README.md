@@ -8,6 +8,7 @@ Watchlist
 Bubble Charts
 Max Pain Calculator
 Monte Carlo Simulator
+ ![Screenshot](flaskr/static/images/monte-carlo.png)
  
 Register & Log in
 
