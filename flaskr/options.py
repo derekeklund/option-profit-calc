@@ -51,6 +51,7 @@ def scanner():
 
         ticker = yf.Ticker(ticker)
         exp_dates = ticker.options
+        print("Expiry dates:", exp_dates)
 
         try:
             if selected_exp_date == None:
