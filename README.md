@@ -24,10 +24,12 @@ Register & Log in
 
 ## 1. Clone repo
 git clone https://github.com/derekeklund/option-profit-calc.git
+
 cd option-profit-calc
 ## 2. Set Up Virtual Environment
 .venv\scripts\activate # Windows
-Ource .venv/bin/activate # MacOs/Linux
+
+source .venv/bin/activate # MacOs/Linux
 
 ## 3. Install dependencies
 pip install -r requirements.txt
