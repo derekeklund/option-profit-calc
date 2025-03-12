@@ -35,7 +35,7 @@ source .venv/bin/activate # MacOs/Linux
 pip install -r requirements.txt
 
 ## 4. Run the App
-flask --app flaskr run –debug
+flask --app flaskr run --debug
 Open http://127.0.0.1:5000 in your browser
 
 
